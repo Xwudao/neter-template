@@ -39,7 +39,10 @@ func NewLogger(conf *koanf.Koanf) (*zap.SugaredLogger, error) {
 	}
 
 	logger := zap.New(core)
-	return logger.Sugar(), nil
+	log := logger.Sugar()
+
+	log.Infof("logger init")
+	return log, nil
 }
 
 func NewCore(level, format, logPath, linkName string) (zapcore.Core, error) {

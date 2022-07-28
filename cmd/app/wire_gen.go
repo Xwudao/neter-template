@@ -19,11 +19,11 @@ import (
 
 // wireApp init the application.
 func wireApp() (*cobra.Command, func(), error) {
-	engine := routes.NewEngine()
 	koanf, err := config.NewConfig()
 	if err != nil {
 		return nil, nil, err
 	}
+	engine := routes.NewEngine(koanf)
 	sugaredLogger, err := logger.NewLogger(koanf)
 	if err != nil {
 		return nil, nil, err

@@ -2,13 +2,20 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/knadh/koanf"
 	"go.uber.org/zap"
 
 	v1 "github.com/Xwudao/neter/internal/routes/v1"
 )
 
-func NewEngine() *gin.Engine {
-	r := gin.Default()
+func NewEngine(conf *koanf.Koanf) *gin.Engine {
+	mode := conf.String("app.mode")
+	if mode != "debug" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+	r := gin.New()
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
 
 	return r
 }
