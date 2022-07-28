@@ -12,5 +12,5 @@ import (
 )
 
 func mainApp() (*cmd.MainApp, func(), error) {
-	panic(wire.Build(cmd.NewMainApp, config.NewConfig, logger.NewLogger, routes.NewHttpEngine))
+	panic(wire.Build(cmd.NewMainApp, config.NewConfig, logger.NewLogger, routes.ProviderRouteSet))
 }
