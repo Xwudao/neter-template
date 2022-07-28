@@ -5,7 +5,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
+	"github.com/Xwudao/neter-template/internal/core"
 
 	"github.com/spf13/cobra"
 )
@@ -13,15 +13,19 @@ import (
 // importCmd represents the import command
 var importCmd = &cobra.Command{
 	Use:   "import",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "this is command is an example",
+	Long:  `you can learn how to use dependency in sub command.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("import called")
+		f, clear, err := core.CoreApp()
+		if err != nil {
+			panic("init dependency error")
+		}
+
+		f.Log.Infof("importing...")
+		f.Conf.Print()
+
+		defer clear()
+
 	},
 }
 

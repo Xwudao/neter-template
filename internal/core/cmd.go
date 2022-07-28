@@ -1,4 +1,4 @@
-package cmd
+package core
 
 import (
 	"github.com/knadh/koanf"
@@ -6,10 +6,10 @@ import (
 )
 
 type App struct {
-	log  *zap.SugaredLogger
-	conf *koanf.Koanf
+	Log  *zap.SugaredLogger
+	Conf *koanf.Koanf
 }
 
 func NewApp(log *zap.SugaredLogger, conf *koanf.Koanf) *App {
-	return &App{log: log, conf: conf}
+	return &App{Log: log, Conf: conf}
 }

@@ -20,6 +20,11 @@ var rootCmd = &cobra.Command{
 	// Run: func(cmd *cobra.Command, args []string) { },
 }
 
+func Execute(run func(cmd *cobra.Command, args []string)) error {
+	rootCmd.Run = run
+	return rootCmd.Execute()
+}
+
 type MainApp struct {
 	http *routes.HttpEngine
 }
