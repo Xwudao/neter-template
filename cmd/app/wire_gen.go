@@ -9,28 +9,23 @@ package main
 import (
 	"github.com/Xwudao/neter-template/internal/cmd"
 	"github.com/Xwudao/neter-template/internal/routes"
-	"github.com/Xwudao/neter-template/internal/routes/v1"
 	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/Xwudao/neter-template/pkg/logger"
-	"github.com/spf13/cobra"
 )
 
 // Injectors from wire.go:
 
-// wireApp init the application.
-func wireApp() (*cobra.Command, func(), error) {
+func mainApp() (*cmd.MainApp, func(), error) {
 	koanf, err := config.NewConfig()
 	if err != nil {
 		return nil, nil, err
 	}
-	engine := routes.NewEngine(koanf)
 	sugaredLogger, err := logger.NewLogger(koanf)
 	if err != nil {
 		return nil, nil, err
 	}
-	homeRoute := v1.NewHomeRoute(engine, koanf)
-	appRoutes := routes.NewAppRoutes(sugaredLogger, homeRoute)
-	command := cmd.NewApp(engine, sugaredLogger, appRoutes, koanf)
-	return command, func() {
+	httpEngine := routes.NewHttpEngine(koanf, sugaredLogger)
+	cmdMainApp := cmd.NewMainApp(httpEngine)
+	return cmdMainApp, func() {
 	}, nil
 }
