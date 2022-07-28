@@ -5,14 +5,8 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-
-	"github.com/gin-gonic/gin"
-	"github.com/knadh/koanf"
-	"github.com/spf13/cobra"
-	"go.uber.org/zap"
-
 	"github.com/Xwudao/neter-template/internal/routes"
+	"github.com/spf13/cobra"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -26,19 +20,16 @@ var rootCmd = &cobra.Command{
 	// Run: func(cmd *cobra.Command, args []string) { },
 }
 
-func NewApp(r *gin.Engine, log *zap.SugaredLogger, routes *routes.AppRoutes, conf *koanf.Koanf) *cobra.Command {
-	rootCmd.Run = func(cmd *cobra.Command, args []string) {
-		routes.Setup()
+type MainApp struct {
+	http *routes.HttpEngine
+}
 
-		port := conf.Int("app.port")
-		err := r.Run(fmt.Sprintf(":%d", port))
-		if err != nil {
-			panic(err)
-		}
-		log.Infof("app running on port: %d", port)
-	}
+func (m *MainApp) Run() error {
+	return m.http.Run()
+}
 
-	return rootCmd
+func NewMainApp(http *routes.HttpEngine) *MainApp {
+	return &MainApp{http: http}
 }
 
 //func Execute() {
