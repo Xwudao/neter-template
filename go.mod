@@ -1,4 +1,4 @@
-module github.com/Xwudao/neter
+module github.com/Xwudao/neter-template
 
 go 1.18
 

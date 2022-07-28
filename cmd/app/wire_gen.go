@@ -7,11 +7,11 @@
 package main
 
 import (
-	"github.com/Xwudao/neter/internal/cmd"
-	"github.com/Xwudao/neter/internal/routes"
-	"github.com/Xwudao/neter/internal/routes/v1"
-	"github.com/Xwudao/neter/pkg/config"
-	"github.com/Xwudao/neter/pkg/logger"
+	"github.com/Xwudao/neter-template/internal/cmd"
+	"github.com/Xwudao/neter-template/internal/routes"
+	"github.com/Xwudao/neter-template/internal/routes/v1"
+	"github.com/Xwudao/neter-template/pkg/config"
+	"github.com/Xwudao/neter-template/pkg/logger"
 	"github.com/spf13/cobra"
 )
 

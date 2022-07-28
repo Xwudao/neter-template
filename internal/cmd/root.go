@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
-	"github.com/Xwudao/neter/internal/routes"
+	"github.com/Xwudao/neter-template/internal/routes"
 )
 
 // rootCmd represents the base command when called without any subcommands

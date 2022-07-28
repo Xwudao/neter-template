@@ -5,7 +5,7 @@ import (
 	"github.com/knadh/koanf"
 	"go.uber.org/zap"
 
-	v1 "github.com/Xwudao/neter/internal/routes/v1"
+	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
 )
 
 func NewEngine(conf *koanf.Koanf) *gin.Engine {
