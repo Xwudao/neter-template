@@ -1,0 +1,9 @@
+app:
+  port: 8080
+  mode: debug
+
+log:
+  level: debug
+  format: json
+  linkName: current.log
+  path: ./logs
