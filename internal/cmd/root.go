@@ -7,7 +7,9 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/Xwudao/neter-template/internal/core"
 	"github.com/Xwudao/neter-template/internal/routes"
+	"github.com/Xwudao/neter-template/pkg/utils/cron"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -27,16 +29,29 @@ func Execute(run func(cmd *cobra.Command, args []string)) error {
 }
 
 type MainApp struct {
-	http *routes.HttpEngine
+	http       *routes.HttpEngine
+	initSystem *core.InitSystem
+	cron       *cron.Cron
 }
 
 func (m *MainApp) Run() error {
+	m.initSystem.InitConfig()
 	m.http.Register()
+	m.cron.Run()
 	return m.http.Run()
 }
 
-func NewMainApp(http *routes.HttpEngine) *MainApp {
-	return &MainApp{http: http}
+func NewMainApp(http *routes.HttpEngine, cron *cron.Cron, initSystem *core.InitSystem) (*MainApp, func()) {
+	m := &MainApp{
+		http:       http,
+		initSystem: initSystem,
+		cron:       cron,
+	}
+	cleanup := func() {
+		_ = m.cron.Close()
+	}
+
+	return m, cleanup
 }
 
 //func Execute() {
