@@ -22,11 +22,11 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	engine := routes.NewEngine(koanf)
 	sugaredLogger, err := logger.NewLogger(koanf)
 	if err != nil {
 		return nil, nil, err
 	}
+	engine := routes.NewEngine(koanf, sugaredLogger)
 	homeBiz := biz.NewHomeBiz()
 	homeRoute := v1.NewHomeRoute(engine, koanf, homeBiz)
 	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, homeRoute)

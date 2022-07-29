@@ -1,6 +1,6 @@
 app:
   port: 8080
-  mode: release
+  mode: debug
 
 log:
   level: debug

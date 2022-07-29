@@ -30,7 +30,6 @@ func (r *HomeRoute) Reg() {
 
 func (r *HomeRoute) home() core.WrappedHandlerFunc {
 	return func(c *gin.Context) (interface{}, *core.RtnStatus) {
-
 		return "hello", nil
 	}
 }

@@ -3,23 +3,35 @@ package routes
 import (
 	"fmt"
 
+	"github.com/Xwudao/neter-template/internal/routes/mdw"
+	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
+
 	"github.com/gin-gonic/gin"
 	"github.com/knadh/koanf"
 	"go.uber.org/zap"
-
-	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
 )
 
-func NewEngine(conf *koanf.Koanf) *gin.Engine {
+func NewEngine(conf *koanf.Koanf, log *zap.SugaredLogger) *gin.Engine {
 
 	mode := conf.String("app.mode")
 	if mode != "debug" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
+	logFunc := func(fields *mdw.RouterLogFields) {
+		log.Infow("visit",
+			zap.Int("status", fields.Status),
+			zap.String("method", fields.Method),
+			zap.String("time", fields.Time.String()),
+			zap.String("path", fields.Path),
+			zap.String("ip", fields.IP),
+			zap.String("agent", fields.Agent),
+			zap.String("uri", fields.Uri))
+	}
+
 	r := gin.New()
 	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
+	r.Use(gin.Recovery(), mdw.LoggerMiddleware(logFunc))
 
 	return r
 }
