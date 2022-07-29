@@ -1,27 +1,15 @@
 package cron
 
 import (
+	"fmt"
+
 	"github.com/robfig/cron/v3"
 	"go.uber.org/zap"
 )
 
 type Cron struct {
-	logger      *zap.SugaredLogger
-	cron        *cron.Cron
-	minuteFunc  map[int][]func()
-	secondsFunc map[int][]func()
-	hourFunc    map[int][]func()
-
-	//Run once a year, midnight, Jan. 1st
-	yearlyFunc []func()
-	//Run once a month, midnight, first of month
-	monthlyFunc []func()
-	//Run once a week, midnight between Sat/Sun
-	weeklyFunc []func()
-	//Run once a day, midnight
-	dailyFunc []func()
-	//Run once an hour, beginning of hour
-	hourlyFunc []func()
+	logger *zap.SugaredLogger
+	cron   *cron.Cron
 }
 
 func (c *Cron) Close() error {
@@ -30,36 +18,74 @@ func (c *Cron) Close() error {
 	return nil
 }
 
-func (c *Cron) AddSecondsFunc(s int, f ...func()) {
-	c.secondsFunc[s] = append(c.secondsFunc[s], f...)
+func (c *Cron) AddSecondsFunc(sec int, f ...func()) error {
+	var err error
+	for i := 0; i < len(f); i++ {
+		_, err = c.cron.AddFunc(fmt.Sprintf("@every %ds", sec), f[i])
+	}
+	return err
 }
-func (c *Cron) AddMinuteFunc(m int, f ...func()) {
-	c.minuteFunc[m] = append(c.minuteFunc[m], f...)
+func (c *Cron) AddMinuteFunc(m int, f ...func()) error {
+	var err error
+	for i := 0; i < len(f); i++ {
+		_, err = c.cron.AddFunc(fmt.Sprintf("@every %dm", m), f[i])
+	}
+	return err
 }
-func (c *Cron) AddHourly(f func()) {
-	c.hourlyFunc = append(c.hourlyFunc, f)
+func (c *Cron) AddHourly(f ...func()) error {
+	var err error
+	for i := 0; i < len(f); i++ {
+		_, err = c.cron.AddFunc(fmt.Sprintf("@hourly"), f[i])
+	}
+	return err
+
 }
-func (c *Cron) AddDaily(f func()) {
-	c.dailyFunc = append(c.dailyFunc, f)
+func (c *Cron) AddDaily(f ...func()) error {
+	var err error
+	for i := 0; i < len(f); i++ {
+		_, err = c.cron.AddFunc(fmt.Sprintf("@daily"), f[i])
+	}
+	return err
 }
-func (c *Cron) AddMonthly(f func()) {
-	c.monthlyFunc = append(c.monthlyFunc, f)
+func (c *Cron) AddMonthly(f ...func()) error {
+	var err error
+	for i := 0; i < len(f); i++ {
+		_, err = c.cron.AddFunc(fmt.Sprintf("@monthly"), f[i])
+	}
+	return err
 }
-func (c *Cron) AddYearly(f func()) {
-	c.yearlyFunc = append(c.yearlyFunc, f)
+func (c *Cron) AddYearly(f ...func()) error {
+	var err error
+	for i := 0; i < len(f); i++ {
+		_, err = c.cron.AddFunc(fmt.Sprintf("@yearly"), f[i])
+	}
+	return err
+}
+func (c *Cron) AddWeekly(f ...func()) error {
+	var err error
+	for i := 0; i < len(f); i++ {
+		_, err = c.cron.AddFunc(fmt.Sprintf("@weekly"), f[i])
+	}
+	return err
+}
+
+func (c *Cron) AddManually(expr string, f ...func()) error {
+	var err error
+	for i := 0; i < len(f); i++ {
+		_, err = c.cron.AddFunc(expr, f[i])
+	}
+	return err
 }
 func (c *Cron) Run() {
 	c.logger.Infof("Starting cron")
+
 	c.cron.Start()
 }
 func NewCron(logger *zap.SugaredLogger) *Cron {
-	c := &Cron{
-		logger:      logger,
-		cron:        cron.New(),
-		minuteFunc:  make(map[int][]func()),
-		secondsFunc: make(map[int][]func()),
-		hourFunc:    make(map[int][]func()),
-	}
-
+	c := &Cron{logger: logger, cron: cron.New(
+		cron.WithParser(cron.NewParser(
+			cron.SecondOptional|cron.Minute|cron.Hour|cron.Dom|cron.Month|cron.Dow|cron.Descriptor,
+		)), cron.WithChain(cron.Recover(cron.DefaultLogger)),
+	)}
 	return c
 }
