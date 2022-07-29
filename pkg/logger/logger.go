@@ -1,6 +1,8 @@
 package logger
 
 import (
+	"io"
+	"os"
 	"path/filepath"
 	"runtime"
 	"time"
@@ -101,5 +103,6 @@ func NewWrite(logPath string, linkName string) (zapcore.WriteSyncer, error) {
 	if err != nil {
 		return nil, err
 	}
-	return zapcore.AddSync(writer), nil
+	coreWriter := io.MultiWriter(writer, os.Stdout)
+	return zapcore.AddSync(coreWriter), nil
 }
