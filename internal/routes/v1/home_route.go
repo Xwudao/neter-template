@@ -5,6 +5,7 @@ import (
 	"github.com/knadh/koanf"
 
 	"github.com/Xwudao/neter-template/internal/biz"
+	"github.com/Xwudao/neter-template/internal/core"
 )
 
 type HomeRoute struct {
@@ -24,13 +25,12 @@ func NewHomeRoute(g *gin.Engine, conf *koanf.Koanf, hb *biz.HomeBiz) *HomeRoute 
 }
 
 func (r *HomeRoute) Reg() {
-	r.g.GET("/", r.home())
+	r.g.GET("/", core.WrapData(r.home()))
 }
 
-func (r *HomeRoute) home() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		name := c.Query("name")
+func (r *HomeRoute) home() core.WrappedHandlerFunc {
+	return func(c *gin.Context) (interface{}, *core.RtnStatus) {
 
-		c.String(200, r.hb.SayHello(name))
+		return "hello", nil
 	}
 }
