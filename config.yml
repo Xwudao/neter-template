@@ -7,3 +7,8 @@ log:
   format: json
   linkName: current.log
   path: ./logs
+
+
+
+jwt:
+  secret: "secret"
