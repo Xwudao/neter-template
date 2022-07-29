@@ -25,7 +25,7 @@ func NewHomeRoute(g *gin.Engine, conf *koanf.Koanf, hb *biz.HomeBiz) *HomeRoute 
 }
 
 func (r *HomeRoute) Reg() {
-	r.g.GET("/", core.WrapData(r.home()))
+	r.g.GET("/v1", core.WrapData(r.home()))
 }
 
 func (r *HomeRoute) home() core.WrappedHandlerFunc {
