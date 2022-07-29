@@ -7,8 +7,10 @@
 package main
 
 import (
+	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/cmd"
 	"github.com/Xwudao/neter-template/internal/routes"
+	"github.com/Xwudao/neter-template/internal/routes/v1"
 	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/Xwudao/neter-template/pkg/logger"
 )
@@ -20,11 +22,17 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
+	engine := routes.NewEngine(koanf)
 	sugaredLogger, err := logger.NewLogger(koanf)
 	if err != nil {
 		return nil, nil, err
 	}
-	httpEngine := routes.NewHttpEngine(koanf, sugaredLogger)
+	homeBiz := biz.NewHomeBiz()
+	homeRoute := v1.NewHomeRoute(engine, koanf, homeBiz)
+	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, homeRoute)
+	if err != nil {
+		return nil, nil, err
+	}
 	cmdMainApp := cmd.NewMainApp(httpEngine)
 	return cmdMainApp, func() {
 	}, nil

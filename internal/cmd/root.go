@@ -5,8 +5,9 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/Xwudao/neter-template/internal/routes"
 	"github.com/spf13/cobra"
+
+	"github.com/Xwudao/neter-template/internal/routes"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -30,6 +31,7 @@ type MainApp struct {
 }
 
 func (m *MainApp) Run() error {
+	m.http.Register()
 	return m.http.Run()
 }
 

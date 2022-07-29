@@ -1,29 +1,36 @@
 package v1
 
 import (
-	"strconv"
-
 	"github.com/gin-gonic/gin"
 	"github.com/knadh/koanf"
+
+	"github.com/Xwudao/neter-template/internal/biz"
 )
 
 type HomeRoute struct {
-	router *gin.Engine
-	conf   *koanf.Koanf
+	conf *koanf.Koanf
+	hb   *biz.HomeBiz
+	g    *gin.Engine
 }
 
-func NewHomeRoute(router *gin.Engine, conf *koanf.Koanf) *HomeRoute {
-	r := &HomeRoute{router: router, conf: conf}
-
-	r.router.GET("/", r.home())
+func NewHomeRoute(g *gin.Engine, conf *koanf.Koanf, hb *biz.HomeBiz) *HomeRoute {
+	r := &HomeRoute{
+		conf: conf,
+		hb:   hb,
+		g:    g,
+	}
 
 	return r
 }
 
+func (r *HomeRoute) Reg() {
+	r.g.GET("/", r.home())
+}
+
 func (r *HomeRoute) home() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		port := r.conf.Int("port")
+		name := c.Query("name")
 
-		c.String(200, "Hello World!"+strconv.Itoa(port))
+		c.String(200, r.hb.SayHello(name))
 	}
 }

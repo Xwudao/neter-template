@@ -2,47 +2,68 @@ package routes
 
 import (
 	"fmt"
-	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
+
 	"github.com/gin-gonic/gin"
 	"github.com/knadh/koanf"
 	"go.uber.org/zap"
+
+	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
 )
+
+func NewEngine(conf *koanf.Koanf) *gin.Engine {
+
+	mode := conf.String("app.mode")
+	if mode != "debug" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	r := gin.New()
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
+
+	return r
+}
 
 type HttpEngine struct {
 	router *gin.Engine
 	conf   *koanf.Koanf
 	log    *zap.SugaredLogger
+
+	homeRoute *v1.HomeRoute
 }
 
-func NewHttpEngine(conf *koanf.Koanf, log *zap.SugaredLogger) *HttpEngine {
+func NewHttpEngine(
+	router *gin.Engine,
+	conf *koanf.Koanf,
+	log *zap.SugaredLogger,
+	homeRoute *v1.HomeRoute,
+) (*HttpEngine, error) {
 
 	he := &HttpEngine{
-		conf: conf,
-		log:  log,
+		conf:   conf,
+		log:    log,
+		router: router,
+
+		homeRoute: homeRoute,
 	}
 
-	return he
+	return he, nil
 }
 
-func (h *HttpEngine) Run() error {
-	mode := h.conf.String("app.mode")
-	if mode != "debug" {
-		gin.SetMode(gin.ReleaseMode)
-	}
-	r := gin.New()
-	h.router = r
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
+func (r *HttpEngine) Run() error {
+	conf := r.conf
+	log := r.log
+	router := r.router
 
-	port := h.conf.Int("app.port")
-	err := r.Run(fmt.Sprintf(":%d", port))
+	port := conf.Int("app.port")
+	err := router.Run(fmt.Sprintf(":%d", port))
 	if err != nil {
 		return err
 	}
-	h.log.Infof("app running on port: %d", port)
+	log.Infof("app running on port: %d", port)
+
 	return nil
 }
-
-func (h *HttpEngine) Setup() {
-	v1.NewHomeRoute(h.router, h.conf)
+func (r *HttpEngine) Register() {
+	r.homeRoute.Reg()
 }

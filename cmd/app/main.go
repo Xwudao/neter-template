@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/Xwudao/neter-template/internal/cmd"
 	"github.com/spf13/cobra"
+
+	"github.com/Xwudao/neter-template/internal/cmd"
 )
 
 func main() {
@@ -12,13 +13,13 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-
-		defer cleanup()
-
 		err = app.Run()
 		if err != nil {
 			panic(err)
 		}
+
+		defer cleanup()
+
 	})
 	if err != nil {
 		panic(err)
