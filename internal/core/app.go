@@ -16,3 +16,7 @@ func NewAppContext() *AppContext {
 		Cancel: cancel,
 	}
 }
+
+func NewTestAppContext() *AppContext {
+	return NewAppContext()
+}

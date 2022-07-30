@@ -20,3 +20,22 @@ cors:
     - http://127.0.0.1:*
   allowCredentials: true
   maxAge: 24h
+
+#host := conf.String("mail.host")
+#	port := conf.Int("mail.port")
+#	username := conf.String("mail.username")
+#	password := conf.String("mail.password")
+#
+#	keepAlive := conf.Bool("mail.keepAlive")
+#	connectTimeout := conf.Duration("mail.connectTimeout")
+#	sendTimeout := conf.Duration("mail.sendTimeout")
+
+mail:
+  from: xx
+  host: xx
+  port: xx
+  username: xx
+  password: xx
+  keepAlive: true,
+  connectTimeout: 10s
+  sendTimeout: 10s

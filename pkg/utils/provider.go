@@ -7,4 +7,6 @@ import (
 	"github.com/Xwudao/neter-template/pkg/utils/jwt"
 )
 
-var ProvideUtilSet = wire.NewSet(cron.NewCron, jwt.NewClient)
+var (
+	ProvideUtilSet = wire.NewSet(cron.NewCron, jwt.NewClient)
+)

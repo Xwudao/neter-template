@@ -116,6 +116,8 @@ func NewClientWithConf(ctx *core.AppContext, logger *zap.SugaredLogger, config *
 		logger:  logger,
 	}
 
+	go c.task()
+
 	return c, nil
 }
 
@@ -127,6 +129,7 @@ func (c *Client) task() {
 			log.Info("mail service stopped")
 			return
 		case m := <-c.msgChan:
+			log.Info("ready to send email")
 			email := mail.NewMSG()
 			//From Example <nube@example.com>
 			email.SetFrom(m.From).

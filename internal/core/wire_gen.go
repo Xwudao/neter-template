@@ -26,3 +26,18 @@ func CoreApp() (*App, func(), error) {
 	return app, func() {
 	}, nil
 }
+
+func TestApp() (*TestManager, func(), error) {
+	koanf, err := config.NewTestConfig()
+	if err != nil {
+		return nil, nil, err
+	}
+	sugaredLogger, err := logger.NewLogger(koanf)
+	if err != nil {
+		return nil, nil, err
+	}
+	appContext := NewTestAppContext()
+	testManager := NewTestApp(sugaredLogger, appContext, koanf)
+	return testManager, func() {
+	}, nil
+}
