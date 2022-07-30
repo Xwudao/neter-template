@@ -8,7 +8,14 @@ log:
   linkName: current.log
   path: ./logs
 
-
+db:
+  dialect: mysql
+  host: 127.0.0.1
+  port: 3306
+  username: root
+  password: root
+  database: ent-demo
+  devDsn: mysql://root:root@:3306/dev-ent
 
 jwt:
   secret: "secret"
