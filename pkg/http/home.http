@@ -1,0 +1,3 @@
+### home
+GET {{api}}/v1
+Origin: http://127.0.0.1:3333

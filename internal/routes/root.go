@@ -2,6 +2,9 @@ package routes
 
 import (
 	"fmt"
+	"time"
+
+	"github.com/gin-contrib/cors"
 
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
 	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
@@ -41,6 +44,8 @@ type HttpEngine struct {
 	conf   *koanf.Koanf
 	log    *zap.SugaredLogger
 
+	corsConf cors.Config
+
 	homeRoute *v1.HomeRoute
 }
 
@@ -57,6 +62,7 @@ func NewHttpEngine(
 		router: router,
 
 		homeRoute: homeRoute,
+		corsConf:  cors.DefaultConfig(),
 	}
 
 	return he, nil
@@ -78,4 +84,30 @@ func (r *HttpEngine) Run() error {
 }
 func (r *HttpEngine) Register() {
 	r.homeRoute.Reg()
+}
+
+func (r *HttpEngine) ConfigCors() {
+	r.router.Use(cors.New(r.corsConf))
+}
+
+func (r *HttpEngine) SetOriginFun(f func(origin string) bool) {
+	r.corsConf.AllowOriginFunc = f
+}
+func (r *HttpEngine) SetMaxAge(age time.Duration) {
+	r.corsConf.MaxAge = age
+}
+func (r *HttpEngine) SetCredentials(b bool) {
+	r.corsConf.AllowCredentials = b
+}
+func (r *HttpEngine) SetExposeHeaders(s []string) {
+	r.corsConf.ExposeHeaders = s
+}
+func (r *HttpEngine) SetHeaders(s []string) {
+	r.corsConf.AllowHeaders = s
+}
+func (r *HttpEngine) SetMethods(s []string) {
+	r.corsConf.AllowMethods = s
+}
+func (r *HttpEngine) SetOrigin(s []string) {
+	r.corsConf.AllowOrigins = s
 }

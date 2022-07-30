@@ -39,7 +39,7 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	}
 	cronCron := cron.NewCron(sugaredLogger)
 	initSystem := core.NewInitSystem(cronCron)
-	cmdMainApp, cleanup := cmd.NewMainApp(httpEngine, cronCron, initSystem)
+	cmdMainApp, cleanup := cmd.NewMainApp(httpEngine, sugaredLogger, koanf, cronCron, initSystem)
 	return cmdMainApp, func() {
 		cleanup()
 	}, nil

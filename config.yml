@@ -12,3 +12,11 @@ log:
 
 jwt:
   secret: "secret"
+
+
+cors:
+  allowOrigin:
+    - http://localhost:*
+    - http://127.0.0.1:*
+  allowCredentials: true
+  maxAge: 24h
