@@ -13,7 +13,7 @@ type Cron struct {
 }
 
 func (c *Cron) Close() error {
-	c.logger.Infof("Closing cron")
+	c.logger.Infof("closing cron")
 	c.cron.Stop()
 	return nil
 }
@@ -77,7 +77,7 @@ func (c *Cron) AddManually(expr string, f ...func()) error {
 	return err
 }
 func (c *Cron) Run() {
-	c.logger.Infof("Starting cron")
+	c.logger.Infof("starting cron")
 
 	c.cron.Start()
 }
