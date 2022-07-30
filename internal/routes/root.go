@@ -2,10 +2,15 @@ package routes
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/gin-contrib/cors"
 
+	"github.com/Xwudao/neter-template/internal/core"
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
 	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
 
@@ -44,6 +49,7 @@ type HttpEngine struct {
 	router *gin.Engine
 	conf   *koanf.Koanf
 	log    *zap.SugaredLogger
+	ctx    *core.AppContext
 
 	corsConf cors.Config
 
@@ -54,6 +60,7 @@ func NewHttpEngine(
 	router *gin.Engine,
 	conf *koanf.Koanf,
 	log *zap.SugaredLogger,
+	ctx *core.AppContext,
 	homeRoute *v1.HomeRoute,
 ) (*HttpEngine, error) {
 
@@ -61,6 +68,7 @@ func NewHttpEngine(
 		conf:   conf,
 		log:    log,
 		router: router,
+		ctx:    ctx,
 
 		homeRoute: homeRoute,
 		corsConf:  cors.DefaultConfig(),
@@ -75,12 +83,31 @@ func (r *HttpEngine) Run() error {
 	router := r.router
 
 	port := conf.Int("app.port")
-	err := router.Run(fmt.Sprintf(":%d", port))
-	if err != nil {
-		return err
-	}
+	addr := fmt.Sprintf(":%d", port)
 	log.Infof("app running on port: %d", port)
 
+	srv := &http.Server{
+		Addr:    addr,
+		Handler: router,
+	}
+
+	go func() {
+		// service connections
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen: %s\n", err)
+		}
+	}()
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	ctx := r.ctx.Ctx
+	cancel := r.ctx.Cancel
+
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatal("Server Shutdown:", err)
+	}
+	log.Infof("server exiting")
 	return nil
 }
 func (r *HttpEngine) Register() {

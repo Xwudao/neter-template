@@ -74,6 +74,7 @@ func (m *MainApp) cors() {
 	m.http.SetExposeHeaders(exposeHeaders)
 	m.http.SetMethods(methods)
 	m.http.SetMaxAge(maxAge)
+
 	m.http.ConfigCors()
 	//config cors end
 }
@@ -94,8 +95,11 @@ func NewMainApp(http *routes.HttpEngine, logger *zap.SugaredLogger, conf *koanf.
 		cron:       cron,
 		conf:       conf,
 	}
+
 	cleanup := func() {
+		logger.Infof("begin to cleanup")
 		_ = m.cron.Close()
+		logger.Infof("cleanup done")
 	}
 
 	return m, cleanup

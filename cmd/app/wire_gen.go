@@ -30,10 +30,11 @@ func mainApp() (*cmd.MainApp, func(), error) {
 		return nil, nil, err
 	}
 	engine := routes.NewEngine(koanf, sugaredLogger)
+	appContext := core.NewAppContext()
 	client := jwt.NewClient(koanf)
 	homeBiz := biz.NewHomeBiz()
 	homeRoute := v1.NewHomeRoute(engine, client, koanf, homeBiz)
-	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, homeRoute)
+	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, appContext, homeRoute)
 	if err != nil {
 		return nil, nil, err
 	}
