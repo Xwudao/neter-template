@@ -81,7 +81,7 @@ func (m *MainApp) cors() {
 func (m *MainApp) Run() error {
 	m.initSystem.InitConfig()
 	m.cron.Run()
-	m.cors()
+	m.cors() //this must be set before Register method
 	m.http.Register()
 	return m.http.Run()
 }

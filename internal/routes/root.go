@@ -33,6 +33,7 @@ func NewEngine(conf *koanf.Koanf, log *zap.SugaredLogger) *gin.Engine {
 	}
 
 	r := gin.New()
+	_ = r.SetTrustedProxies(nil) // you can set multiple proxies with , to split them
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery(), mdw.LoggerMiddleware(logFunc))
 
