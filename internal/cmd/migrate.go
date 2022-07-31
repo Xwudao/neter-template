@@ -79,6 +79,9 @@ var upCmd = &cobra.Command{
 			panic(err)
 		}
 		defer cleanup()
+
+		upAll, _ := cmd.Flags().GetBool("all")
+
 		conf := app.Conf
 		log := app.Log
 		dialect := conf.String("db.dialect")
@@ -95,7 +98,11 @@ var upCmd = &cobra.Command{
 			log.Fatalf("failed creating migrate: %v", err)
 		}
 
-		err = m.Up()
+		if upAll {
+			err = m.Up()
+		} else {
+			err = m.Steps(1)
+		}
 		if err != nil {
 			log.Errorf("failed creating migrate: %v", err)
 			return
@@ -115,6 +122,9 @@ var downCmd = &cobra.Command{
 			panic(err)
 		}
 		defer cleanup()
+
+		downAll, _ := cmd.Flags().GetBool("all")
+
 		conf := app.Conf
 		log := app.Log
 		dialect := conf.String("db.dialect")
@@ -131,7 +141,11 @@ var downCmd = &cobra.Command{
 			log.Fatalf("failed creating migrate: %v", err)
 		}
 
-		err = m.Down()
+		if downAll {
+			err = m.Down()
+		} else {
+			err = m.Steps(-1)
+		}
 		if err != nil {
 			log.Errorf("failed creating migrate: %v", err)
 			return
@@ -156,6 +170,9 @@ func init() {
 	// migrateCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	migrateCmd.Flags().StringP("name", "n", "", "the migration name for this migrate.")
-
 	_ = migrateCmd.MarkFlagRequired("name")
+
+	upCmd.Flags().BoolP("all", "a", false, "up all migrations")
+
+	downCmd.Flags().BoolP("all", "a", false, "down all migrations")
 }
