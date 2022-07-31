@@ -88,7 +88,7 @@ var upCmd = &cobra.Command{
 		password := conf.String("db.password")
 		database := conf.String("db.database")
 
-		dsn := fmt.Sprintf("%s://%s:%s@tcp(%s:%s)/%s", dialect, username, password, host, port, database)
+		dsn := fmt.Sprintf("%s://%s:%s@tcp(%s:%s)/%s?multiStatements=true", dialect, username, password, host, port, database)
 
 		m, err := gomigrate.New(fmt.Sprintf("file://%s", "migrations"), dsn)
 		if err != nil {
@@ -124,7 +124,7 @@ var downCmd = &cobra.Command{
 		password := conf.String("db.password")
 		database := conf.String("db.database")
 
-		dsn := fmt.Sprintf("%s://%s:%s@tcp(%s:%s)/%s", dialect, username, password, host, port, database)
+		dsn := fmt.Sprintf("%s://%s:%s@tcp(%s:%s)/%s?multiStatements=true", dialect, username, password, host, port, database)
 
 		m, err := gomigrate.New(fmt.Sprintf("file://%s", "migrations"), dsn)
 		if err != nil {
