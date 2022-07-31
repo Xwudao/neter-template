@@ -15,6 +15,13 @@ func NewRtnStatus(code int, message string) *RtnStatus {
 	return &RtnStatus{Code: code, Message: message}
 }
 
+func NewRtnWithErr(err error) *RtnStatus {
+	return &RtnStatus{
+		Code:    0,
+		Message: err.Error(),
+	}
+}
+
 var (
 	Success = &RtnStatus{200, "请求成功"}
 	Fail    = &RtnStatus{0, "请求失败"}
