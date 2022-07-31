@@ -11,6 +11,10 @@ type RtnStatus struct {
 	Message string `json:"message"`
 }
 
+func NewRtnStatus(code int, message string) *RtnStatus {
+	return &RtnStatus{Code: code, Message: message}
+}
+
 var (
 	Success = &RtnStatus{200, "请求成功"}
 	Fail    = &RtnStatus{0, "请求失败"}
