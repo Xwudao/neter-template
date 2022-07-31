@@ -53,10 +53,10 @@ func (m *MainApp) cors() {
 	for i := 0; i < len(origins); i++ {
 		re, err := regexp.Compile(origins[i])
 		if err != nil {
-			m.logger.Warnf("cors.allow_origin[%s] is invalid, skip it", origins[i])
+			m.logger.Warnf("cors.allowOrigin[%s] is invalid, skip it", origins[i])
 			continue
 		}
-		m.logger.Debugf("cors.allow_origin[%s] is valid", origins[i])
+		m.logger.Debugf("cors.allowOrigin[%s] is valid", origins[i])
 		originMap[origins[i]] = re
 	}
 
@@ -65,7 +65,7 @@ func (m *MainApp) cors() {
 			if v.MatchString(origin) {
 				return true
 			}
-			m.logger.Debugf("cors.allow_origin[%s] is not match origin[%s]", k, origin)
+			m.logger.Debugf("cors.allowOrigin[%s] is not match origin[%s]", k, origin)
 		}
 		return false
 	})
