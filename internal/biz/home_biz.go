@@ -3,6 +3,7 @@ package biz
 import "fmt"
 
 type HomeBiz struct {
+	ur UserRepository
 }
 
 func NewHomeBiz() *HomeBiz {
