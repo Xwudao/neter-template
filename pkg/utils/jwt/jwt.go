@@ -40,6 +40,10 @@ func (c *Client) Parse(tokenString string) (jwt.MapClaims, error) {
 		return []byte(c.conf.MustString("jwt.secret")), nil
 	})
 
+	if err != nil {
+		return nil, err
+	}
+
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		return claims, nil
 	}
