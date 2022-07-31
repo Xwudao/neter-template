@@ -11,8 +11,8 @@ import (
 	"ariga.io/atlas/sql/sqltool"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql/schema"
-	"entgo.io/ent/entc/integration/migrate/versioned/migrate"
 	"github.com/Xwudao/neter-template/internal/core"
+	"github.com/Xwudao/neter-template/internal/data/ent/migrate"
 
 	gomigrate "github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/mysql"
