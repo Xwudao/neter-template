@@ -2,17 +2,17 @@
 
 This is my third attempt.
 
-I just want made an easy to use, easy to maintenance.
+I just want made an easy to use, easy to maintenance template.
 
-So far, I am very satisfied with the project.
+So far, I am very satisfied with this project.
 
 # Features
 
 - wire - injects dependencies
 - ent - database orm
 - gin - router
-- config - koanf
-- logger - zap
+- koanf - config manager
+- zap - the logger
 - and so on...
     - mail
     - ...
