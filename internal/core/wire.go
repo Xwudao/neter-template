@@ -10,7 +10,7 @@ import (
 	"github.com/Xwudao/neter-template/pkg/logger"
 )
 
-func CoreApp() (*App, func(), error) {
+func CmdApp() (*App, func(), error) {
 	panic(wire.Build(NewApp, logger.NewLogger, config.NewConfig))
 }
 

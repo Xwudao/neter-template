@@ -15,6 +15,7 @@ db:
   username: root
   password: root
   database: ent-demo
+  tablePrefix: ""
   devDsn: mysql://root:root@:3306/dev-ent
 
 jwt:

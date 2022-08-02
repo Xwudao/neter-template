@@ -13,7 +13,7 @@ import (
 
 // Injectors from wire.go:
 
-func CoreApp() (*App, func(), error) {
+func CmdApp() (*App, func(), error) {
 	koanf, err := config.NewConfig()
 	if err != nil {
 		return nil, nil, err
