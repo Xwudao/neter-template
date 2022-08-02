@@ -58,8 +58,11 @@ var migrateCmd = &cobra.Command{
 			schema.WithDialect(dialect.MySQL),           // Ent dialect to use
 			schema.WithFormatter(sqltool.GolangMigrateFormatter),
 		}
-		// Generate migrations using Atlas support for TiDB (note the Ent dialect option passed above).
-		err = migrate.NamedDiff(ctx, dsn, migrateName, opts...)
+		if migrateName == "" {
+			err = migrate.Diff(ctx, dsn, opts...)
+		} else {
+			err = migrate.NamedDiff(ctx, dsn, migrateName, opts...)
+		}
 		if err != nil {
 			log.Fatalf("failed generating migration file: %v", err)
 		}
@@ -171,7 +174,7 @@ func init() {
 	// migrateCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	migrateCmd.Flags().StringP("name", "n", "", "the migration name for this migrate.")
-	_ = migrateCmd.MarkFlagRequired("name")
+	//_ = migrateCmd.MarkFlagRequired("name")
 
 	upCmd.Flags().BoolP("all", "a", false, "up all migrations")
 
