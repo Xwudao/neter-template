@@ -11,6 +11,7 @@ import (
 	"ariga.io/atlas/sql/sqltool"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql/schema"
+
 	"github.com/Xwudao/neter-template/internal/core"
 	"github.com/Xwudao/neter-template/internal/data/ent/migrate"
 
@@ -26,7 +27,7 @@ var migrateCmd = &cobra.Command{
 	Use:   "migrate",
 	Short: "migrate database",
 	Run: func(cmd *cobra.Command, args []string) {
-		app, cleanup, err := core.CoreApp()
+		app, cleanup, err := core.CmdApp()
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -74,7 +75,7 @@ var upCmd = &cobra.Command{
 	Use:   "up",
 	Short: "up database",
 	Run: func(cmd *cobra.Command, args []string) {
-		app, cleanup, err := core.CoreApp()
+		app, cleanup, err := core.CmdApp()
 		if err != nil {
 			panic(err)
 		}
@@ -117,7 +118,7 @@ var downCmd = &cobra.Command{
 	Use:   "down",
 	Short: "down database",
 	Run: func(cmd *cobra.Command, args []string) {
-		app, cleanup, err := core.CoreApp()
+		app, cleanup, err := core.CmdApp()
 		if err != nil {
 			panic(err)
 		}

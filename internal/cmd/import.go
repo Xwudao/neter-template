@@ -16,7 +16,7 @@ var importCmd = &cobra.Command{
 	Short: "this is command is an example",
 	Long:  `you can learn how to use dependency in sub command.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		f, clear, err := core.CoreApp()
+		f, clear, err := core.CmdApp()
 		if err != nil {
 			panic("init dependency error")
 		}
