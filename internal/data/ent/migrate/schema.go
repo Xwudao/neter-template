@@ -3,27 +3,32 @@
 package migrate
 
 import (
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/dialect/sql/schema"
 	"entgo.io/ent/schema/field"
 )
 
 var (
-	// UsersColumns holds the columns for the "users" table.
-	UsersColumns = []*schema.Column{
+	// PrefixUsersColumns holds the columns for the "prefix_users" table.
+	PrefixUsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "name", Type: field.TypeString},
+		{Name: "username", Type: field.TypeString},
+		{Name: "role", Type: field.TypeString, Default: "user"},
 	}
-	// UsersTable holds the schema information for the "users" table.
-	UsersTable = &schema.Table{
-		Name:       "users",
-		Columns:    UsersColumns,
-		PrimaryKey: []*schema.Column{UsersColumns[0]},
+	// PrefixUsersTable holds the schema information for the "prefix_users" table.
+	PrefixUsersTable = &schema.Table{
+		Name:       "prefix_users",
+		Columns:    PrefixUsersColumns,
+		PrimaryKey: []*schema.Column{PrefixUsersColumns[0]},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		UsersTable,
+		PrefixUsersTable,
 	}
 )
 
 func init() {
+	PrefixUsersTable.Annotation = &entsql.Annotation{
+		Table: "prefix_users",
+	}
 }

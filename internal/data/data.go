@@ -3,14 +3,15 @@ package data
 import (
 	"fmt"
 
-	"github.com/Xwudao/neter-template/internal/data/ent"
 	"github.com/knadh/koanf"
+
+	"github.com/Xwudao/neter-template/internal/data/ent"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 type Data struct {
-	client *ent.Client
+	Client *ent.Client
 }
 
 func NewData(conf *koanf.Koanf) (*Data, error) {
@@ -28,5 +29,5 @@ func NewData(conf *koanf.Koanf) (*Data, error) {
 		return nil, err
 	}
 
-	return &Data{client: client}, nil
+	return &Data{Client: client}, nil
 }

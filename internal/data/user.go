@@ -15,5 +15,5 @@ func NewUserRepository(ctx *core.AppContext, data *Data) biz.UserRepository {
 }
 
 func (ur *userRepository) CreateUser(name string) error {
-	return ur.data.client.User.Create().SetName(name).Exec(ur.ctx.Ctx)
+	return ur.data.Client.User.Create().SetUsername(name).Exec(ur.ctx.Ctx)
 }

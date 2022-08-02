@@ -19,3 +19,15 @@ const (
 	RequestError Reason = iota
 	RequestSuccess
 )
+
+//keys
+
+const (
+	KeyUser          = "user"
+	KeyAuthorization = "Authorization"
+	KeyBearer        = "Bearer "
+	KeyUserInfo      = "userInfo"
+	KeyAdminUser     = "admin"
+	KeyDebug         = "debug"
+	KeyRelease       = "release"
+)
