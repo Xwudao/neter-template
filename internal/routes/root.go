@@ -38,7 +38,7 @@ func NewEngine(conf *koanf.Koanf, log *zap.SugaredLogger) *gin.Engine {
 	}
 
 	r := gin.New()
-	_ = r.SetTrustedProxies(nil) // you can set multiple proxies with , to split them
+	_ = r.SetTrustedProxies(nil)
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery(), mdw.LoggerMiddleware(logFunc))
 
@@ -53,7 +53,7 @@ type HttpEngine struct {
 
 	corsConf cors.Config
 
-	homeRoute *v1.HomeRoute
+	v1UserRoute *v1.UserRoute
 }
 
 func NewHttpEngine(
@@ -61,17 +61,17 @@ func NewHttpEngine(
 	conf *koanf.Koanf,
 	log *zap.SugaredLogger,
 	ctx *core.AppContext,
-	homeRoute *v1.HomeRoute,
+	v1UserRoute *v1.UserRoute,
 ) (*HttpEngine, error) {
 
 	he := &HttpEngine{
-		conf:   conf,
-		log:    log,
-		router: router,
-		ctx:    ctx,
+		conf:     conf,
+		log:      log,
+		router:   router,
+		ctx:      ctx,
+		corsConf: cors.DefaultConfig(),
 
-		homeRoute: homeRoute,
-		corsConf:  cors.DefaultConfig(),
+		v1UserRoute: v1UserRoute,
 	}
 
 	return he, nil
@@ -92,7 +92,7 @@ func (r *HttpEngine) Run() error {
 	}
 
 	go func() {
-		// service connections
+
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %s\n", err)
 		}
@@ -111,7 +111,7 @@ func (r *HttpEngine) Run() error {
 	return nil
 }
 func (r *HttpEngine) Register() {
-	r.homeRoute.Reg()
+	r.v1UserRoute.Reg()
 }
 
 func (r *HttpEngine) ConfigCors() {

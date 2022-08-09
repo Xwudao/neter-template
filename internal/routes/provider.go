@@ -6,4 +6,4 @@ import (
 	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
 )
 
-var ProviderRouteSet = wire.NewSet(NewEngine, NewHttpEngine, v1.NewHomeRoute)
+var ProviderRouteSet = wire.NewSet(NewEngine, NewHttpEngine, v1.NewUserRoute)

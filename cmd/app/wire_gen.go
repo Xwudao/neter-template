@@ -15,7 +15,6 @@ import (
 	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/Xwudao/neter-template/pkg/logger"
 	"github.com/Xwudao/neter-template/pkg/utils/cron"
-	"github.com/Xwudao/neter-template/pkg/utils/jwt"
 )
 
 // Injectors from wire.go:
@@ -31,10 +30,9 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	}
 	engine := routes.NewEngine(koanf, sugaredLogger)
 	appContext := core.NewAppContext()
-	client := jwt.NewClient(koanf)
-	homeBiz := biz.NewHomeBiz()
-	homeRoute := v1.NewHomeRoute(engine, client, koanf, homeBiz)
-	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, appContext, homeRoute)
+	userBiz := biz.NewUserBiz()
+	userRoute := v1.NewUserRoute(engine, userBiz, koanf)
+	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, appContext, userRoute)
 	if err != nil {
 		return nil, nil, err
 	}
