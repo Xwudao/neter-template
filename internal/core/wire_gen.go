@@ -27,17 +27,17 @@ func CmdApp() (*App, func(), error) {
 	}, nil
 }
 
-func TestApp() (*TestManager, func(), error) {
-	koanf, err := config.NewTestConfig()
-	if err != nil {
-		return nil, nil, err
-	}
-	sugaredLogger, err := logger.NewLogger(koanf)
+func TestApp() (*Test, func(), error) {
+	sugaredLogger, err := logger.NewTestLogger()
 	if err != nil {
 		return nil, nil, err
 	}
 	appContext := NewTestAppContext()
-	testManager := NewTestApp(sugaredLogger, appContext, koanf)
-	return testManager, func() {
+	koanf, err := config.NewTestConfig()
+	if err != nil {
+		return nil, nil, err
+	}
+	test := NewTestApp(sugaredLogger, appContext, koanf)
+	return test, func() {
 	}, nil
 }
