@@ -1,0 +1,3 @@
+mail:
+  from: "xx@example.com"
+  to: "yy@example.com"

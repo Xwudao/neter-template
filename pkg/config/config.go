@@ -40,12 +40,33 @@ func NewConfig() (*koanf.Koanf, error) {
 func NewTestConfig() (*koanf.Koanf, error) {
 
 	dir, _ := os.Getwd()
-	p := filepath.Join(dir, "mock/mock.json")
 	var k = koanf.New(".")
-	//use env
-	if err := k.Load(file.Provider(p), json.Parser()); err != nil {
-		log.Fatalf("error loading config: %v", err)
+	paths := []string{
+		filepath.Join(dir, "config.yml"),
+		filepath.Join(dir, "config.json"),
+		filepath.Join(dir, "testdata/config.yml"),
+		filepath.Join(dir, "testdata/config.json"),
 	}
+	var success = 0
+	for _, path := range paths {
+		var err error
+		switch filepath.Ext(path) {
+		case ".yml", ".yaml":
+			err = k.Load(file.Provider(path), yaml.Parser())
+		case ".json":
+			err = k.Load(file.Provider(path), json.Parser())
+		}
+		if err == nil {
+			success++
+		}
+	}
+	if success == 0 {
+		log.Fatalf("no config file found in %v", paths)
+	}
+
+	//if err := k.Load(file.Provider(p), json.Parser()); err != nil {
+	//	log.Fatalf("error loading config: %v", err)
+	//}
 
 	return k, nil
 }

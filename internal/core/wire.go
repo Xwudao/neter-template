@@ -14,11 +14,11 @@ func CmdApp() (*App, func(), error) {
 	panic(wire.Build(NewApp, logger.NewLogger, config.NewConfig))
 }
 
-func TestApp() (*TestManager, func(), error) {
+func TestApp() (*Test, func(), error) {
 	panic(wire.Build(
 		NewTestApp,
 		NewTestAppContext,
 		config.NewTestConfig,
-		logger.NewLogger,
+		logger.NewTestLogger,
 	))
 }

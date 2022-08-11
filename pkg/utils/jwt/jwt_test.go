@@ -3,18 +3,23 @@ package jwt
 import (
 	"testing"
 
-	"github.com/go-playground/assert/v2"
+	"github.com/stretchr/testify/assert"
 
-	"github.com/Xwudao/neter-template/pkg/config"
+	"github.com/Xwudao/neter-template/internal/core"
 )
 
 func TestJwtClient(t *testing.T) {
-	koanf, err := config.NewConfig()
+	app, cleanup, err := core.TestApp()
+	defer cleanup()
 	assert.Equal(t, nil, err)
-	client := NewClient(koanf)
+
+	client := NewClient(app.Conf)
 	token, err := client.Generate(1)
 	assert.Equal(t, nil, err)
 	t.Logf("token: %s\n", token)
+	parse, err := client.Parse(token)
+	assert.Equal(t, nil, err)
+	t.Logf("parse: %+v\n", parse)
 	assert.Equal(t, nil, client.Validate(token))
 
 }

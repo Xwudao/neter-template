@@ -46,6 +46,13 @@ func NewLogger(conf *koanf.Koanf) (*zap.SugaredLogger, error) {
 	log.Infof("logger init")
 	return log, nil
 }
+func NewTestLogger() (*zap.SugaredLogger, error) {
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		return nil, err
+	}
+	return logger.Sugar(), nil
+}
 
 func NewCore(level, format, logPath, linkName string) (zapcore.Core, error) {
 	var lvl = zap.DebugLevel
