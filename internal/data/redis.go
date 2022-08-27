@@ -16,7 +16,7 @@ func NewRedisClient(conf *koanf.Koanf) (*redis.Client, error) {
 	ctx := context.Background()
 	_, err := client.Ping(ctx).Result()
 
-	if err != redis.Nil {
+	if err != nil && err != redis.Nil {
 		return nil, err
 	}
 	return client, nil
