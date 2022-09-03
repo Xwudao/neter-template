@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/knadh/koanf"
-	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	"github.com/natefinch/lumberjack/v3"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -97,19 +97,26 @@ func NewEncoder(format string) zapcore.Encoder {
 func NewWrite(logPath string, linkName string) (zapcore.WriteSyncer, error) {
 	//return zapcore.AddSync(os.Stdout)
 	win := runtime.GOOS == "windows"
-	var opts []rotatelogs.Option
-	opts = append(opts, rotatelogs.WithMaxAge(time.Hour*24*7))
-	opts = append(opts, rotatelogs.WithRotationTime(time.Hour*24))
-	opts = append(opts, rotatelogs.WithRotationSize(1024*1024*10))
 
-	if !win {
-		opts = append(opts, rotatelogs.WithLinkName(linkName))
+	logFile := filepath.Join(logPath, "current.log")
+	options := &lumberjack.Options{
+		MaxAge:     30,
+		MaxBackups: 30,
+		LocalTime:  true,
+		Compress:   false,
 	}
-	logFile := filepath.Join(logPath, "log-%Y%m%d.log")
-	writer, err := rotatelogs.New(logFile, opts...)
+	//20MB
+	var size int64 = 20 * 1024 * 1024
+
+	roller, err := lumberjack.NewRoller(logFile, size, options)
 	if err != nil {
 		return nil, err
 	}
-	coreWriter := io.MultiWriter(writer, os.Stdout)
+
+	if !win {
+		_ = os.Symlink(logFile, linkName)
+	}
+
+	coreWriter := io.MultiWriter(roller, os.Stdout)
 	return zapcore.AddSync(coreWriter), nil
 }
