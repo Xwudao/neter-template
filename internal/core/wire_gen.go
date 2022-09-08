@@ -22,7 +22,11 @@ func CmdApp() (*App, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	app := NewApp(sugaredLogger, koanf)
+	appConfig, err := config.NewConfig(koanf)
+	if err != nil {
+		return nil, nil, err
+	}
+	app := NewApp(sugaredLogger, appConfig, koanf)
 	return app, func() {
 	}, nil
 }

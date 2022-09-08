@@ -32,9 +32,9 @@ cors:
 mail:
   from: xx
   host: xx
-  port: xx
+  port: 456
   username: xx
   password: xx
-  keepAlive: true,
+  keepAlive: true
   connectTimeout: 10s
   sendTimeout: 10s

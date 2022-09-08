@@ -24,19 +24,19 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
+	appConfig, err := config.NewConfig(koanf)
+	if err != nil {
+		return nil, nil, err
+	}
 	sugaredLogger, err := logger.NewLogger(koanf)
 	if err != nil {
 		return nil, nil, err
 	}
-	engine := routes.NewEngine(koanf, sugaredLogger)
-	configConfig, err := config.NewConfig(koanf)
-	if err != nil {
-		return nil, nil, err
-	}
+	engine := routes.NewEngine(appConfig, sugaredLogger)
 	appContext := core.NewAppContext()
 	userBiz := biz.NewUserBiz()
 	userRoute := v1.NewUserRoute(engine, userBiz, koanf)
-	httpEngine, err := routes.NewHttpEngine(engine, configConfig, sugaredLogger, appContext, userRoute)
+	httpEngine, err := routes.NewHttpEngine(engine, appConfig, sugaredLogger, appContext, userRoute)
 	if err != nil {
 		return nil, nil, err
 	}

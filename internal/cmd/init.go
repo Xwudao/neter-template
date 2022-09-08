@@ -8,9 +8,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/knadh/koanf/parsers/yaml"
-
 	"github.com/Xwudao/neter-template/pkg/config"
+	"github.com/knadh/koanf/parsers/yaml"
 	"github.com/spf13/cobra"
 )
 
@@ -40,21 +39,24 @@ var configCmd = &cobra.Command{
 			log.Fatal("config file already exist")
 		}
 		defer ff.Close()
-
-		k, err := config.NewKoanf()
 		if err != nil {
 			log.Fatal(err)
 		}
 		parser := yaml.Parser()
-		data, err := k.Marshal(parser)
+		koanf, err := config.NewKoanf()
+		if err != nil {
+			log.Fatal(err)
+		}
+		data, err := koanf.Marshal(parser)
 		if err != nil {
 			log.Fatal(err)
 		}
 		_, err = ff.Write(data)
 		if err != nil {
 			log.Fatal(err)
+		} else {
+			log.Println("config file created")
 		}
-		log.Println("config file created")
 	},
 }
 

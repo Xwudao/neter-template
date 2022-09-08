@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/knadh/koanf"
 	"github.com/knadh/koanf/parsers/json"
@@ -12,7 +13,7 @@ import (
 	"github.com/knadh/koanf/providers/file"
 )
 
-type Config struct {
+type AppConfig struct {
 	App struct {
 		Port int    `koanf:"port,omitempty"`
 		Mode string `koanf:"mode,omitempty"`
@@ -47,19 +48,19 @@ type Config struct {
 		Db       int    `koanf:"db,omitempty"`
 	} `koanf:"redis,omitempty"`
 	Mail struct {
-		From           string `koanf:"from,omitempty"`
-		Host           string `koanf:"host,omitempty"`
-		Port           string `koanf:"port,omitempty"`
-		Username       string `koanf:"username,omitempty"`
-		Password       string `koanf:"password,omitempty"`
-		KeepAlive      string `koanf:"keepAlive,omitempty"`
-		ConnectTimeout string `koanf:"connectTimeout,omitempty"`
-		SendTimeout    string `koanf:"sendTimeout,omitempty"`
+		From           string        `koanf:"from,omitempty"`
+		Host           string        `koanf:"host,omitempty"`
+		Port           int           `koanf:"port,omitempty"`
+		Username       string        `koanf:"username,omitempty"`
+		Password       string        `koanf:"password,omitempty"`
+		KeepAlive      bool          `koanf:"keepAlive,omitempty"`
+		ConnectTimeout time.Duration `koanf:"connectTimeout,omitempty"`
+		SendTimeout    time.Duration `koanf:"sendTimeout,omitempty"`
 	} `koanf:"mail,omitempty"`
 }
 
-func NewConfig(k *koanf.Koanf) (*Config, error) {
-	var c = &Config{}
+func NewConfig(k *koanf.Koanf) (*AppConfig, error) {
+	var c = &AppConfig{}
 	if err := k.Unmarshal("", c); err != nil {
 		return nil, err
 	}
@@ -126,48 +127,6 @@ func NewTestConfig() (*koanf.Koanf, error) {
 }
 
 func setDefault(k *koanf.Koanf) {
-	/*
-	   app:
-	     port: 8080
-	     mode: debug
-
-	   log:
-	     level: debug
-	     format: json
-	     linkName: current.log
-	     path: ./logs
-
-	   db:
-	     dialect: mysql
-	     host: 127.0.0.1
-	     port: 3306
-	     username: root
-	     password: root
-	     database: ent-demo
-	     tablePrefix: ""
-	     devDsn: mysql://root:root@:3306/dev-ent
-
-	   jwt:
-	     secret: "secret"
-
-
-	   cors:
-	     allowOrigin:
-	       - http://localhost:*
-	       - http://127.0.0.1:*
-	     allowCredentials: true
-	     maxAge: 24h
-
-	   mail:
-	     from: xx
-	     host: xx
-	     port: xx
-	     username: xx
-	     password: xx
-	     keepAlive: true,
-	     connectTimeout: 10s
-	     sendTimeout: 10s
-	*/
 	_ = k.Load(confmap.Provider(map[string]interface{}{
 		"cors.allowOrigin":      []string{"http://localhost:*", "http://127.0.0.1:*"},
 		"cors.allowCredentials": true,
@@ -198,7 +157,7 @@ func setDefault(k *koanf.Koanf) {
 
 		"mail.from":           "xx",
 		"mail.host":           "xx",
-		"mail.port":           "xx",
+		"mail.port":           466,
 		"mail.username":       "xx",
 		"mail.password":       "xx",
 		"mail.keepAlive":      true,

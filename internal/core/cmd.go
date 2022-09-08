@@ -1,17 +1,27 @@
 package core
 
 import (
+	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/knadh/koanf"
 	"go.uber.org/zap"
 )
 
 type App struct {
-	Log  *zap.SugaredLogger
-	Conf *koanf.Koanf
+	Log    *zap.SugaredLogger
+	Koanf  *koanf.Koanf
+	Config *config.AppConfig
 }
 
-func NewApp(log *zap.SugaredLogger, conf *koanf.Koanf) *App {
-	return &App{Log: log, Conf: conf}
+func NewApp(
+	log *zap.SugaredLogger,
+	config *config.AppConfig,
+	conf *koanf.Koanf,
+) *App {
+	return &App{
+		Log:    log,
+		Koanf:  conf,
+		Config: config,
+	}
 }
 
 // Test for test env

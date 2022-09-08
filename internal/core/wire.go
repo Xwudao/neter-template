@@ -11,7 +11,12 @@ import (
 )
 
 func CmdApp() (*App, func(), error) {
-	panic(wire.Build(NewApp, logger.NewLogger, config.NewKoanf))
+	panic(wire.Build(
+		NewApp,
+		logger.NewLogger,
+		config.NewKoanf,
+		config.NewConfig,
+	))
 }
 
 func TestApp() (*Test, func(), error) {

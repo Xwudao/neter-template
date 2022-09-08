@@ -1,6 +1,5 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -32,7 +31,7 @@ var migrateCmd = &cobra.Command{
 			fmt.Println(err)
 			return
 		}
-		conf := app.Conf
+		conf := app.Koanf
 		log := app.Log
 
 		dsn := conf.String("db.devDsn")
@@ -86,7 +85,7 @@ var upCmd = &cobra.Command{
 
 		upAll, _ := cmd.Flags().GetBool("all")
 
-		conf := app.Conf
+		conf := app.Koanf
 		log := app.Log
 		dialect := conf.String("db.dialect")
 		host := conf.String("db.host")
@@ -129,7 +128,7 @@ var downCmd = &cobra.Command{
 
 		downAll, _ := cmd.Flags().GetBool("all")
 
-		conf := app.Conf
+		conf := app.Koanf
 		log := app.Log
 		dialect := conf.String("db.dialect")
 		host := conf.String("db.host")

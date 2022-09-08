@@ -1,6 +1,5 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -22,7 +21,7 @@ var importCmd = &cobra.Command{
 		}
 
 		f.Log.Infof("importing...")
-		f.Conf.Print()
+		f.Koanf.Print()
 
 		defer clear()
 

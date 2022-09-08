@@ -5,7 +5,7 @@ import (
 	"crypto/tls"
 	"time"
 
-	"github.com/knadh/koanf"
+	"github.com/Xwudao/neter-template/pkg/config"
 	mail "github.com/xhit/go-simple-mail/v2"
 	"go.uber.org/zap"
 
@@ -38,15 +38,14 @@ func NewConfig(host string, port int, username string, password string, keepAliv
 	return c
 }
 
-func NewConfigWithConf(conf *koanf.Koanf) *Config {
-	host := conf.String("mail.host")
-	port := conf.Int("mail.port")
-	username := conf.String("mail.username")
-	password := conf.String("mail.password")
-
-	keepAlive := conf.Bool("mail.keepAlive")
-	connectTimeout := conf.Duration("mail.connectTimeout")
-	sendTimeout := conf.Duration("mail.sendTimeout")
+func NewConfigWithConf(cf *config.AppConfig) *Config {
+	host := cf.Mail.Host
+	port := cf.Mail.Port
+	username := cf.Mail.Username
+	password := cf.Mail.Password
+	keepAlive := cf.Mail.KeepAlive
+	connectTimeout := cf.Mail.ConnectTimeout
+	sendTimeout := cf.Mail.SendTimeout
 
 	c := NewConfig(host, port, username, password, keepAlive, connectTimeout, sendTimeout)
 	return c

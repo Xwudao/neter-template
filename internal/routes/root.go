@@ -15,13 +15,11 @@ import (
 	"github.com/gin-contrib/cors"
 
 	"github.com/gin-gonic/gin"
-	"github.com/knadh/koanf"
 	"go.uber.org/zap"
 )
 
-func NewEngine(conf *koanf.Koanf, log *zap.SugaredLogger) *gin.Engine {
-
-	mode := conf.String("app.mode")
+func NewEngine(conf *config.AppConfig, log *zap.SugaredLogger) *gin.Engine {
+	mode := conf.App.Mode
 	if mode != "debug" {
 		gin.SetMode(gin.ReleaseMode)
 	}
@@ -47,7 +45,7 @@ func NewEngine(conf *koanf.Koanf, log *zap.SugaredLogger) *gin.Engine {
 
 type HttpEngine struct {
 	router *gin.Engine
-	conf   *config.Config
+	conf   *config.AppConfig
 	log    *zap.SugaredLogger
 	ctx    *core.AppContext
 
@@ -58,7 +56,7 @@ type HttpEngine struct {
 
 func NewHttpEngine(
 	router *gin.Engine,
-	conf *config.Config,
+	conf *config.AppConfig,
 	log *zap.SugaredLogger,
 	ctx *core.AppContext,
 	v1UserRoute *v1.UserRoute,

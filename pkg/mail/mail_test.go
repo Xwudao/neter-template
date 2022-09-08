@@ -10,13 +10,13 @@ func TestClient_SendEmail(t *testing.T) {
 	//	t.Fatal(err)
 	//}
 	//defer cleanup()
-	//config := NewConfigWithConf(app.Conf)
+	//config := NewConfigWithConf(app.Koanf)
 	//mailClient, err := NewClientWithConf(app.Ctx, app.Logger, config)
 	//
 	//assert.Nil(t, err)
 	//
-	//from := app.Conf.String("mail.from")
-	//to := app.Conf.String("mail.to")
+	//from := app.Koanf.String("mail.from")
+	//to := app.Koanf.String("mail.to")
 	//
 	//assert.NotEmpty(t, from, "mail.from is empty")
 	//assert.NotEmpty(t, to, "mail.to is empty")
