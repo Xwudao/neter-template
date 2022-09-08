@@ -20,7 +20,7 @@ import (
 // Injectors from wire.go:
 
 func mainApp() (*cmd.MainApp, func(), error) {
-	koanf, err := config.NewConfig()
+	koanf, err := config.NewKoanf()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -29,10 +29,14 @@ func mainApp() (*cmd.MainApp, func(), error) {
 		return nil, nil, err
 	}
 	engine := routes.NewEngine(koanf, sugaredLogger)
+	configConfig, err := config.NewConfig(koanf)
+	if err != nil {
+		return nil, nil, err
+	}
 	appContext := core.NewAppContext()
 	userBiz := biz.NewUserBiz()
 	userRoute := v1.NewUserRoute(engine, userBiz, koanf)
-	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, appContext, userRoute)
+	httpEngine, err := routes.NewHttpEngine(engine, configConfig, sugaredLogger, appContext, userRoute)
 	if err != nil {
 		return nil, nil, err
 	}

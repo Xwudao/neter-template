@@ -8,11 +8,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gin-contrib/cors"
-
 	"github.com/Xwudao/neter-template/internal/core"
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
 	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
+	"github.com/Xwudao/neter-template/pkg/config"
+	"github.com/gin-contrib/cors"
 
 	"github.com/gin-gonic/gin"
 	"github.com/knadh/koanf"
@@ -47,7 +47,7 @@ func NewEngine(conf *koanf.Koanf, log *zap.SugaredLogger) *gin.Engine {
 
 type HttpEngine struct {
 	router *gin.Engine
-	conf   *koanf.Koanf
+	conf   *config.Config
 	log    *zap.SugaredLogger
 	ctx    *core.AppContext
 
@@ -58,7 +58,7 @@ type HttpEngine struct {
 
 func NewHttpEngine(
 	router *gin.Engine,
-	conf *koanf.Koanf,
+	conf *config.Config,
 	log *zap.SugaredLogger,
 	ctx *core.AppContext,
 	v1UserRoute *v1.UserRoute,
@@ -82,7 +82,7 @@ func (r *HttpEngine) Run() error {
 	log := r.log
 	router := r.router
 
-	port := conf.Int("app.port")
+	port := conf.App.Port
 	addr := fmt.Sprintf(":%d", port)
 	log.Infof("app running on port: %d", port)
 

@@ -14,7 +14,7 @@ import (
 // Injectors from wire.go:
 
 func CmdApp() (*App, func(), error) {
-	koanf, err := config.NewConfig()
+	koanf, err := config.NewKoanf()
 	if err != nil {
 		return nil, nil, err
 	}
