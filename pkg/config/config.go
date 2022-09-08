@@ -41,6 +41,11 @@ type Config struct {
 		AllowCredentials bool     `koanf:"allowCredentials,omitempty"`
 		MaxAge           string   `koanf:"maxAge,omitempty"`
 	} `koanf:"cors,omitempty"`
+	Redis struct {
+		Addr     string `koanf:"addr,omitempty"`
+		Password string `koanf:"password,omitempty"`
+		Db       int    `koanf:"db,omitempty"`
+	} `koanf:"redis,omitempty"`
 	Mail struct {
 		From           string `koanf:"from,omitempty"`
 		Host           string `koanf:"host,omitempty"`
@@ -186,6 +191,10 @@ func setDefault(k *koanf.Koanf) {
 		"db.devDsn":      "mysql://root:root@:3306/dev-ent",
 
 		"jwt.secret": "secret",
+
+		"redis.addr":     "127.0.0.1:6379",
+		"redis.password": "",
+		"redis.db":       0,
 
 		"mail.from":           "xx",
 		"mail.host":           "xx",
