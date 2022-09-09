@@ -4,6 +4,7 @@
 package main
 
 import (
+	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/google/wire"
 
 	"github.com/Xwudao/neter-template/internal/biz"
@@ -25,5 +26,6 @@ func mainApp() (*cmd.MainApp, func(), error) {
 		core.ProviderCoreSet,
 		biz.ProviderBizSet,
 		routes.ProviderRouteSet,
+		system.ProviderSystemSet,
 	))
 }

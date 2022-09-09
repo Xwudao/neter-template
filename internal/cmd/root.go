@@ -1,17 +1,16 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"regexp"
 
+	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/knadh/koanf"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
-	"github.com/Xwudao/neter-template/internal/core"
 	"github.com/Xwudao/neter-template/internal/routes"
 	"github.com/Xwudao/neter-template/pkg/utils/cron"
 )
@@ -34,7 +33,7 @@ func Execute(run func(cmd *cobra.Command, args []string)) error {
 
 type MainApp struct {
 	http       *routes.HttpEngine
-	initSystem *core.InitSystem
+	initSystem *system.InitSystem
 	cron       *cron.Cron
 	conf       *koanf.Koanf
 	logger     *zap.SugaredLogger
@@ -87,7 +86,7 @@ func (m *MainApp) Run() error {
 	return m.http.Run()
 }
 
-func NewMainApp(http *routes.HttpEngine, logger *zap.SugaredLogger, conf *koanf.Koanf, cron *cron.Cron, initSystem *core.InitSystem) (*MainApp, func()) {
+func NewMainApp(http *routes.HttpEngine, logger *zap.SugaredLogger, conf *koanf.Koanf, cron *cron.Cron, initSystem *system.InitSystem) (*MainApp, func()) {
 	m := &MainApp{
 		logger:     logger,
 		http:       http,

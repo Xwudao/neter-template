@@ -12,6 +12,7 @@ import (
 	"github.com/Xwudao/neter-template/internal/core"
 	"github.com/Xwudao/neter-template/internal/routes"
 	"github.com/Xwudao/neter-template/internal/routes/v1"
+	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/Xwudao/neter-template/pkg/logger"
 	"github.com/Xwudao/neter-template/pkg/utils/cron"
@@ -41,7 +42,7 @@ func mainApp() (*cmd.MainApp, func(), error) {
 		return nil, nil, err
 	}
 	cronCron := cron.NewCron(sugaredLogger)
-	initSystem := core.NewInitSystem(cronCron)
+	initSystem := system.NewInitSystem(cronCron)
 	cmdMainApp, cleanup := cmd.NewMainApp(httpEngine, sugaredLogger, koanf, cronCron, initSystem)
 	return cmdMainApp, func() {
 		cleanup()

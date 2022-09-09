@@ -4,4 +4,4 @@ import (
 	"github.com/google/wire"
 )
 
-var ProviderCoreSet = wire.NewSet(NewInitSystem, NewAppContext)
+var ProviderCoreSet = wire.NewSet(NewAppContext)
