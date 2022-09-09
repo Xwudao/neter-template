@@ -5,6 +5,7 @@ package main
 
 import (
 	"github.com/Xwudao/neter-template/internal/system"
+	"github.com/Xwudao/neter-template/pkg/utils/cron"
 	"github.com/google/wire"
 
 	"github.com/Xwudao/neter-template/internal/biz"
@@ -13,7 +14,6 @@ import (
 	"github.com/Xwudao/neter-template/internal/routes"
 	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/Xwudao/neter-template/pkg/logger"
-	"github.com/Xwudao/neter-template/pkg/utils"
 )
 
 func mainApp() (*cmd.MainApp, func(), error) {
@@ -22,7 +22,7 @@ func mainApp() (*cmd.MainApp, func(), error) {
 		config.NewKoanf,
 		config.NewConfig,
 		logger.NewLogger,
-		utils.ProvideUtilSet,
+		cron.ProviderCronSet,
 		core.ProviderCoreSet,
 		biz.ProviderBizSet,
 		routes.ProviderRouteSet,
