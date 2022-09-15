@@ -100,7 +100,7 @@ func NewWrite(logPath string, linkName string) (zapcore.WriteSyncer, error) {
 
 	logFile := filepath.Join(logPath, "current.log")
 	options := &lumberjack.Options{
-		MaxAge:     30,
+		MaxAge:     time.Hour * 24 * 30,
 		MaxBackups: 30,
 		LocalTime:  true,
 		Compress:   false,
