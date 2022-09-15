@@ -59,6 +59,47 @@ type AppConfig struct {
 	} `koanf:"mail,omitempty"`
 }
 
+func setDefault(k *koanf.Koanf) {
+	_ = k.Load(confmap.Provider(map[string]interface{}{
+		"cors.allowOrigin":      []string{"http://localhost:*", "http://127.0.0.1:*"},
+		"cors.allowCredentials": true,
+		"cors.maxAge":           "24h",
+
+		"app.port":  8080,
+		"app.mode":  "debug",
+		"app.pprof": false,
+
+		"log.level":    "debug",
+		"log.format":   "json",
+		"log.linkName": "current.log",
+		"log.path":     "./logs",
+
+		"db.dialect":     "mysql",
+		"db.host":        "127.0.0.1",
+		"db.port":        3306,
+		"db.username":    "root",
+		"db.password":    "root",
+		"db.database":    "ent-demo",
+		"db.tablePrefix": "",
+		"db.devDsn":      "mysql://root:root@:3306/dev-ent",
+
+		"jwt.secret": "secret",
+
+		"redis.addr":     "127.0.0.1:6379",
+		"redis.password": "",
+		"redis.db":       0,
+
+		"mail.from":           "xx",
+		"mail.host":           "xx",
+		"mail.port":           466,
+		"mail.username":       "xx",
+		"mail.password":       "xx",
+		"mail.keepAlive":      true,
+		"mail.connectTimeout": "10s",
+		"mail.sendTimeout":    "10s",
+	}, "."), nil)
+}
+
 func NewConfig(k *koanf.Koanf) (*AppConfig, error) {
 	var c = &AppConfig{}
 	if err := k.Unmarshal("", c); err != nil {
@@ -124,44 +165,4 @@ func NewTestConfig() (*koanf.Koanf, error) {
 	//}
 
 	return k, nil
-}
-
-func setDefault(k *koanf.Koanf) {
-	_ = k.Load(confmap.Provider(map[string]interface{}{
-		"cors.allowOrigin":      []string{"http://localhost:*", "http://127.0.0.1:*"},
-		"cors.allowCredentials": true,
-		"cors.maxAge":           "24h",
-
-		"app.port": 8080,
-		"app.mode": "debug",
-
-		"log.level":    "debug",
-		"log.format":   "json",
-		"log.linkName": "current.log",
-		"log.path":     "./logs",
-
-		"db.dialect":     "mysql",
-		"db.host":        "127.0.0.1",
-		"db.port":        3306,
-		"db.username":    "root",
-		"db.password":    "root",
-		"db.database":    "ent-demo",
-		"db.tablePrefix": "",
-		"db.devDsn":      "mysql://root:root@:3306/dev-ent",
-
-		"jwt.secret": "secret",
-
-		"redis.addr":     "127.0.0.1:6379",
-		"redis.password": "",
-		"redis.db":       0,
-
-		"mail.from":           "xx",
-		"mail.host":           "xx",
-		"mail.port":           466,
-		"mail.username":       "xx",
-		"mail.password":       "xx",
-		"mail.keepAlive":      true,
-		"mail.connectTimeout": "10s",
-		"mail.sendTimeout":    "10s",
-	}, "."), nil)
 }

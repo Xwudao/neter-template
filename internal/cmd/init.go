@@ -28,34 +28,28 @@ var configCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		f := "config.yml"
 
-		var ff *os.File
-		_, err := os.Stat(f)
+		ff, err := os.OpenFile(f, os.O_CREATE|os.O_RDWR, 0666)
 		if err != nil {
-			ff, err = os.Create(f)
-			if err != nil {
-				log.Fatal(err)
-			}
-		} else {
-			log.Fatal("config file already exist")
+			log.Fatalf("open file error: %v", err)
 		}
+
 		defer ff.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
 		parser := yaml.Parser()
 		koanf, err := config.NewKoanf()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("new koanf err: %s", err)
 		}
+		//_, _ = config.NewConfig(koanf)
 		data, err := koanf.Marshal(parser)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("marshal config err: %s", err)
 		}
+		log.Println(string(data))
 		_, err = ff.Write(data)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("write config err: %s", err)
 		} else {
-			log.Println("config file created")
+			log.Println("write config!")
 		}
 	},
 }
