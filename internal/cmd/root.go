@@ -15,6 +15,14 @@ import (
 	"github.com/Xwudao/neter-template/pkg/utils/cron"
 )
 
+/*type rootCmd struct {
+	cmd *cobra.Command
+}
+
+func newRootCmd() *rootCmd {
+	return &rootCmd{}
+}*/
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "",
@@ -26,12 +34,12 @@ var rootCmd = &cobra.Command{
 	// Run: func(cmd *cobra.Command, args []string) { },
 }
 
-func Execute(run func(cmd *cobra.Command, args []string)) error {
-	rootCmd.Run = run
-	return rootCmd.Execute()
-}
+// func Execute(run func(cmd *cobra.Command, args []string)) error {
+// 	rootCmd.Run = run
+// 	return rootCmd.Execute()
+// }
 
-type MainApp struct {
+type App struct {
 	http       *routes.HttpEngine
 	initSystem *system.InitSystem
 	cron       *cron.Cron
@@ -39,8 +47,8 @@ type MainApp struct {
 	logger     *zap.SugaredLogger
 }
 
-func (m *MainApp) cors() {
-	//config cors
+func (m *App) cors() {
+	// config cors
 	origins := m.conf.Strings("cors.allowOrigin")
 	credentials := m.conf.Bool("cors.allowCredentials")
 	headers := []string{"Origin", "Content-Type", "Accept", "Authorization"}
@@ -75,25 +83,47 @@ func (m *MainApp) cors() {
 	m.http.SetMaxAge(maxAge)
 
 	m.http.ConfigCors()
-	//config cors end
+	// config cors end
 }
 
-func (m *MainApp) Run() error {
+func (m *App) Run() error {
 	m.initSystem.InitConfig()
 	m.cron.Run()
-	m.cors() //this must be set before Register method
+	m.cors() // this must be set before Register method
 	m.http.Register()
 	return m.http.Run()
 }
+func (m *App) Execute() {
+	rootCmd.Run = func(cmd *cobra.Command, args []string) {
+		err := m.Run()
+		if err != nil {
+			panic(err)
+		}
+	}
+	if err := rootCmd.Execute(); err != nil {
+		m.logger.Errorf("execute root command failed: %v", err)
+	}
+}
 
-func NewMainApp(http *routes.HttpEngine, logger *zap.SugaredLogger, conf *koanf.Koanf, cron *cron.Cron, initSystem *system.InitSystem) (*MainApp, func()) {
-	m := &MainApp{
+func NewApp(
+	http *routes.HttpEngine,
+	logger *zap.SugaredLogger,
+	conf *koanf.Koanf,
+	cron *cron.Cron,
+	initSystem *system.InitSystem,
+	migrateCmd *migrateCmd,
+	initCmd *initCmd,
+) (*App, func()) {
+	m := &App{
 		logger:     logger,
 		http:       http,
 		initSystem: initSystem,
 		cron:       cron,
 		conf:       conf,
 	}
+
+	// add sub commands
+	rootCmd.AddCommand(migrateCmd.getCmd(), initCmd.getCmd())
 
 	cleanup := func() {
 		logger.Infof("begin to cleanup")
@@ -104,15 +134,15 @@ func NewMainApp(http *routes.HttpEngine, logger *zap.SugaredLogger, conf *koanf.
 	return m, cleanup
 }
 
-//func Execute() {
+// func Execute() {
 //	err := rootCmd.Execute()
 //	if err != nil {
 //		os.Exit(1)
 //	}
-//}
+// }
 
 func init() {
-	rootCmd.AddCommand(migrateCmd)
+	// rootCmd.AddCommand(migrateCmd)
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
@@ -121,5 +151,5 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

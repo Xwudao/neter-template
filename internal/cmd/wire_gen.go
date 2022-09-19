@@ -4,11 +4,10 @@
 //go:build !wireinject
 // +build !wireinject
 
-package main
+package cmd
 
 import (
 	"github.com/Xwudao/neter-template/internal/biz"
-	"github.com/Xwudao/neter-template/internal/cmd"
 	"github.com/Xwudao/neter-template/internal/core"
 	"github.com/Xwudao/neter-template/internal/routes"
 	"github.com/Xwudao/neter-template/internal/routes/v1"
@@ -18,9 +17,14 @@ import (
 	"github.com/Xwudao/neter-template/pkg/utils/cron"
 )
 
+import (
+	_ "github.com/golang-migrate/migrate/v4/database/mysql"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+)
+
 // Injectors from wire.go:
 
-func mainApp() (*cmd.MainApp, func(), error) {
+func MainApp() (*App, func(), error) {
 	koanf, err := config.NewKoanf()
 	if err != nil {
 		return nil, nil, err
@@ -43,8 +47,13 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	}
 	cronCron := cron.NewCron(sugaredLogger)
 	initSystem := system.NewInitSystem(cronCron)
-	cmdMainApp, cleanup := cmd.NewMainApp(httpEngine, sugaredLogger, koanf, cronCron, initSystem)
-	return cmdMainApp, func() {
+	cmdUpCmd := newUpCmd()
+	cmdDownCmd := newDownCmd()
+	cmdMigrateCmd := newMigrateCmd(cmdUpCmd, cmdDownCmd)
+	cmdConfigCmd := newConfigCmd()
+	cmdInitCmd := newInitCmd(cmdConfigCmd)
+	app, cleanup := NewApp(httpEngine, sugaredLogger, koanf, cronCron, initSystem, cmdMigrateCmd, cmdInitCmd)
+	return app, func() {
 		cleanup()
 	}, nil
 }

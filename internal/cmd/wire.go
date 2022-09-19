@@ -1,7 +1,7 @@
 //go:build wireinject
 // +build wireinject
 
-package main
+package cmd
 
 import (
 	"github.com/Xwudao/neter-template/internal/system"
@@ -9,16 +9,15 @@ import (
 	"github.com/google/wire"
 
 	"github.com/Xwudao/neter-template/internal/biz"
-	"github.com/Xwudao/neter-template/internal/cmd"
 	"github.com/Xwudao/neter-template/internal/core"
 	"github.com/Xwudao/neter-template/internal/routes"
 	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/Xwudao/neter-template/pkg/logger"
 )
 
-func mainApp() (*cmd.MainApp, func(), error) {
+func MainApp() (*App, func(), error) {
 	panic(wire.Build(
-		cmd.NewMainApp,
+		NewApp,
 		config.NewKoanf,
 		config.NewConfig,
 		logger.NewLogger,
@@ -27,5 +26,6 @@ func mainApp() (*cmd.MainApp, func(), error) {
 		biz.ProviderBizSet,
 		routes.ProviderRouteSet,
 		system.ProviderSystemSet,
+		ProvideCmdSet,
 	))
 }

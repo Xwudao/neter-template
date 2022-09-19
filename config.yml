@@ -1,40 +1,39 @@
 app:
-  port: 8080
-  mode: debug
-
-log:
-  level: debug
-  format: json
-  linkName: current.log
-  path: ./logs
-
-db:
-  dialect: mysql
-  host: 127.0.0.1
-  port: 3306
-  username: root
-  password: root
-  database: ent-demo
-  tablePrefix: ""
-  devDsn: mysql://root:root@:3306/dev-ent
-
-jwt:
-  secret: "secret"
-
-
+    mode: debug
+    port: 8080
+    pprof: false
 cors:
-  allowOrigin:
-    - http://localhost:*
-    - http://127.0.0.1:*
-  allowCredentials: true
-  maxAge: 24h
-
+    allowCredentials: true
+    allowOrigin:
+        - http://localhost:*
+        - http://127.0.0.1:*
+    maxAge: 24h
+db:
+    database: ent-demo
+    devDsn: mysql://root:root@:3306/dev-ent
+    dialect: mysql
+    host: 127.0.0.1
+    password: root
+    port: 3306
+    tablePrefix: ""
+    username: root
+jwt:
+    secret: secret
+log:
+    format: json
+    level: debug
+    linkName: current.log
+    path: ./logs
 mail:
-  from: xx
-  host: xx
-  port: 456
-  username: xx
-  password: xx
-  keepAlive: true
-  connectTimeout: 10s
-  sendTimeout: 10s
+    connectTimeout: 10s
+    from: xx
+    host: xx
+    keepAlive: true
+    password: xx
+    port: 456
+    sendTimeout: 10s
+    username: xx
+redis:
+    addr: 127.0.0.1:6379
+    db: 0
+    password: ""
