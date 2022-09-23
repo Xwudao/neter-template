@@ -1,3 +1,3 @@
 package biz
 
-//go:generate neter gen -t biz -n user
+//go:generate nr gen -t biz -n user

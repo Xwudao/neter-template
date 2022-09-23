@@ -1,3 +1,3 @@
 package v1
 
-//go:generate neter gen -t route -n user
+//go:generate nr gen -t route -n user
