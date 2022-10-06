@@ -9,7 +9,6 @@ package main
 import (
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/cmd"
-	"github.com/Xwudao/neter-template/internal/core"
 	"github.com/Xwudao/neter-template/internal/routes"
 	"github.com/Xwudao/neter-template/internal/routes/v1"
 	"github.com/Xwudao/neter-template/internal/system"
@@ -34,7 +33,7 @@ func mainApp() (*cmd.MainApp, func(), error) {
 		return nil, nil, err
 	}
 	engine := routes.NewEngine(appConfig, sugaredLogger)
-	appContext := core.NewAppContext()
+	appContext := system.NewAppContext()
 	userBiz := biz.NewUserBiz()
 	userRoute := v1.NewUserRoute(engine, userBiz, koanf)
 	httpEngine, err := routes.NewHttpEngine(engine, appConfig, sugaredLogger, appContext, userRoute)

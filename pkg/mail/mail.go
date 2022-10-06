@@ -5,22 +5,21 @@ import (
 	"crypto/tls"
 	"time"
 
+	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/config"
 	mail "github.com/xhit/go-simple-mail/v2"
 	"go.uber.org/zap"
-
-	"github.com/Xwudao/neter-template/internal/core"
 )
 
 type Config struct {
-	//mail server
+	// mail server
 	host       string
 	port       int
 	username   string
 	password   string
 	encryption mail.Encryption
 
-	//config
+	// config
 	authentication mail.AuthType
 	keepAlive      bool
 	connectTimeout time.Duration
@@ -56,14 +55,14 @@ type Message struct {
 	To      []string
 	CC      []string
 	Subject string
-	//text body, html body can only set one
+	// text body, html body can only set one
 	TextBody string
-	//text body, html body can only set one
+	// text body, html body can only set one
 	HtmlBody string
 }
 
 type Client struct {
-	//client
+	// client
 	client  *mail.SMTPClient
 	ctx     context.Context
 	cancel  context.CancelFunc
@@ -72,7 +71,7 @@ type Client struct {
 	logger *zap.SugaredLogger
 }
 
-func NewClientWithConf(ctx *core.AppContext, logger *zap.SugaredLogger, config *Config) (*Client, error) {
+func NewClientWithConf(ctx *system.AppContext, logger *zap.SugaredLogger, config *Config) (*Client, error) {
 	server := mail.NewSMTPClient()
 
 	// SMTP Server
@@ -130,7 +129,7 @@ func (c *Client) task() {
 		case m := <-c.msgChan:
 			log.Info("ready to send email")
 			email := mail.NewMSG()
-			//From Example <nube@example.com>
+			// From Example <nube@example.com>
 			email.SetFrom(m.From).
 				AddTo(m.To...).
 				AddCc(m.CC...).
@@ -145,7 +144,7 @@ func (c *Client) task() {
 			// email.SetBodyData(mail.TextHTML, []byte(htmlBody))
 
 			// add inline
-			//email.Attach(&mail.File{FilePath: "/path/to/image.png", Name: "Gopher.png", Inline: true})
+			// email.Attach(&mail.File{FilePath: "/path/to/image.png", Name: "Gopher.png", Inline: true})
 
 			// always check error after send
 			if email.Error != nil {

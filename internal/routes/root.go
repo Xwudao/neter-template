@@ -8,9 +8,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Xwudao/neter-template/internal/core"
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
 	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
+	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/gin-contrib/cors"
 
@@ -47,7 +47,7 @@ type HttpEngine struct {
 	router *gin.Engine
 	conf   *config.AppConfig
 	log    *zap.SugaredLogger
-	ctx    *core.AppContext
+	ctx    *system.AppContext
 
 	corsConf cors.Config
 
@@ -58,7 +58,7 @@ func NewHttpEngine(
 	router *gin.Engine,
 	conf *config.AppConfig,
 	log *zap.SugaredLogger,
-	ctx *core.AppContext,
+	ctx *system.AppContext,
 	v1UserRoute *v1.UserRoute,
 ) (*HttpEngine, error) {
 

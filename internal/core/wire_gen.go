@@ -7,36 +7,19 @@
 package core
 
 import (
+	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/Xwudao/neter-template/pkg/logger"
 )
 
 // Injectors from wire.go:
 
-func CmdApp() (*App, func(), error) {
-	koanf, err := config.NewKoanf()
-	if err != nil {
-		return nil, nil, err
-	}
-	sugaredLogger, err := logger.NewLogger(koanf)
-	if err != nil {
-		return nil, nil, err
-	}
-	appConfig, err := config.NewConfig(koanf)
-	if err != nil {
-		return nil, nil, err
-	}
-	app := NewApp(sugaredLogger, appConfig, koanf)
-	return app, func() {
-	}, nil
-}
-
 func TestApp() (*Test, func(), error) {
 	sugaredLogger, err := logger.NewTestLogger()
 	if err != nil {
 		return nil, nil, err
 	}
-	appContext := NewTestAppContext()
+	appContext := system.NewTestAppContext()
 	koanf, err := config.NewTestConfig()
 	if err != nil {
 		return nil, nil, err

@@ -5,11 +5,8 @@ package cmd
 
 import (
 	"fmt"
-	"log"
-	"os"
 
-	"github.com/Xwudao/neter-template/pkg/config"
-	"github.com/knadh/koanf/parsers/yaml"
+	"github.com/Xwudao/neter-template/internal/cmd_app"
 	"github.com/spf13/cobra"
 )
 
@@ -26,31 +23,13 @@ var configCmd = &cobra.Command{
 	Use:   "config",
 	Short: "config something that the system need",
 	Run: func(cmd *cobra.Command, args []string) {
-		f := "config.yml"
+		ic, f, err := cmd_app.InitCmd()
+		if err != nil {
+			panic(err)
+		}
+		defer f()
 
-		ff, err := os.OpenFile(f, os.O_CREATE|os.O_RDWR, 0666)
-		if err != nil {
-			log.Fatalf("open file error: %v", err)
-		}
-
-		defer ff.Close()
-		parser := yaml.Parser()
-		koanf, err := config.NewKoanf()
-		if err != nil {
-			log.Fatalf("new koanf err: %s", err)
-		}
-		//_, _ = config.NewConfig(koanf)
-		data, err := koanf.Marshal(parser)
-		if err != nil {
-			log.Fatalf("marshal config err: %s", err)
-		}
-		log.Println(string(data))
-		_, err = ff.Write(data)
-		if err != nil {
-			log.Fatalf("write config err: %s", err)
-		} else {
-			log.Println("write config!")
-		}
+		ic.Config()
 	},
 }
 

@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/Xwudao/neter-template/internal/core"
+	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/go-redis/redis/v8"
 	"github.com/knadh/koanf"
 )
@@ -15,7 +15,7 @@ type RedisClient struct {
 	ctx    context.Context
 }
 
-func NewRedisClient(conf *koanf.Koanf, app *core.AppContext) (*RedisClient, error) {
+func NewRedisClient(conf *koanf.Koanf, app *system.AppContext) (*RedisClient, error) {
 	client := redis.NewClient(&redis.Options{
 		Addr:     conf.String("redis.addr"),
 		Password: conf.String("redis.password"),
