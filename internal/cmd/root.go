@@ -112,7 +112,7 @@ func NewMainApp(http *routes.HttpEngine, logger *zap.SugaredLogger, conf *koanf.
 //}
 
 func init() {
-	rootCmd.AddCommand(migrateCmd)
+	//rootCmd.AddCommand(migrateCmd)
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
