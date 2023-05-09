@@ -29,12 +29,12 @@ var (
 
 // WrappedResp 被包装的输出结构
 type WrappedResp struct {
-	Code int         `json:"code"`
-	Msg  string      `json:"msg"`
-	Data interface{} `json:"data"`
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+	Data any    `json:"data"`
 }
 
-type WrappedHandlerFunc func(*gin.Context) (interface{}, *RtnStatus)
+type WrappedHandlerFunc func(*gin.Context) (any, *RtnStatus)
 
 // WrapData 包装响应结果
 func WrapData(handler WrappedHandlerFunc) func(*gin.Context) {

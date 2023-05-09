@@ -60,7 +60,7 @@ type AppConfig struct {
 }
 
 func setDefault(k *koanf.Koanf) {
-	_ = k.Load(confmap.Provider(map[string]interface{}{
+	_ = k.Load(confmap.Provider(map[string]any{
 		"cors.allowOrigin":      []string{"http://localhost:*", "http://127.0.0.1:*"},
 		"cors.allowCredentials": true,
 		"cors.maxAge":           "24h",
@@ -119,7 +119,7 @@ func NewKoanf() (*koanf.Koanf, error) {
 		return nil, err
 	}
 
-	_ = f.Watch(func(event interface{}, err error) {
+	_ = f.Watch(func(event any, err error) {
 		if err != nil {
 			log.Println(err)
 			return

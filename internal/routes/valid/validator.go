@@ -17,7 +17,7 @@ type Validator interface {
 type ValidatorMessages map[string]string
 
 // GetErrorMsg 获取错误信息
-func GetErrorMsg(request interface{}, err error) error {
+func GetErrorMsg(request any, err error) error {
 	if _, isValidatorErrors := err.(validator.ValidationErrors); isValidatorErrors {
 		_, isValidator := request.(Validator)
 

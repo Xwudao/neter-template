@@ -44,7 +44,7 @@ func (r *UserRoute) Reg() {
 }
 
 func (r *UserRoute) user() core.WrappedHandlerFunc {
-	return func(c *gin.Context) (interface{}, *core.RtnStatus) {
+	return func(c *gin.Context) (any, *core.RtnStatus) {
 		return "hello", nil
 	}
 }

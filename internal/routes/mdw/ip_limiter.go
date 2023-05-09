@@ -15,7 +15,7 @@ type IPRateLimiter struct {
 }
 
 // NewIPRateLimiter .
-//func SetupIPRateLimiter(r rate.Limit, b int) (error) {
+// func SetupIPRateLimiter(r rate.Limit, b int) (error) {
 func NewIPRateLimiter(countPerSeconds int) *IPRateLimiter {
 	//r:=1
 	var r rate.Limit

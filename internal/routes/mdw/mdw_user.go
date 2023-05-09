@@ -14,7 +14,7 @@ import (
 	"github.com/Xwudao/neter-template/pkg/utils/jwt"
 )
 
-//ExtractUserInfoMiddleware just extract the user info from the request, and save it to the context.
+// ExtractUserInfoMiddleware just extract the user info from the request, and save it to the context.
 func ExtractUserInfoMiddleware(logger *zap.SugaredLogger, jc *jwt.Client, data *data.Data) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader(enum.KeyAuthorization)
