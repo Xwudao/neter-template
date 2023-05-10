@@ -4,9 +4,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/knadh/koanf"
 )
+
+type CustomClaims struct {
+	UserID int64 `json:"user_id"`
+	jwt.RegisteredClaims
+}
 
 type Client struct {
 	conf *koanf.Koanf
@@ -19,9 +24,14 @@ func NewClient(conf *koanf.Koanf) *Client {
 }
 
 func (c *Client) Generate(userID int64) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id":   userID,
-		"sign_date": time.Now().Unix(),
+	var d = c.conf.MustDuration("jwt.expire")
+	var exp = time.Now().Add(d)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, CustomClaims{
+		UserID: userID,
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    c.conf.MustString("jwt.issuer"),
+			ExpiresAt: jwt.NewNumericDate(exp),
+		},
 	})
 
 	signedString, err := token.SignedString([]byte(c.conf.MustString("jwt.secret")))
@@ -33,7 +43,7 @@ func (c *Client) Generate(userID int64) (string, error) {
 
 // Parse the token string
 func (c *Client) Parse(tokenString string) (jwt.MapClaims, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
@@ -44,8 +54,10 @@ func (c *Client) Parse(tokenString string) (jwt.MapClaims, error) {
 		return nil, err
 	}
 
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		return claims, nil
+	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
+		return jwt.MapClaims{
+			"user_id": claims.UserID,
+		}, nil
 	}
 	return nil, err
 }
