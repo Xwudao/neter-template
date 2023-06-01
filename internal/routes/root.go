@@ -13,13 +13,15 @@ import (
 	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/gin-contrib/cors"
+	"github.com/knadh/koanf"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
-func NewEngine(conf *config.AppConfig, log *zap.SugaredLogger) *gin.Engine {
+func NewEngine(conf *config.AppConfig, cf *koanf.Koanf /* db *data.Data*/, log *zap.SugaredLogger) *gin.Engine {
 	mode := conf.App.Mode
+	//jx := jwt.NewClient(cf)
 	if mode != "debug" {
 		gin.SetMode(gin.ReleaseMode)
 	}
@@ -39,6 +41,7 @@ func NewEngine(conf *config.AppConfig, log *zap.SugaredLogger) *gin.Engine {
 	_ = r.SetTrustedProxies(nil)
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery(), mdw.LoggerMiddleware(logFunc))
+	//r.Use(mdw.ExtractUserInfoMiddleware(log, jx, db))
 
 	return r
 }

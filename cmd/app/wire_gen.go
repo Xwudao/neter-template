@@ -32,7 +32,7 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	engine := routes.NewEngine(appConfig, sugaredLogger)
+	engine := routes.NewEngine(appConfig, koanf, sugaredLogger)
 	appContext := system.NewAppContext()
 	userBiz := biz.NewUserBiz()
 	userRoute := v1.NewUserRoute(engine, userBiz, koanf)
