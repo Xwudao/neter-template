@@ -12,13 +12,15 @@ import (
 	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
 	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/config"
+	"github.com/Xwudao/neter-template/pkg/logger"
+
 	"github.com/gin-contrib/cors"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
-func NewEngine(conf *config.AppConfig, log *zap.SugaredLogger) *gin.Engine {
+func NewEngine(conf *config.AppConfig, zw *logger.ZapWriter, log *zap.SugaredLogger) *gin.Engine {
 	mode := conf.App.Mode
 	if mode != "debug" {
 		gin.SetMode(gin.ReleaseMode)
@@ -38,7 +40,7 @@ func NewEngine(conf *config.AppConfig, log *zap.SugaredLogger) *gin.Engine {
 	r := gin.New()
 	_ = r.SetTrustedProxies(nil)
 	r.Use(gin.Logger())
-	r.Use(gin.Recovery(), mdw.LoggerMiddleware(logFunc))
+	r.Use(gin.RecoveryWithWriter(zw), mdw.LoggerMiddleware(logFunc))
 
 	return r
 }

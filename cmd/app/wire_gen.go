@@ -32,9 +32,10 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	engine := routes.NewEngine(appConfig, sugaredLogger)
+	zapWriter := logger.NewZapWriter(sugaredLogger)
+	engine := routes.NewEngine(appConfig, zapWriter, sugaredLogger)
 	appContext := system.NewAppContext()
-	userBiz := biz.NewUserBiz()
+	userBiz := biz.NewUserBiz(sugaredLogger, appContext)
 	userRoute := v1.NewUserRoute(engine, userBiz, koanf)
 	httpEngine, err := routes.NewHttpEngine(engine, appConfig, sugaredLogger, appContext, userRoute)
 	if err != nil {

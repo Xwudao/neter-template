@@ -46,6 +46,20 @@ func NewLogger(conf *koanf.Koanf) (*zap.SugaredLogger, error) {
 	log.Infof("logger init")
 	return log, nil
 }
+
+type ZapWriter struct {
+	log *zap.SugaredLogger
+}
+
+func NewZapWriter(log *zap.SugaredLogger) *ZapWriter {
+	return &ZapWriter{log: log.Named("panic-recover")}
+}
+
+func (z ZapWriter) Write(p []byte) (n int, err error) {
+	z.log.Error(string(p))
+	return len(p), nil
+}
+
 func NewTestLogger() (*zap.SugaredLogger, error) {
 	logger, err := zap.NewDevelopment()
 	if err != nil {
