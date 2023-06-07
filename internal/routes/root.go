@@ -8,6 +8,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/knadh/koanf"
+
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
 	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
 	"github.com/Xwudao/neter-template/internal/system"
@@ -15,12 +17,11 @@ import (
 	"github.com/Xwudao/neter-template/pkg/logger"
 
 	"github.com/gin-contrib/cors"
-
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
-func NewEngine(conf *config.AppConfig, zw *logger.ZapWriter, log *zap.SugaredLogger) *gin.Engine {
+func NewEngine(conf *config.AppConfig, zw *logger.ZapWriter, cf *koanf.Koanf ,log *zap.SugaredLogger) *gin.Engine {
 	mode := conf.App.Mode
 	if mode != "debug" {
 		gin.SetMode(gin.ReleaseMode)

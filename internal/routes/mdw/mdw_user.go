@@ -54,6 +54,30 @@ func ExtractUserInfoMiddleware(logger *zap.SugaredLogger, jc *jwt.Client, data *
 	}
 }
 
+//func ExtractUserInfoByTokenMdw(data *data.Data) gin.HandlerFunc {
+//	return func(c *gin.Context) {
+//		var logged bool
+//		defer func() {
+//			c.Header("X-Logged", strconv.FormatBool(logged))
+//		}()
+//
+//		token := c.Query("token")
+//		if token == "" {
+//			c.Next()
+//			return
+//		}
+//
+//		us, err := data.Client.User.Query().Where(user.Token(token)).First(c.Request.Context())
+//		if err != nil {
+//			c.Next()
+//			return
+//		}
+//
+//		logged = true
+//		c.Set(enum.KeyUserInfo, us)
+//	}
+//}
+
 func MustLoginMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		_, exists := c.Get(enum.KeyUserInfo)
