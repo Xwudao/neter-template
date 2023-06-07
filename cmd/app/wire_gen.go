@@ -33,7 +33,7 @@ func mainApp() (*cmd.MainApp, func(), error) {
 		return nil, nil, err
 	}
 	zapWriter := logger.NewZapWriter(sugaredLogger)
-	engine := routes.NewEngine(appConfig, zapWriter, sugaredLogger)
+	engine := routes.NewEngine(appConfig, zapWriter, koanf, sugaredLogger)
 	appContext := system.NewAppContext()
 	userBiz := biz.NewUserBiz(sugaredLogger, appContext)
 	userRoute := v1.NewUserRoute(engine, userBiz, koanf)

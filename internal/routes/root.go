@@ -21,7 +21,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func NewEngine(conf *config.AppConfig, zw *logger.ZapWriter, cf *koanf.Koanf ,log *zap.SugaredLogger) *gin.Engine {
+func NewEngine(conf *config.AppConfig, zw *logger.ZapWriter, cf *koanf.Koanf, log *zap.SugaredLogger) *gin.Engine {
 	mode := conf.App.Mode
 	if mode != "debug" {
 		gin.SetMode(gin.ReleaseMode)
