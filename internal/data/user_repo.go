@@ -11,30 +11,30 @@ import (
 var _ biz.UserRepository = (*userRepository)(nil)
 
 type userRepository struct {
-	ctx  context.Context
-	data *Data
+	appCtx *system.AppContext
+	data   *Data
 }
 
 func NewUserRepository(appCtx *system.AppContext, data *Data) biz.UserRepository {
 	return &userRepository{
-		ctx:  appCtx.Ctx,
-		data: data,
+		appCtx: appCtx,
+		data:   data,
 	}
 }
 
-func (u *userRepository) GetAll() ([]*ent.User, error) {
-	return u.data.Client.User.Query().All(u.ctx)
+func (u *userRepository) GetAll(ctx context.Context) ([]*ent.User, error) {
+	return u.data.Client.User.Query().All(ctx)
 }
 
-func (u *userRepository) DeleteByID(id int64) error {
-	return u.data.Client.User.DeleteOneID(id).Exec(u.ctx)
+func (u *userRepository) DeleteByID(ctx context.Context, id int64) error {
+	return u.data.Client.User.DeleteOneID(id).Exec(ctx)
 }
 
-func (u *userRepository) GetByID(id int64) (*ent.User, error) {
-	return u.data.Client.User.Get(u.ctx, id)
+func (u *userRepository) GetByID(ctx context.Context, id int64) (*ent.User, error) {
+	return u.data.Client.User.Get(ctx, id)
 }
 
-func (u *userRepository) Create() (*ent.User, error) {
+func (u *userRepository) Create(ctx context.Context) (*ent.User, error) {
 	// todo add set fields
-	return u.data.Client.User.Create().Save(u.ctx)
+	return u.data.Client.User.Create().Save(ctx)
 }

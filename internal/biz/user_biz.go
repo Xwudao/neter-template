@@ -10,22 +10,22 @@ import (
 )
 
 type UserRepository interface {
-	GetAll() ([]*ent.User, error)
-	DeleteByID(id int64) error
-	GetByID(id int64) (*ent.User, error)
-	Create() (*ent.User, error)
+	GetAll(ctx context.Context) ([]*ent.User, error)
+	DeleteByID(ctx context.Context, id int64) error
+	GetByID(ctx context.Context, id int64) (*ent.User, error)
+	Create(ctx context.Context) (*ent.User, error)
 }
 
 type UserBiz struct {
-	log *zap.SugaredLogger
-	ctx context.Context
-	ur  UserRepository
+	log    *zap.SugaredLogger
+	appCtx *system.AppContext
+	ur     UserRepository
 }
 
 func NewUserBiz(log *zap.SugaredLogger /*ur UserRepository,*/, appCtx *system.AppContext) *UserBiz {
 	return &UserBiz{
-		log: log.Named("user-biz"),
-		ctx: appCtx.Ctx,
+		log:    log.Named("user-biz"),
+		appCtx: appCtx,
 		//ur:  ur,
 	}
 }
@@ -34,18 +34,18 @@ func (h *UserBiz) Index() string {
 	panic("TODO implement")
 }
 
-func (h *UserBiz) Delete(id int64) error {
-	return h.ur.DeleteByID(id)
+func (h *UserBiz) Delete(ctx context.Context, id int64) error {
+	return h.ur.DeleteByID(ctx, id)
 }
 
-func (h *UserBiz) Get(id int64) (*ent.User, error) {
-	return h.ur.GetByID(id)
+func (h *UserBiz) Get(ctx context.Context, id int64) (*ent.User, error) {
+	return h.ur.GetByID(ctx, id)
 }
 
-func (h *UserBiz) Create() (*ent.User, error) {
-	return h.ur.Create()
+func (h *UserBiz) Create(ctx context.Context) (*ent.User, error) {
+	return h.ur.Create(ctx)
 }
 
-func (h *UserBiz) GetAll() ([]*ent.User, error) {
-	return h.ur.GetAll()
+func (h *UserBiz) GetAll(ctx context.Context) ([]*ent.User, error) {
+	return h.ur.GetAll(ctx)
 }
