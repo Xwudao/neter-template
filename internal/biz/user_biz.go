@@ -22,11 +22,11 @@ type UserBiz struct {
 	ur  UserRepository
 }
 
-func NewUserBiz(log *zap.SugaredLogger, ur UserRepository, appCtx *system.AppContext) *UserBiz {
+func NewUserBiz(log *zap.SugaredLogger /*ur UserRepository,*/, appCtx *system.AppContext) *UserBiz {
 	return &UserBiz{
 		log: log.Named("user-biz"),
 		ctx: appCtx.Ctx,
-		ur:  ur,
+		//ur:  ur,
 	}
 }
 

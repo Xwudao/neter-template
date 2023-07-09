@@ -4,9 +4,10 @@
 package main
 
 import (
+	"github.com/google/wire"
+
 	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/utils/cron"
-	"github.com/google/wire"
 
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/cmd"
@@ -22,6 +23,7 @@ func mainApp() (*cmd.MainApp, func(), error) {
 		config.NewKoanf,
 		config.NewConfig,
 		logger.NewLogger,
+		logger.NewZapWriter,
 		cron.ProviderCronSet,
 		core.ProviderCoreSet,
 		biz.ProviderBizSet,
