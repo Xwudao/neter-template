@@ -114,21 +114,27 @@ func NewKoanf() (*koanf.Koanf, error) {
 	//default
 	setDefault(k)
 
-	f := file.Provider("config.yml")
-	if err := k.Load(f, yaml.Parser()); err != nil {
-		return nil, err
-	}
+	var err error
 
-	_ = f.Watch(func(event any, err error) {
-		if err != nil {
-			log.Println(err)
-			return
+	var files = []string{"config.yml", "config.dev.yml"}
+	for _, fn := range files {
+		f := file.Provider(fn)
+		if err = k.Load(f, yaml.Parser()); err != nil {
+			log.Println("load file " + fn + " failed")
+			continue
 		}
-		log.Println("config file changed")
-		k = koanf.New(".")
-		_ = k.Load(f, yaml.Parser())
-		k.Print()
-	})
+
+		_ = f.Watch(func(event any, err error) {
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			log.Println("config file changed")
+			k = koanf.New(".")
+			_ = k.Load(f, yaml.Parser())
+			k.Print()
+		})
+	}
 
 	return k, nil
 }
