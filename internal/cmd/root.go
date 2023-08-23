@@ -7,7 +7,7 @@ import (
 	"regexp"
 
 	"github.com/Xwudao/neter-template/internal/system"
-	"github.com/knadh/koanf"
+	"github.com/knadh/koanf/v2"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 

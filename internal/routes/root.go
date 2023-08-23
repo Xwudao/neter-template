@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/knadh/koanf"
+	"github.com/knadh/koanf/v2"
 
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
 	v1 "github.com/Xwudao/neter-template/internal/routes/v1"

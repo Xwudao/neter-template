@@ -3,7 +3,7 @@ package data
 import (
 	"fmt"
 
-	"github.com/knadh/koanf"
+	"github.com/knadh/koanf/v2"
 
 	"github.com/Xwudao/neter-template/internal/data/ent"
 

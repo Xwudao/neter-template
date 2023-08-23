@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/knadh/koanf"
+	"github.com/knadh/koanf/v2"
 )
 
 type CustomClaims struct {

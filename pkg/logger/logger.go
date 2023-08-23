@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/knadh/koanf"
+	"github.com/knadh/koanf/v2"
 	"github.com/natefinch/lumberjack/v3"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
