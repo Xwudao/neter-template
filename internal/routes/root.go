@@ -40,6 +40,7 @@ func NewEngine(conf *config.AppConfig, zw *logger.ZapWriter, cf *koanf.Koanf, lo
 
 	r := gin.New()
 	_ = r.SetTrustedProxies(nil)
+	r.Use(mdw.DumpReqResMdw(mode == gin.DebugMode, log))
 	r.Use(gin.Logger())
 	r.Use(gin.RecoveryWithWriter(zw), mdw.LoggerMiddleware(logFunc))
 
