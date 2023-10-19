@@ -44,7 +44,7 @@ func DumpReqResMdw(enable bool, log *zap.SugaredLogger) gin.HandlerFunc {
 			resBodyStr = bw.bodyCache.String()
 		}
 
-		filename := nowtime + "_" + strings.ToLower(name) + "_" + strings.ReplaceAll(path, "/", "") + ".log"
+		filename := nowtime + "_" + strings.ToLower(name) + "_" + strings.ReplaceAll(path, "/", "_") + ".log"
 		aimFolder := "./build"
 		if _, err := os.Stat(aimFolder); err != nil {
 			_ = os.Mkdir(aimFolder, os.ModePerm)
