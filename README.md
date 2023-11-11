@@ -33,7 +33,7 @@ Then, you can use the cli to init project from template:
 nr init <project-name> [-m <mod-name>]
 ```
 
-Then, run `neter run` to start the project.
+Then, run `nr run` to start the project.
 
 # Database
 
