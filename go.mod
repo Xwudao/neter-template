@@ -3,8 +3,8 @@ module github.com/Xwudao/neter-template
 go 1.18
 
 require (
-	ariga.io/atlas v0.13.1
-	entgo.io/ent v0.12.3
+	ariga.io/atlas v0.14.1-0.20230918065911-83ad451a4935
+	entgo.io/ent v0.12.5
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-playground/validator/v10 v10.15.1

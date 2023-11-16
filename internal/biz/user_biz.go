@@ -26,7 +26,7 @@ func NewUserBiz(log *zap.SugaredLogger /*ur UserRepository,*/, appCtx *system.Ap
 	return &UserBiz{
 		log:    log.Named("user-biz"),
 		appCtx: appCtx,
-		//ur:  ur,
+		//ur:     ur,
 	}
 }
 

@@ -1,6 +1,7 @@
 package data
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/knadh/koanf/v2"
@@ -21,12 +22,19 @@ func NewData(conf *koanf.Koanf) (*Data, error) {
 	username := conf.String("db.username")
 	password := conf.String("db.password")
 	dbname := conf.String("db.database")
+	autoMigrate := conf.Bool("db.autoMigrate")
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=True", username, password, host, port, dbname)
 
 	client, err := ent.Open(dialect, dsn)
 	if err != nil {
 		return nil, err
+	}
+
+	if autoMigrate {
+		if err := client.Schema.Create(context.Background()); err != nil {
+			return nil, err
+		}
 	}
 
 	return &Data{Client: client}, nil
