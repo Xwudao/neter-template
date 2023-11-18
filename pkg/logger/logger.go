@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -56,6 +57,7 @@ func NewZapWriter(log *zap.SugaredLogger) *ZapWriter {
 }
 
 func (z ZapWriter) Write(p []byte) (n int, err error) {
+	fmt.Println(string(p))
 	z.log.Error(string(p))
 	return len(p), nil
 }
