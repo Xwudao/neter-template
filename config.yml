@@ -1,39 +1,39 @@
 app:
-    mode: debug
-    port: 8080
-    pprof: false
+  mode: debug
+  port: 8080
+  pprof: false
 cors:
-    allowCredentials: true
-    allowOrigin:
-        - http://localhost:*
-        - http://127.0.0.1:*
-    maxAge: 24h
+  allowCredentials: true
+  allowOrigin:
+    - http://localhost:*
+    - http://127.0.0.1:*
+  maxAge: 24h
 db:
-    database: ent-demo
-    devDsn: mysql://root:root@:3306/dev-ent
-    dialect: mysql
-    host: 127.0.0.1
-    password: root
-    port: 3306
-    username: root
-    autoMigrate: true
+  database: ent-demo
+  devDsn: mysql://root:root@:3306/dev-ent
+  dialect: mysql
+  host: 127.0.0.1
+  username: root
+  password: root
+  port: 3306
+  autoMigrate: true
 jwt:
-    secret: secret
+  secret: secret
 log:
-    format: json
-    level: debug
-    linkName: current.log
-    path: ./logs
+  format: json
+  level: debug
+  linkName: current.log
+  path: ./logs
 mail:
-    connectTimeout: 10s
-    from: xx
-    host: xx
-    keepAlive: true
-    password: xx
-    port: 456
-    sendTimeout: 10s
-    username: xx
+  connectTimeout: 10s
+  from: xx
+  host: xx
+  keepAlive: true
+  password: xx
+  port: 456
+  sendTimeout: 10s
+  username: xx
 redis:
-    addr: 127.0.0.1:6379
-    db: 0
-    password: ""
+  addr: 127.0.0.1:6379
+  db: 0
+  password: ""
