@@ -19,6 +19,8 @@ db:
   autoMigrate: true
 jwt:
   secret: secret
+  expire: 24h
+  issuer: neter
 log:
   format: json
   level: debug
