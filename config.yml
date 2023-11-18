@@ -15,8 +15,8 @@ db:
     host: 127.0.0.1
     password: root
     port: 3306
-    tablePrefix: ""
     username: root
+    autoMigrate: true
 jwt:
     secret: secret
 log:

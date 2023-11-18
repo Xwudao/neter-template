@@ -27,6 +27,7 @@ func mainApp() (*cmd.MainApp, func(), error) {
 		cron.ProviderCronSet,
 		core.ProviderCoreSet,
 		biz.ProviderBizSet,
+		//data.ProviderDataSet,
 		routes.ProviderRouteSet,
 		system.ProviderSystemSet,
 	))

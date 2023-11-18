@@ -2,6 +2,10 @@
 
 package user
 
+import (
+	"entgo.io/ent/dialect/sql"
+)
+
 const (
 	// Label holds the string label denoting the user type in the database.
 	Label = "user"
@@ -12,7 +16,7 @@ const (
 	// FieldRole holds the string denoting the role field in the database.
 	FieldRole = "role"
 	// Table holds the table name of the user in the database.
-	Table = "prefix_users"
+	Table = "users"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -38,3 +42,21 @@ var (
 	// DefaultRole holds the default value on creation for the "role" field.
 	DefaultRole string
 )
+
+// OrderOption defines the ordering options for the User queries.
+type OrderOption func(*sql.Selector)
+
+// ByID orders the results by the id field.
+func ByID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByUsername orders the results by the username field.
+func ByUsername(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUsername, opts...).ToFunc()
+}
+
+// ByRole orders the results by the role field.
+func ByRole(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRole, opts...).ToFunc()
+}
