@@ -39,6 +39,30 @@ type MainApp struct {
 	logger     *zap.SugaredLogger
 }
 
+func NewMainApp(
+	http *routes.HttpEngine,
+	logger *zap.SugaredLogger,
+	conf *koanf.Koanf,
+	cron *cron.Cron,
+	initSystem *system.InitSystem,
+) (*MainApp, func()) {
+	m := &MainApp{
+		logger:     logger,
+		http:       http,
+		initSystem: initSystem,
+		cron:       cron,
+		conf:       conf,
+	}
+
+	cleanup := func() {
+		logger.Infof("begin to cleanup")
+		_ = m.cron.Close()
+		logger.Infof("cleanup done")
+	}
+
+	return m, cleanup
+}
+
 func (m *MainApp) cors() {
 	//config cors
 	origins := m.conf.Strings("cors.allowOrigin")
@@ -84,24 +108,6 @@ func (m *MainApp) Run() error {
 	m.cors() //this must be set before Register method
 	m.http.Register()
 	return m.http.Run()
-}
-
-func NewMainApp(http *routes.HttpEngine, logger *zap.SugaredLogger, conf *koanf.Koanf, cron *cron.Cron, initSystem *system.InitSystem) (*MainApp, func()) {
-	m := &MainApp{
-		logger:     logger,
-		http:       http,
-		initSystem: initSystem,
-		cron:       cron,
-		conf:       conf,
-	}
-
-	cleanup := func() {
-		logger.Infof("begin to cleanup")
-		_ = m.cron.Close()
-		logger.Infof("cleanup done")
-	}
-
-	return m, cleanup
 }
 
 //func Execute() {
