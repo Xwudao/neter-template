@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/gin-gonic/gin"
 	"github.com/knadh/koanf/v2"
 
 	"github.com/Xwudao/neter-template/internal/data/ent"
@@ -23,6 +24,7 @@ func NewData(conf *koanf.Koanf) (*Data, error) {
 	password := conf.String("db.password")
 	dbname := conf.String("db.database")
 	autoMigrate := conf.Bool("db.autoMigrate")
+	isDebug := conf.String("app.mode") == gin.DebugMode
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=True", username, password, host, port, dbname)
 
@@ -35,6 +37,10 @@ func NewData(conf *koanf.Koanf) (*Data, error) {
 		if err := client.Schema.Create(context.Background()); err != nil {
 			return nil, err
 		}
+	}
+
+	if isDebug {
+		client = client.Debug()
 	}
 
 	return &Data{Client: client}, nil
