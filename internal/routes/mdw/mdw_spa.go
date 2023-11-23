@@ -45,6 +45,22 @@ func (m *SpaMdw) Serve(urlPrefix string) gin.HandlerFunc {
 	}
 }
 
+func (m *SpaMdw) ServeNotFound(fallbackFile string) gin.HandlerFunc {
+	if fallbackFile == "" {
+		fallbackFile = INDEX
+	}
+	fd := EmbedFolder(m.fsData, m.target)
+	return func(c *gin.Context) {
+		f, err := fd.Open(fallbackFile)
+		if err != nil {
+			c.String(http.StatusNotFound, "404 page not found")
+			return
+		}
+		defer f.Close()
+		c.Data(http.StatusOK, "text/html; charset=utf-8", m.modifierIndex(fd))
+	}
+}
+
 func (m *SpaMdw) modifierIndex(fs ServeFileSystem) []byte {
 	f, err := fs.Open(INDEX)
 	if err != nil {

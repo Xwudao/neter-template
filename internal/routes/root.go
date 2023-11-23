@@ -1,7 +1,9 @@
 package routes
 
 import (
+	"errors"
 	"fmt"
+	"mime"
 	"net/http"
 	"os"
 	"os/signal"
@@ -38,9 +40,12 @@ func NewEngine(conf *config.AppConfig, zw *logger.ZapWriter, cf *koanf.Koanf, lo
 			zap.String("uri", fields.Uri))
 	}
 
+	_ = mime.AddExtensionType(".js", "application/javascript")
 	r := gin.New()
 	_ = r.SetTrustedProxies(nil)
-	//r.Use(mdw.NewSpaMdw(fs, "dist").Serve("/"))
+	//spa := mdw.NewSpaMdw(assets.SpaDist, "dist")
+	//r.Use(spa.Serve("/"))
+	//r.NoRoute(spa.ServeNotFound("index.html"))
 	r.Use(mdw.DumpReqResMdw(mode == gin.DebugMode, log))
 	r.Use(gin.Logger())
 	r.Use(gin.RecoveryWithWriter(zw), mdw.LoggerMiddleware(logFunc))
@@ -95,8 +100,7 @@ func (r *HttpEngine) Run() error {
 	}
 
 	go func() {
-
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("listen: %s\n", err)
 		}
 	}()
@@ -115,6 +119,10 @@ func (r *HttpEngine) Run() error {
 }
 func (r *HttpEngine) Register() {
 	r.v1UserRoute.Reg()
+}
+
+func (r *HttpEngine) Use(middleware ...gin.HandlerFunc) gin.IRoutes {
+	return r.router.Use(middleware...)
 }
 
 func (r *HttpEngine) ConfigCors() {
