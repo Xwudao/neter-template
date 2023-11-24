@@ -33,13 +33,18 @@ func (m *SpaMdw) Serve(urlPrefix string) gin.HandlerFunc {
 		fileServer = http.StripPrefix(urlPrefix, fileServer)
 	}
 	return func(c *gin.Context) {
-		if c.Request.URL.Path == "/" {
-			c.Data(200, "text/html; charset=utf-8", m.modifierIndex(fd))
+		if fd.Exists(urlPrefix, c.Request.URL.Path) && c.Request.URL.Path != "/" {
+			fileServer.ServeHTTP(c.Writer, c.Request)
 			c.Abort()
 			return
-		}
-		if fd.Exists(urlPrefix, c.Request.URL.Path) {
-			fileServer.ServeHTTP(c.Writer, c.Request)
+		} else {
+			f, err := fd.Open(INDEX)
+			if err != nil {
+				c.String(http.StatusNotFound, "404 page not found")
+				return
+			}
+			defer f.Close()
+			c.Data(http.StatusOK, "text/html; charset=utf-8", m.modifierIndex(fd))
 			c.Abort()
 		}
 	}

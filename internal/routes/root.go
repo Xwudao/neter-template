@@ -44,7 +44,6 @@ func NewEngine(conf *config.AppConfig, zw *logger.ZapWriter, cf *koanf.Koanf, lo
 	r := gin.New()
 	_ = r.SetTrustedProxies(nil)
 	//spa := mdw.NewSpaMdw(assets.SpaDist, "dist")
-	//r.Use(spa.Serve("/"))
 	//r.NoRoute(spa.ServeNotFound("index.html"))
 	r.Use(mdw.DumpReqResMdw(mode == gin.DebugMode, log))
 	r.Use(gin.Logger())
