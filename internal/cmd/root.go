@@ -6,13 +6,14 @@ package cmd
 import (
 	"regexp"
 
+	"github.com/Xwudao/neter-template/internal/cron"
 	"github.com/Xwudao/neter-template/internal/system"
+
 	"github.com/knadh/koanf/v2"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
 	"github.com/Xwudao/neter-template/internal/routes"
-	"github.com/Xwudao/neter-template/pkg/utils/cron"
 )
 
 // rootCmd represents the base command when called without any subcommands

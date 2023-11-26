@@ -9,12 +9,12 @@ package main
 import (
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/cmd"
+	"github.com/Xwudao/neter-template/internal/cron"
 	"github.com/Xwudao/neter-template/internal/routes"
 	"github.com/Xwudao/neter-template/internal/routes/v1"
 	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/Xwudao/neter-template/pkg/logger"
-	"github.com/Xwudao/neter-template/pkg/utils/cron"
 )
 
 // Injectors from wire.go:
@@ -41,8 +41,11 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	cronCron := cron.NewCron(sugaredLogger)
-	initSystem := system.NewInitSystem(cronCron)
+	cronCron, err := cron.NewCron(sugaredLogger)
+	if err != nil {
+		return nil, nil, err
+	}
+	initSystem := system.NewInitSystem()
 	cmdMainApp, cleanup := cmd.NewMainApp(httpEngine, sugaredLogger, koanf, cronCron, initSystem)
 	return cmdMainApp, func() {
 		cleanup()

@@ -8,12 +8,28 @@ import (
 )
 
 type Cron struct {
-	logger *zap.SugaredLogger
-	cron   *cron.Cron
+	log  *zap.SugaredLogger
+	cron *cron.Cron
+}
+
+func NewCron(logger *zap.SugaredLogger) (*Cron, error) {
+	c := &Cron{
+		log: logger.Named("cron"),
+		cron: cron.New(
+			cron.WithParser(cron.NewParser(
+				cron.SecondOptional|cron.Minute|cron.Hour|cron.Dom|cron.Month|cron.Dow|cron.Descriptor,
+			)), cron.WithChain(cron.Recover(cron.DefaultLogger)),
+		),
+	}
+	if err := c.InitCron(); err != nil {
+		return nil, err
+	}
+	c.log.Infof("init cron successfully")
+	return c, nil
 }
 
 func (c *Cron) Close() error {
-	c.logger.Infof("closing cron")
+	c.log.Infof("closing cron")
 	c.cron.Stop()
 	return nil
 }
@@ -54,6 +70,7 @@ func (c *Cron) AddMonthly(f ...func()) error {
 	}
 	return err
 }
+
 func (c *Cron) AddYearly(f ...func()) error {
 	var err error
 	for i := 0; i < len(f); i++ {
@@ -61,6 +78,7 @@ func (c *Cron) AddYearly(f ...func()) error {
 	}
 	return err
 }
+
 func (c *Cron) AddWeekly(f ...func()) error {
 	var err error
 	for i := 0; i < len(f); i++ {
@@ -76,16 +94,9 @@ func (c *Cron) AddManually(expr string, f ...func()) error {
 	}
 	return err
 }
+
 func (c *Cron) Run() {
-	c.logger.Infof("starting cron")
+	c.log.Infof("starting cron")
 
 	c.cron.Start()
-}
-func NewCron(logger *zap.SugaredLogger) *Cron {
-	c := &Cron{logger: logger, cron: cron.New(
-		cron.WithParser(cron.NewParser(
-			cron.SecondOptional|cron.Minute|cron.Hour|cron.Dom|cron.Month|cron.Dow|cron.Descriptor,
-		)), cron.WithChain(cron.Recover(cron.DefaultLogger)),
-	)}
-	return c
 }
