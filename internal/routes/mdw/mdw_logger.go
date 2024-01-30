@@ -1,8 +1,10 @@
 package mdw
 
 import (
-	"github.com/gin-gonic/gin"
+	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type RouterLogFields struct {
@@ -49,6 +51,8 @@ func LoggerMiddleware(apply func(fields *RouterLogFields)) gin.HandlerFunc {
 			Uri:    uri,
 		}
 
-		apply(fields)
+		if !strings.HasPrefix(c.Request.URL.Path, "/assets/") {
+			apply(fields)
+		}
 	}
 }

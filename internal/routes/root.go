@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/gin-contrib/gzip"
 	"github.com/knadh/koanf/v2"
 
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
@@ -43,6 +44,14 @@ func NewEngine(conf *config.AppConfig, zw *logger.ZapWriter, cf *koanf.Koanf, lo
 	_ = mime.AddExtensionType(".js", "application/javascript")
 	r := gin.New()
 	_ = r.SetTrustedProxies(nil)
+	r.Use(mdw.CacheMdw(), gzip.Gzip(gzip.DefaultCompression, gzip.WithExcludedPaths([]string{
+		"/admin/",
+		"/auth/",
+		"/open/",
+		"/v1/",
+		"/v2/",
+		"/v3/",
+	})))
 	//spa := mdw.NewSpaMdw(assets.SpaDist, "dist")
 	//r.NoRoute(spa.ServeNotFound("index.html"))
 	r.Use(mdw.DumpReqResMdw(mode == gin.DebugMode, log))

@@ -1,14 +1,18 @@
 package mdw
 
 import (
-	"github.com/gin-gonic/gin"
 	"net"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 func IPLimitMiddleware(countPerSeconds int, limited func(c *gin.Context, ip string)) gin.HandlerFunc {
 	limiter := NewIPRateLimiter(countPerSeconds)
 	return func(c *gin.Context) {
+		if strings.HasPrefix(c.Request.URL.Path, "/assets/") {
+			return
+		}
 		ipAddr := getIP(c)
 		lt := limiter.GetLimiter(ipAddr)
 		if !lt.Allow() {

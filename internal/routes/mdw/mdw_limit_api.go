@@ -1,9 +1,11 @@
 package mdw
 
 import (
+	"strings"
+	"sync"
+
 	"github.com/gin-gonic/gin"
 	"go.uber.org/ratelimit"
-	"sync"
 )
 
 type ApiLimitOpt struct {
@@ -18,6 +20,9 @@ func ApiLimitMiddleware(opts []ApiLimitOpt) gin.HandlerFunc {
 		syncMap.LoadOrStore(opt.Path, ratelimit.New(opt.CountPerSeconds, ratelimit.WithSlack(opt.Slack)))
 	}
 	return func(c *gin.Context) {
+		if strings.HasPrefix(c.Request.URL.Path, "/assets/") {
+			return
+		}
 		pt := c.Request.URL.Path
 		limiter, ok := syncMap.Load(pt)
 		if !ok {
