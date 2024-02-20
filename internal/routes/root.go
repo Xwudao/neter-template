@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/gin-contrib/gzip"
 	"github.com/knadh/koanf/v2"
@@ -67,8 +66,6 @@ type HttpEngine struct {
 	log    *zap.SugaredLogger
 	ctx    *system.AppContext
 
-	corsConf cors.Config
-
 	v1UserRoute *v1.UserRoute
 }
 
@@ -81,11 +78,10 @@ func NewHttpEngine(
 ) (*HttpEngine, error) {
 
 	he := &HttpEngine{
-		conf:     conf,
-		log:      log,
-		router:   router,
-		ctx:      ctx,
-		corsConf: cors.DefaultConfig(),
+		conf:   conf,
+		log:    log,
+		router: router,
+		ctx:    ctx,
 
 		v1UserRoute: v1UserRoute,
 	}
@@ -133,28 +129,6 @@ func (r *HttpEngine) Use(middleware ...gin.HandlerFunc) gin.IRoutes {
 	return r.router.Use(middleware...)
 }
 
-func (r *HttpEngine) ConfigCors() {
-	r.router.Use(cors.New(r.corsConf))
-}
-
-func (r *HttpEngine) SetOriginFun(f func(origin string) bool) {
-	r.corsConf.AllowOriginFunc = f
-}
-func (r *HttpEngine) SetMaxAge(age time.Duration) {
-	r.corsConf.MaxAge = age
-}
-func (r *HttpEngine) SetCredentials(b bool) {
-	r.corsConf.AllowCredentials = b
-}
-func (r *HttpEngine) SetExposeHeaders(s []string) {
-	r.corsConf.ExposeHeaders = s
-}
-func (r *HttpEngine) SetHeaders(s []string) {
-	r.corsConf.AllowHeaders = s
-}
-func (r *HttpEngine) SetMethods(s []string) {
-	r.corsConf.AllowMethods = s
-}
-func (r *HttpEngine) SetOrigin(s []string) {
-	r.corsConf.AllowOrigins = s
+func (r *HttpEngine) ConfigCors(c cors.Config) {
+	r.router.Use(cors.New(c))
 }

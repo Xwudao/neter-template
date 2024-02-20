@@ -6,6 +6,8 @@ package cmd
 import (
 	"regexp"
 
+	"github.com/gin-contrib/cors"
+
 	"github.com/Xwudao/neter-template/internal/cron"
 	"github.com/Xwudao/neter-template/internal/system"
 
@@ -84,22 +86,24 @@ func (m *MainApp) cors() {
 		originMap[origins[i]] = re
 	}
 
-	m.http.SetOriginFun(func(origin string) bool {
-		for k, v := range originMap {
-			if v.MatchString(origin) {
-				return true
+	var c = cors.Config{
+		AllowOriginFunc: func(origin string) bool {
+			for k, v := range originMap {
+				if v.MatchString(origin) {
+					return true
+				}
+				m.logger.Debugf("cors.allowOrigin[%s] is not match origin[%s]", k, origin)
 			}
-			m.logger.Debugf("cors.allowOrigin[%s] is not match origin[%s]", k, origin)
-		}
-		return false
-	})
-	m.http.SetCredentials(credentials)
-	m.http.SetHeaders(headers)
-	m.http.SetExposeHeaders(exposeHeaders)
-	m.http.SetMethods(methods)
-	m.http.SetMaxAge(maxAge)
+			return false
+		},
+		AllowMethods:     methods,
+		AllowHeaders:     headers,
+		AllowCredentials: credentials,
+		ExposeHeaders:    exposeHeaders,
+		MaxAge:           maxAge,
+	}
 
-	m.http.ConfigCors()
+	m.http.ConfigCors(c)
 	//config cors end
 }
 
