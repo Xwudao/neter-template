@@ -45,7 +45,7 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	initSystem := system.NewInitSystem()
+	initSystem := system.NewInitSystem(koanf)
 	cmdMainApp, cleanup := cmd.NewMainApp(httpEngine, sugaredLogger, koanf, cronCron, initSystem)
 	return cmdMainApp, func() {
 		cleanup()
