@@ -24,20 +24,16 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	appConfig, err := config.NewConfig(koanf)
-	if err != nil {
-		return nil, nil, err
-	}
 	sugaredLogger, err := logger.NewLogger(koanf)
 	if err != nil {
 		return nil, nil, err
 	}
 	zapWriter := logger.NewZapWriter(sugaredLogger)
-	engine := routes.NewEngine(appConfig, zapWriter, koanf, sugaredLogger)
+	engine := routes.NewEngine(zapWriter, koanf, sugaredLogger)
 	appContext := system.NewAppContext()
 	userBiz := biz.NewUserBiz(sugaredLogger, appContext)
 	userRoute := v1.NewUserRoute(engine, userBiz, koanf)
-	httpEngine, err := routes.NewHttpEngine(engine, appConfig, sugaredLogger, appContext, userRoute)
+	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, appContext, userRoute)
 	if err != nil {
 		return nil, nil, err
 	}

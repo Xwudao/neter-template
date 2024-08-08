@@ -15,7 +15,6 @@ import (
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
 	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
 	"github.com/Xwudao/neter-template/internal/system"
-	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/Xwudao/neter-template/pkg/logger"
 
 	"github.com/gin-contrib/cors"
@@ -23,9 +22,12 @@ import (
 	"go.uber.org/zap"
 )
 
-func NewEngine(conf *config.AppConfig, zw *logger.ZapWriter, cf *koanf.Koanf, log *zap.SugaredLogger) *gin.Engine {
-	mode := conf.App.Mode
-	if mode != "debug" {
+func NewEngine(zw *logger.ZapWriter, conf *koanf.Koanf, log *zap.SugaredLogger) *gin.Engine {
+	var (
+		isDebug   = conf.String("app.mode") == "debug"
+		isRelease = conf.String("app.mode") == "release"
+	)
+	if isRelease {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
@@ -53,7 +55,7 @@ func NewEngine(conf *config.AppConfig, zw *logger.ZapWriter, cf *koanf.Koanf, lo
 	})))
 	//spa := mdw.NewSpaMdw(assets.SpaDist, "dist")
 	//r.NoRoute(spa.ServeNotFound("index.html"))
-	r.Use(mdw.DumpReqResMdw(mode == gin.DebugMode, log))
+	r.Use(mdw.DumpReqResMdw(isDebug, log))
 	r.Use(gin.Logger())
 	r.Use(gin.RecoveryWithWriter(zw), mdw.LoggerMiddleware(logFunc))
 
@@ -62,7 +64,7 @@ func NewEngine(conf *config.AppConfig, zw *logger.ZapWriter, cf *koanf.Koanf, lo
 
 type HttpEngine struct {
 	router *gin.Engine
-	conf   *config.AppConfig
+	conf   *koanf.Koanf
 	log    *zap.SugaredLogger
 	ctx    *system.AppContext
 
@@ -71,7 +73,7 @@ type HttpEngine struct {
 
 func NewHttpEngine(
 	router *gin.Engine,
-	conf *config.AppConfig,
+	conf *koanf.Koanf,
 	log *zap.SugaredLogger,
 	ctx *system.AppContext,
 	v1UserRoute *v1.UserRoute,
@@ -90,12 +92,12 @@ func NewHttpEngine(
 }
 
 func (r *HttpEngine) Run() error {
-	conf := r.conf
 	log := r.log
 	router := r.router
 
-	port := conf.App.Port
+	port := r.conf.Int("app.port")
 	addr := fmt.Sprintf(":%d", port)
+
 	log.Infof("app running on port: %d", port)
 
 	srv := &http.Server{

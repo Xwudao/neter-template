@@ -18,11 +18,11 @@ db:
   port: 3306
   autoMigrate: true
 jwt:
-  secret: secret
+  secret: thisstringmustbeverylongandrandom
   expire: 24h
   issuer: neter
 log:
-  format: json
+  format: text
   level: debug
   linkName: current.log
   path: ./logs

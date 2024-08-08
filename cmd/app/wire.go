@@ -21,7 +21,6 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	panic(wire.Build(
 		cmd.NewMainApp,
 		config.NewKoanf,
-		config.NewConfig,
 		logger.NewLogger,
 		logger.NewZapWriter,
 		cron.ProviderCronSet,
