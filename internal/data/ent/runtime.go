@@ -17,8 +17,8 @@ func init() {
 	userDescUsername := userFields[1].Descriptor()
 	// user.UsernameValidator is a validator for the "username" field. It is called by the builders before save.
 	user.UsernameValidator = userDescUsername.Validators[0].(func(string) error)
-	// userDescRole is the schema descriptor for role field.
-	userDescRole := userFields[2].Descriptor()
-	// user.DefaultRole holds the default value on creation for the role field.
-	user.DefaultRole = userDescRole.Default.(string)
+	// userDescPassword is the schema descriptor for password field.
+	userDescPassword := userFields[2].Descriptor()
+	// user.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
+	user.PasswordValidator = userDescPassword.Validators[0].(func(string) error)
 }

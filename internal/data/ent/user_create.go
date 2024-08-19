@@ -25,16 +25,22 @@ func (uc *UserCreate) SetUsername(s string) *UserCreate {
 	return uc
 }
 
+// SetPassword sets the "password" field.
+func (uc *UserCreate) SetPassword(s string) *UserCreate {
+	uc.mutation.SetPassword(s)
+	return uc
+}
+
 // SetRole sets the "role" field.
-func (uc *UserCreate) SetRole(s string) *UserCreate {
-	uc.mutation.SetRole(s)
+func (uc *UserCreate) SetRole(u user.Role) *UserCreate {
+	uc.mutation.SetRole(u)
 	return uc
 }
 
 // SetNillableRole sets the "role" field if the given value is not nil.
-func (uc *UserCreate) SetNillableRole(s *string) *UserCreate {
-	if s != nil {
-		uc.SetRole(*s)
+func (uc *UserCreate) SetNillableRole(u *user.Role) *UserCreate {
+	if u != nil {
+		uc.SetRole(*u)
 	}
 	return uc
 }
@@ -96,8 +102,21 @@ func (uc *UserCreate) check() error {
 			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
 		}
 	}
+	if _, ok := uc.mutation.Password(); !ok {
+		return &ValidationError{Name: "password", err: errors.New(`ent: missing required field "User.password"`)}
+	}
+	if v, ok := uc.mutation.Password(); ok {
+		if err := user.PasswordValidator(v); err != nil {
+			return &ValidationError{Name: "password", err: fmt.Errorf(`ent: validator failed for field "User.password": %w`, err)}
+		}
+	}
 	if _, ok := uc.mutation.Role(); !ok {
 		return &ValidationError{Name: "role", err: errors.New(`ent: missing required field "User.role"`)}
+	}
+	if v, ok := uc.mutation.Role(); ok {
+		if err := user.RoleValidator(v); err != nil {
+			return &ValidationError{Name: "role", err: fmt.Errorf(`ent: validator failed for field "User.role": %w`, err)}
+		}
 	}
 	return nil
 }
@@ -135,8 +154,12 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 		_node.Username = value
 	}
+	if value, ok := uc.mutation.Password(); ok {
+		_spec.SetField(user.FieldPassword, field.TypeString, value)
+		_node.Password = value
+	}
 	if value, ok := uc.mutation.Role(); ok {
-		_spec.SetField(user.FieldRole, field.TypeString, value)
+		_spec.SetField(user.FieldRole, field.TypeEnum, value)
 		_node.Role = value
 	}
 	return _node, _spec

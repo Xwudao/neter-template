@@ -12,7 +12,8 @@ var (
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "username", Type: field.TypeString},
-		{Name: "role", Type: field.TypeString, Default: "user"},
+		{Name: "password", Type: field.TypeString},
+		{Name: "role", Type: field.TypeEnum, Enums: []string{"user", "admin"}, Default: "user"},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{

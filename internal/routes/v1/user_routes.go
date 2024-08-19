@@ -6,6 +6,7 @@ import (
 
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/core"
+	"github.com/Xwudao/neter-template/internal/data/ent/user"
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
 )
 
@@ -37,7 +38,7 @@ func (r *UserRoute) Reg() {
 		// authGroup.GET("/auth", core.WrapData(r.user()))
 		_ = authGroup
 	}
-	adminGroup := r.g.Group("/admin/v1/user").Use(mdw.MustWithRoleMiddleware("admin"))
+	adminGroup := r.g.Group("/admin/v1/user").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
 	{
 		_ = adminGroup
 	}

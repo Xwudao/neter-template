@@ -3,6 +3,8 @@
 package user
 
 import (
+	"fmt"
+
 	"entgo.io/ent/dialect/sql"
 )
 
@@ -13,6 +15,8 @@ const (
 	FieldID = "id"
 	// FieldUsername holds the string denoting the username field in the database.
 	FieldUsername = "username"
+	// FieldPassword holds the string denoting the password field in the database.
+	FieldPassword = "password"
 	// FieldRole holds the string denoting the role field in the database.
 	FieldRole = "role"
 	// Table holds the table name of the user in the database.
@@ -23,6 +27,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldUsername,
+	FieldPassword,
 	FieldRole,
 }
 
@@ -39,9 +44,35 @@ func ValidColumn(column string) bool {
 var (
 	// UsernameValidator is a validator for the "username" field. It is called by the builders before save.
 	UsernameValidator func(string) error
-	// DefaultRole holds the default value on creation for the "role" field.
-	DefaultRole string
+	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.
+	PasswordValidator func(string) error
 )
+
+// Role defines the type for the "role" enum field.
+type Role string
+
+// RoleUser is the default value of the Role enum.
+const DefaultRole = RoleUser
+
+// Role values.
+const (
+	RoleUser  Role = "user"
+	RoleAdmin Role = "admin"
+)
+
+func (r Role) String() string {
+	return string(r)
+}
+
+// RoleValidator is a validator for the "role" field enum values. It is called by the builders before save.
+func RoleValidator(r Role) error {
+	switch r {
+	case RoleUser, RoleAdmin:
+		return nil
+	default:
+		return fmt.Errorf("user: invalid enum value for role field: %q", r)
+	}
+}
 
 // OrderOption defines the ordering options for the User queries.
 type OrderOption func(*sql.Selector)
@@ -54,6 +85,11 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 // ByUsername orders the results by the username field.
 func ByUsername(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUsername, opts...).ToFunc()
+}
+
+// ByPassword orders the results by the password field.
+func ByPassword(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPassword, opts...).ToFunc()
 }
 
 // ByRole orders the results by the role field.

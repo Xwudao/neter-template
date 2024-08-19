@@ -24,7 +24,8 @@ func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("id"),
 		field.String("username").NotEmpty(),
-		field.String("role").Default("user"),
+		field.String("password").Sensitive().NotEmpty(),
+		field.Enum("role").Values("user", "admin").Default("user"),
 	}
 }
 

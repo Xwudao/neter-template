@@ -96,7 +96,7 @@ func MustLoginMiddleware() gin.HandlerFunc {
 	}
 }
 
-func MustWithRoleMiddleware(needRole string) gin.HandlerFunc {
+func MustWithRoleMiddleware(needRole user.Role) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		u, exists := c.Get(enum.KeyUserInfo)
 		if !exists {
