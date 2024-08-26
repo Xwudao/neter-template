@@ -4,9 +4,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/go-redis/redis/v8"
 	"github.com/knadh/koanf/v2"
+
+	"github.com/Xwudao/neter-template/internal/system"
 )
 
 type RedisClient struct {

@@ -8,6 +8,7 @@ import (
 	"github.com/knadh/koanf/v2"
 
 	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/domain/payloads"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -16,25 +17,25 @@ type Data struct {
 	Client *ent.Client
 }
 
-func NewData(conf *koanf.Koanf) (*Data, error) {
-	dialect := conf.String("db.dialect")
-	host := conf.String("db.host")
-	port := conf.Int("db.port")
-	username := conf.String("db.username")
-	password := conf.String("db.password")
-	dbname := conf.String("db.database")
-	autoMigrate := conf.Bool("db.autoMigrate")
+func NewData(conf *koanf.Koanf, dbConf *payloads.DBConfig) (*Data, error) {
 	isDebug := conf.String("app.mode") == gin.DebugMode
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=True", username, password, host, port, dbname)
+	dsn := fmt.Sprintf(
+		"%s:%s@tcp(%s:%d)/%s?parseTime=True",
+		dbConf.Username,
+		dbConf.Password,
+		dbConf.Host,
+		dbConf.Port,
+		dbConf.Database,
+	)
 
-	client, err := ent.Open(dialect, dsn)
+	client, err := ent.Open(dbConf.Dialect, dsn)
 	if err != nil {
 		return nil, err
 	}
 
-	if autoMigrate {
-		if err := client.Schema.Create(context.Background()); err != nil {
+	if dbConf.AutoMigrate {
+		if err = client.Schema.Create(context.Background()); err != nil {
 			return nil, err
 		}
 	}

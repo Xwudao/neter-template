@@ -20,9 +20,10 @@ import (
 func mainApp() (*cmd.MainApp, func(), error) {
 	panic(wire.Build(
 		cmd.NewMainApp,
-		config.NewKoanf,
 		logger.NewLogger,
 		logger.NewZapWriter,
+		//config.NewKoanf,
+		config.ProviderConfigSet,
 		cron.ProviderCronSet,
 		core.ProviderCoreSet,
 		biz.ProviderBizSet,

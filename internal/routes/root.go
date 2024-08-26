@@ -12,14 +12,14 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/knadh/koanf/v2"
 
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
+
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
 	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
 	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/logger"
-
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 func NewEngine(zw *logger.ZapWriter, conf *koanf.Koanf, log *zap.SugaredLogger) *gin.Engine {
@@ -45,6 +45,7 @@ func NewEngine(zw *logger.ZapWriter, conf *koanf.Koanf, log *zap.SugaredLogger) 
 	_ = mime.AddExtensionType(".js", "application/javascript")
 	r := gin.New()
 	_ = r.SetTrustedProxies(nil)
+
 	r.Use(mdw.CacheMdw(), gzip.Gzip(gzip.DefaultCompression, gzip.WithExcludedPaths([]string{
 		"/admin/",
 		"/auth/",
@@ -55,6 +56,22 @@ func NewEngine(zw *logger.ZapWriter, conf *koanf.Koanf, log *zap.SugaredLogger) 
 	})))
 	//spa := mdw.NewSpaMdw(assets.SpaDist, "dist")
 	//r.NoRoute(spa.ServeNotFound("index.html"))
+	//r.NoRoute(mdw.NotFoundMdw())
+
+	/*for html glob start*/
+	//r.SetFuncMap(template.FuncMap{
+	//	"join":       strings.Join,
+	//	"indexes":    utils.BuildSlice,
+	//	"hostname":   utils.MustHostname,
+	//	"b64encode":  utils.B64Encode,
+	//	"addutm":     utils.AddUTM,
+	//	"htmlx":      utils.HtmlX,
+	//	"formatdate": utils.FormatDate,
+	//})
+	//r.LoadHTMLGlob("web/front/**/*")
+	//r.Static("/static", "web/static")
+	/*for html glob end*/
+
 	r.Use(mdw.DumpReqResMdw(isDebug, log))
 	r.Use(gin.Logger())
 	r.Use(gin.RecoveryWithWriter(zw), mdw.LoggerMiddleware(logFunc))
