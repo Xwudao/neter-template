@@ -1,2 +1,17 @@
-### user
-GET {{api}}/v1/user
+### login
+POST {{api}}/v1/user/login
+Content-Type: application/json
+X-Name: UserLogin
+
+{
+  "username": "admin",
+  "password": "TkfMxHwaFno9"
+}
+> {%
+    client.global.set("token", response.body['data']['token'])
+%}
+
+### info
+GET {{api}}/auth/v1/user/info
+Authorization: {{token}}
+X-Name: UserInfo

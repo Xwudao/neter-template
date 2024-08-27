@@ -1,0 +1,87 @@
+@mixin space-x($amount) {
+  & {
+    > * ~ * {
+      margin-left: $amount;
+    }
+  }
+}
+
+@mixin space-y($amount) {
+  & {
+    > * ~ * {
+      margin-top: $amount;
+    }
+  }
+}
+
+@mixin px($amount) {
+  padding-left: $amount;
+  padding-right: $amount;
+}
+
+@mixin py($amount) {
+  padding-top: $amount;
+  padding-bottom: $amount;
+}
+
+@mixin p($amount) {
+  padding: $amount;
+}
+
+//mx
+@mixin mx($amount) {
+  margin-left: $amount;
+  margin-right: $amount;
+}
+
+//my
+@mixin my($amount) {
+  margin-top: $amount;
+  margin-bottom: $amount;
+}
+
+@mixin m($amount) {
+  margin: $amount;
+}
+
+@mixin swing($duration, $rotateAngle) {
+  @keyframes swing {
+    0% {
+      transform: rotate(0deg);
+    }
+    10% {
+      transform: rotate($rotateAngle);
+    }
+    30% {
+      transform: rotate(0deg);
+    }
+    40% {
+      transform: rotate(-$rotateAngle);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+  animation: swing $duration ease infinite;
+}
+
+@mixin zoomIn($duration) {
+  @keyframes zoomIn {
+    0% {
+      transform: scale(0.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  animation: zoomIn $duration ease;
+}
+
+// line-clamp
+@mixin line-clamp($lines) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-clamp: $lines;
+}

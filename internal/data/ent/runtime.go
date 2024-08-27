@@ -3,7 +3,11 @@
 package ent
 
 import (
+	"time"
+
+	"github.com/Xwudao/neter-template/internal/data/ent/datalist"
 	"github.com/Xwudao/neter-template/internal/data/ent/schema"
+	"github.com/Xwudao/neter-template/internal/data/ent/siteconfig"
 	"github.com/Xwudao/neter-template/internal/data/ent/user"
 )
 
@@ -11,6 +15,72 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	datalistMixin := schema.DataList{}.Mixin()
+	datalistMixinFields0 := datalistMixin[0].Fields()
+	_ = datalistMixinFields0
+	datalistFields := schema.DataList{}.Fields()
+	_ = datalistFields
+	// datalistDescCreateTime is the schema descriptor for create_time field.
+	datalistDescCreateTime := datalistMixinFields0[0].Descriptor()
+	// datalist.DefaultCreateTime holds the default value on creation for the create_time field.
+	datalist.DefaultCreateTime = datalistDescCreateTime.Default.(func() time.Time)
+	// datalistDescUpdateTime is the schema descriptor for update_time field.
+	datalistDescUpdateTime := datalistMixinFields0[1].Descriptor()
+	// datalist.DefaultUpdateTime holds the default value on creation for the update_time field.
+	datalist.DefaultUpdateTime = datalistDescUpdateTime.Default.(func() time.Time)
+	// datalist.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	datalist.UpdateDefaultUpdateTime = datalistDescUpdateTime.UpdateDefault.(func() time.Time)
+	// datalistDescLabel is the schema descriptor for label field.
+	datalistDescLabel := datalistFields[1].Descriptor()
+	// datalist.LabelValidator is a validator for the "label" field. It is called by the builders before save.
+	datalist.LabelValidator = datalistDescLabel.Validators[0].(func(string) error)
+	// datalistDescKind is the schema descriptor for kind field.
+	datalistDescKind := datalistFields[2].Descriptor()
+	// datalist.KindValidator is a validator for the "kind" field. It is called by the builders before save.
+	datalist.KindValidator = datalistDescKind.Validators[0].(func(string) error)
+	// datalistDescValue is the schema descriptor for value field.
+	datalistDescValue := datalistFields[4].Descriptor()
+	// datalist.ValueValidator is a validator for the "value" field. It is called by the builders before save.
+	datalist.ValueValidator = datalistDescValue.Validators[0].(func(string) error)
+	// datalistDescItemOrder is the schema descriptor for item_order field.
+	datalistDescItemOrder := datalistFields[5].Descriptor()
+	// datalist.DefaultItemOrder holds the default value on creation for the item_order field.
+	datalist.DefaultItemOrder = datalistDescItemOrder.Default.(int)
+	// datalist.ItemOrderValidator is a validator for the "item_order" field. It is called by the builders before save.
+	datalist.ItemOrderValidator = func() func(int) error {
+		validators := datalistDescItemOrder.Validators
+		fns := [...]func(int) error{
+			validators[0].(func(int) error),
+			validators[1].(func(int) error),
+		}
+		return func(item_order int) error {
+			for _, fn := range fns {
+				if err := fn(item_order); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	siteconfigMixin := schema.SiteConfig{}.Mixin()
+	siteconfigMixinFields0 := siteconfigMixin[0].Fields()
+	_ = siteconfigMixinFields0
+	siteconfigFields := schema.SiteConfig{}.Fields()
+	_ = siteconfigFields
+	// siteconfigDescCreateTime is the schema descriptor for create_time field.
+	siteconfigDescCreateTime := siteconfigMixinFields0[0].Descriptor()
+	// siteconfig.DefaultCreateTime holds the default value on creation for the create_time field.
+	siteconfig.DefaultCreateTime = siteconfigDescCreateTime.Default.(func() time.Time)
+	// siteconfigDescUpdateTime is the schema descriptor for update_time field.
+	siteconfigDescUpdateTime := siteconfigMixinFields0[1].Descriptor()
+	// siteconfig.DefaultUpdateTime holds the default value on creation for the update_time field.
+	siteconfig.DefaultUpdateTime = siteconfigDescUpdateTime.Default.(func() time.Time)
+	// siteconfig.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	siteconfig.UpdateDefaultUpdateTime = siteconfigDescUpdateTime.UpdateDefault.(func() time.Time)
+	// siteconfigDescName is the schema descriptor for name field.
+	siteconfigDescName := siteconfigFields[1].Descriptor()
+	// siteconfig.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	siteconfig.NameValidator = siteconfigDescName.Validators[0].(func(string) error)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescUsername is the schema descriptor for username field.

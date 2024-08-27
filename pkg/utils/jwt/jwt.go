@@ -1,11 +1,13 @@
 package jwt
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/knadh/koanf/v2"
+
+	"github.com/Xwudao/neter-template/internal/domain/payloads"
 )
 
 type CustomClaims struct {
@@ -14,27 +16,28 @@ type CustomClaims struct {
 }
 
 type Client struct {
-	conf *koanf.Koanf
+	conf *payloads.JwtConfig
 }
 
-func NewClient(conf *koanf.Koanf) *Client {
+func NewClient(conf *payloads.JwtConfig) *Client {
 	return &Client{
 		conf: conf,
 	}
 }
 
 func (c *Client) Generate(userID int64) (string, error) {
-	var d = c.conf.MustDuration("jwt.expire")
-	var exp = time.Now().Add(d)
+	//var d = c.conf.MustDuration("jwt.expire")
+
+	var exp = time.Now().Add(c.conf.Expire)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, CustomClaims{
 		UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    c.conf.MustString("jwt.issuer"),
+			Issuer:    c.conf.Issuer,
 			ExpiresAt: jwt.NewNumericDate(exp),
 		},
 	})
 
-	signedString, err := token.SignedString([]byte(c.conf.MustString("jwt.secret")))
+	signedString, err := token.SignedString([]byte(c.conf.Secret))
 	if err != nil {
 		return "", err
 	}
@@ -47,7 +50,7 @@ func (c *Client) Parse(tokenString string) (jwt.MapClaims, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(c.conf.MustString("jwt.secret")), nil
+		return []byte(c.conf.Secret), nil
 	})
 
 	if err != nil {
@@ -59,7 +62,7 @@ func (c *Client) Parse(tokenString string) (jwt.MapClaims, error) {
 			"user_id": claims.UserID,
 		}, nil
 	}
-	return nil, err
+	return nil, errors.New("invalid token")
 }
 
 // Validate validate

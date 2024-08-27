@@ -9,6 +9,30 @@ import (
 	"github.com/Xwudao/neter-template/internal/data/ent"
 )
 
+// The DataListFunc type is an adapter to allow the use of ordinary
+// function as DataList mutator.
+type DataListFunc func(context.Context, *ent.DataListMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f DataListFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.DataListMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DataListMutation", m)
+}
+
+// The SiteConfigFunc type is an adapter to allow the use of ordinary
+// function as SiteConfig mutator.
+type SiteConfigFunc func(context.Context, *ent.SiteConfigMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f SiteConfigFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.SiteConfigMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SiteConfigMutation", m)
+}
+
 // The UserFunc type is an adapter to allow the use of ordinary
 // function as User mutator.
 type UserFunc func(context.Context, *ent.UserMutation) (ent.Value, error)

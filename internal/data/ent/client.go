@@ -14,6 +14,8 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
+	"github.com/Xwudao/neter-template/internal/data/ent/datalist"
+	"github.com/Xwudao/neter-template/internal/data/ent/siteconfig"
 	"github.com/Xwudao/neter-template/internal/data/ent/user"
 )
 
@@ -22,6 +24,10 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// DataList is the client for interacting with the DataList builders.
+	DataList *DataListClient
+	// SiteConfig is the client for interacting with the SiteConfig builders.
+	SiteConfig *SiteConfigClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 }
@@ -35,6 +41,8 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.DataList = NewDataListClient(c.config)
+	c.SiteConfig = NewSiteConfigClient(c.config)
 	c.User = NewUserClient(c.config)
 }
 
@@ -126,9 +134,11 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		User:   NewUserClient(cfg),
+		ctx:        ctx,
+		config:     cfg,
+		DataList:   NewDataListClient(cfg),
+		SiteConfig: NewSiteConfigClient(cfg),
+		User:       NewUserClient(cfg),
 	}, nil
 }
 
@@ -146,16 +156,18 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		User:   NewUserClient(cfg),
+		ctx:        ctx,
+		config:     cfg,
+		DataList:   NewDataListClient(cfg),
+		SiteConfig: NewSiteConfigClient(cfg),
+		User:       NewUserClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		User.
+//		DataList.
 //		Query().
 //		Count(ctx)
 func (c *Client) Debug() *Client {
@@ -177,22 +189,296 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.DataList.Use(hooks...)
+	c.SiteConfig.Use(hooks...)
 	c.User.Use(hooks...)
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
+	c.DataList.Intercept(interceptors...)
+	c.SiteConfig.Intercept(interceptors...)
 	c.User.Intercept(interceptors...)
 }
 
 // Mutate implements the ent.Mutator interface.
 func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
+	case *DataListMutation:
+		return c.DataList.mutate(ctx, m)
+	case *SiteConfigMutation:
+		return c.SiteConfig.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
+	}
+}
+
+// DataListClient is a client for the DataList schema.
+type DataListClient struct {
+	config
+}
+
+// NewDataListClient returns a client for the DataList from the given config.
+func NewDataListClient(c config) *DataListClient {
+	return &DataListClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `datalist.Hooks(f(g(h())))`.
+func (c *DataListClient) Use(hooks ...Hook) {
+	c.hooks.DataList = append(c.hooks.DataList, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `datalist.Intercept(f(g(h())))`.
+func (c *DataListClient) Intercept(interceptors ...Interceptor) {
+	c.inters.DataList = append(c.inters.DataList, interceptors...)
+}
+
+// Create returns a builder for creating a DataList entity.
+func (c *DataListClient) Create() *DataListCreate {
+	mutation := newDataListMutation(c.config, OpCreate)
+	return &DataListCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of DataList entities.
+func (c *DataListClient) CreateBulk(builders ...*DataListCreate) *DataListCreateBulk {
+	return &DataListCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *DataListClient) MapCreateBulk(slice any, setFunc func(*DataListCreate, int)) *DataListCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &DataListCreateBulk{err: fmt.Errorf("calling to DataListClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*DataListCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &DataListCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for DataList.
+func (c *DataListClient) Update() *DataListUpdate {
+	mutation := newDataListMutation(c.config, OpUpdate)
+	return &DataListUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *DataListClient) UpdateOne(dl *DataList) *DataListUpdateOne {
+	mutation := newDataListMutation(c.config, OpUpdateOne, withDataList(dl))
+	return &DataListUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *DataListClient) UpdateOneID(id int64) *DataListUpdateOne {
+	mutation := newDataListMutation(c.config, OpUpdateOne, withDataListID(id))
+	return &DataListUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for DataList.
+func (c *DataListClient) Delete() *DataListDelete {
+	mutation := newDataListMutation(c.config, OpDelete)
+	return &DataListDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *DataListClient) DeleteOne(dl *DataList) *DataListDeleteOne {
+	return c.DeleteOneID(dl.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *DataListClient) DeleteOneID(id int64) *DataListDeleteOne {
+	builder := c.Delete().Where(datalist.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &DataListDeleteOne{builder}
+}
+
+// Query returns a query builder for DataList.
+func (c *DataListClient) Query() *DataListQuery {
+	return &DataListQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeDataList},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a DataList entity by its id.
+func (c *DataListClient) Get(ctx context.Context, id int64) (*DataList, error) {
+	return c.Query().Where(datalist.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *DataListClient) GetX(ctx context.Context, id int64) *DataList {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *DataListClient) Hooks() []Hook {
+	return c.hooks.DataList
+}
+
+// Interceptors returns the client interceptors.
+func (c *DataListClient) Interceptors() []Interceptor {
+	return c.inters.DataList
+}
+
+func (c *DataListClient) mutate(ctx context.Context, m *DataListMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&DataListCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&DataListUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&DataListUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&DataListDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown DataList mutation op: %q", m.Op())
+	}
+}
+
+// SiteConfigClient is a client for the SiteConfig schema.
+type SiteConfigClient struct {
+	config
+}
+
+// NewSiteConfigClient returns a client for the SiteConfig from the given config.
+func NewSiteConfigClient(c config) *SiteConfigClient {
+	return &SiteConfigClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `siteconfig.Hooks(f(g(h())))`.
+func (c *SiteConfigClient) Use(hooks ...Hook) {
+	c.hooks.SiteConfig = append(c.hooks.SiteConfig, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `siteconfig.Intercept(f(g(h())))`.
+func (c *SiteConfigClient) Intercept(interceptors ...Interceptor) {
+	c.inters.SiteConfig = append(c.inters.SiteConfig, interceptors...)
+}
+
+// Create returns a builder for creating a SiteConfig entity.
+func (c *SiteConfigClient) Create() *SiteConfigCreate {
+	mutation := newSiteConfigMutation(c.config, OpCreate)
+	return &SiteConfigCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of SiteConfig entities.
+func (c *SiteConfigClient) CreateBulk(builders ...*SiteConfigCreate) *SiteConfigCreateBulk {
+	return &SiteConfigCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *SiteConfigClient) MapCreateBulk(slice any, setFunc func(*SiteConfigCreate, int)) *SiteConfigCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &SiteConfigCreateBulk{err: fmt.Errorf("calling to SiteConfigClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*SiteConfigCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &SiteConfigCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for SiteConfig.
+func (c *SiteConfigClient) Update() *SiteConfigUpdate {
+	mutation := newSiteConfigMutation(c.config, OpUpdate)
+	return &SiteConfigUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *SiteConfigClient) UpdateOne(sc *SiteConfig) *SiteConfigUpdateOne {
+	mutation := newSiteConfigMutation(c.config, OpUpdateOne, withSiteConfig(sc))
+	return &SiteConfigUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *SiteConfigClient) UpdateOneID(id int64) *SiteConfigUpdateOne {
+	mutation := newSiteConfigMutation(c.config, OpUpdateOne, withSiteConfigID(id))
+	return &SiteConfigUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for SiteConfig.
+func (c *SiteConfigClient) Delete() *SiteConfigDelete {
+	mutation := newSiteConfigMutation(c.config, OpDelete)
+	return &SiteConfigDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *SiteConfigClient) DeleteOne(sc *SiteConfig) *SiteConfigDeleteOne {
+	return c.DeleteOneID(sc.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *SiteConfigClient) DeleteOneID(id int64) *SiteConfigDeleteOne {
+	builder := c.Delete().Where(siteconfig.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &SiteConfigDeleteOne{builder}
+}
+
+// Query returns a query builder for SiteConfig.
+func (c *SiteConfigClient) Query() *SiteConfigQuery {
+	return &SiteConfigQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeSiteConfig},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a SiteConfig entity by its id.
+func (c *SiteConfigClient) Get(ctx context.Context, id int64) (*SiteConfig, error) {
+	return c.Query().Where(siteconfig.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *SiteConfigClient) GetX(ctx context.Context, id int64) *SiteConfig {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *SiteConfigClient) Hooks() []Hook {
+	return c.hooks.SiteConfig
+}
+
+// Interceptors returns the client interceptors.
+func (c *SiteConfigClient) Interceptors() []Interceptor {
+	return c.inters.SiteConfig
+}
+
+func (c *SiteConfigClient) mutate(ctx context.Context, m *SiteConfigMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&SiteConfigCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&SiteConfigUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&SiteConfigUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&SiteConfigDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown SiteConfig mutation op: %q", m.Op())
 	}
 }
 
@@ -332,9 +618,9 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		User []ent.Hook
+		DataList, SiteConfig, User []ent.Hook
 	}
 	inters struct {
-		User []ent.Interceptor
+		DataList, SiteConfig, User []ent.Interceptor
 	}
 )

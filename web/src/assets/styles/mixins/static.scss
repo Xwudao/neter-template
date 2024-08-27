@@ -1,0 +1,12 @@
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin btn {
+  appearance: none;
+  border: none;
+  outline: none;
+  padding: 10px;
+}

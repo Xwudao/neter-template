@@ -9,12 +9,11 @@ cors:
     - http://127.0.0.1:*
   maxAge: 24h
 db:
-  database: ent-demo
-  devDsn: mysql://root:root@:3306/dev-ent
+  database: nr-demo
   dialect: mysql
-  host: 127.0.0.1
+  host: 192.168.1.21
   username: root
-  password: root
+  password: 123456
   port: 3306
   autoMigrate: true
 jwt:
@@ -26,16 +25,8 @@ log:
   level: debug
   linkName: current.log
   path: ./logs
-mail:
-  connectTimeout: 10s
-  from: xx
-  host: xx
-  keepAlive: true
-  password: xx
-  port: 456
-  sendTimeout: 10s
-  username: xx
+
 redis:
-  addr: 127.0.0.1:6379
+  addr: 192.168.1.21:6379
   db: 0
   password: ""

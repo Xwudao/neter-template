@@ -12,6 +12,8 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"github.com/Xwudao/neter-template/internal/data/ent/datalist"
+	"github.com/Xwudao/neter-template/internal/data/ent/siteconfig"
 	"github.com/Xwudao/neter-template/internal/data/ent/user"
 )
 
@@ -73,7 +75,9 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			user.Table: user.ValidColumn,
+			datalist.Table:   datalist.ValidColumn,
+			siteconfig.Table: siteconfig.ValidColumn,
+			user.Table:       user.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

@@ -7,7 +7,9 @@ import (
 	"github.com/google/wire"
 
 	"github.com/Xwudao/neter-template/internal/cron"
+	"github.com/Xwudao/neter-template/internal/data"
 	"github.com/Xwudao/neter-template/internal/system"
+	"github.com/Xwudao/neter-template/pkg/utils"
 
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/cmd"
@@ -22,12 +24,12 @@ func mainApp() (*cmd.MainApp, func(), error) {
 		cmd.NewMainApp,
 		logger.NewLogger,
 		logger.NewZapWriter,
-		//config.NewKoanf,
 		config.ProviderConfigSet,
 		cron.ProviderCronSet,
 		core.ProviderCoreSet,
 		biz.ProviderBizSet,
-		//data.ProviderDataSet,
+		data.ProviderDataSet,
+		utils.ProvideUtilSet,
 		routes.ProviderRouteSet,
 		system.ProviderSystemSet,
 	))

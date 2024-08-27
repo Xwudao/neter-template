@@ -1,6 +1,3 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -8,6 +5,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 
+	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/cron"
 	"github.com/Xwudao/neter-template/internal/system"
 
@@ -40,6 +38,8 @@ type MainApp struct {
 	cron       *cron.Cron
 	conf       *koanf.Koanf
 	logger     *zap.SugaredLogger
+	sib        *biz.SystemInitBiz
+	scb        *biz.SiteConfigBiz
 }
 
 func NewMainApp(
@@ -48,6 +48,8 @@ func NewMainApp(
 	conf *koanf.Koanf,
 	cron *cron.Cron,
 	initSystem *system.InitSystem,
+	sib *biz.SystemInitBiz,
+	scb *biz.SiteConfigBiz,
 ) (*MainApp, func()) {
 	m := &MainApp{
 		logger:     logger,
@@ -55,6 +57,7 @@ func NewMainApp(
 		initSystem: initSystem,
 		cron:       cron,
 		conf:       conf,
+		sib:        sib, scb: scb,
 	}
 
 	cleanup := func() {
@@ -66,6 +69,22 @@ func NewMainApp(
 	m.checkSystem()
 
 	return m, cleanup
+}
+
+func (m *MainApp) Run() error {
+	m.initSystem.InitConfig()
+
+	if err := m.sib.AddAdminUser(); err != nil {
+		return err
+	}
+	if err := m.scb.Init(); err != nil {
+		return err
+	}
+
+	m.cron.Run()
+	m.cors() //this must be set before Register method
+	m.http.Register()
+	return m.http.Run()
 }
 
 // check system
@@ -114,12 +133,4 @@ func (m *MainApp) cors() {
 
 	m.http.ConfigCors(c)
 	//config cors end
-}
-
-func (m *MainApp) Run() error {
-	m.initSystem.InitConfig()
-	m.cron.Run()
-	m.cors() //this must be set before Register method
-	m.http.Register()
-	return m.http.Run()
 }

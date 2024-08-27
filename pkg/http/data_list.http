@@ -1,0 +1,59 @@
+### create data list
+POST {{api}}/admin/v1/data_list/create
+Authorization: {{token}}
+Content-Type: application/json
+X-Name: CreateDataList
+
+{
+  "key": "202cb962ac59075b964b07152d234b72",
+  "label": "友链",
+  "kind": "friend_link",
+  "value": "{\"name\":\"test\",\"link\":\"http://test.com\",\"open_blank\":true,\"enable\":true}"
+}
+
+### update data list
+POST {{api}}/admin/v1/data_list/update
+Authorization: {{token}}
+Content-Type: application/json
+X-Name: UpdateDataList
+
+{
+  "id": 3,
+  "key": "202cb962ac59075b964b07152d234b72",
+  "value": "{\"name\":\"test22\",\"link\":\"http://test.com\",\"open_blank\":true,\"enable\":true}"
+}
+
+### list by kind
+GET {{api}}/admin/v1/data_list/list?kind=friend_link&page=1&size=10
+Authorization: {{token}}
+X-Name: ListDataListByKind
+
+### delete data list
+POST {{api}}/admin/v1/data_list/delete
+Authorization: {{token}}
+Content-Type: application/json
+X-Name: DeleteDataList
+
+{
+  "id": 1
+}
+
+### get sort data
+GET {{api}}/admin/v1/data_list/sort_data?kind=friend_link
+Authorization: {{token}}
+X-Name: GetDataListSortData
+
+### update sort
+POST {{api}}/admin/v1/data_list/update_order
+Content-Type: application/json
+Authorization: {{token}}
+X-Name: UpdateSortDataList
+
+{
+  "ids": [
+    4
+  ],
+  "orders": [
+    33
+  ]
+}

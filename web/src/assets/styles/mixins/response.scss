@@ -1,0 +1,87 @@
+//- 320px for mobile devices
+//- 768px for tablets
+//- 1024px for small laptops and desktops
+//- 1440px for larger desktops and high-resolution displays
+
+$mobile: 320px;
+$tablet: 768px;
+$desktop: 1024px;
+$large: 1440px;
+
+@mixin show-mobile {
+  display: block;
+  @media only screen and (min-width: $tablet) {
+    @content;
+  }
+}
+
+@mixin show-tablet {
+  display: none;
+  @media only screen and (min-width: $tablet) {
+    @content;
+  }
+}
+
+@mixin show-desktop {
+  display: none;
+  @media only screen and (min-width: $desktop) {
+    @content;
+  }
+}
+
+@mixin show-large {
+  display: none;
+  @media only screen and (min-width: $large) {
+    @content;
+  }
+}
+
+@mixin respond-at($media) {
+  @media only screen and (min-width: $media) {
+    @content;
+  }
+}
+
+@mixin respond-between($min, $max) {
+  @media only screen and (min-width: $min) and (max-width: $max) {
+    @content;
+  }
+}
+
+@mixin respond-at-mobile {
+  @include respond-at($mobile) {
+    @content;
+  }
+}
+
+@mixin respond-at-tablet {
+  @include respond-at($tablet) {
+    @content;
+  }
+}
+
+@mixin respond-at-desktop {
+  @include respond-at($desktop) {
+    @content;
+  }
+}
+
+@mixin respond-at-large {
+  @include respond-at($large) {
+    @content;
+  }
+}
+
+@mixin responsive-width($width) {
+  width: 100%;
+  @content;
+  @media (min-width: $width) {
+    width: $width;
+  }
+}
+
+@mixin at-dark {
+  @at-root html.dark & {
+    @content;
+  }
+}

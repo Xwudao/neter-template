@@ -3,10 +3,12 @@ package routes
 import (
 	"errors"
 	"fmt"
+	"html/template"
 	"mime"
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/gin-contrib/gzip"
@@ -16,13 +18,22 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
+	"github.com/Xwudao/neter-template/internal/data"
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
 	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
 	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/logger"
+	"github.com/Xwudao/neter-template/pkg/utils"
+	"github.com/Xwudao/neter-template/pkg/utils/jwt"
 )
 
-func NewEngine(zw *logger.ZapWriter, conf *koanf.Koanf, log *zap.SugaredLogger) *gin.Engine {
+func NewEngine(
+	zw *logger.ZapWriter,
+	jwt *jwt.Client,
+	data *data.Data,
+	conf *koanf.Koanf,
+	log *zap.SugaredLogger,
+) *gin.Engine {
 	var (
 		isDebug   = conf.String("app.mode") == "debug"
 		isRelease = conf.String("app.mode") == "release"
@@ -54,22 +65,25 @@ func NewEngine(zw *logger.ZapWriter, conf *koanf.Koanf, log *zap.SugaredLogger) 
 		"/v2/",
 		"/v3/",
 	})))
+
+	r.Use(mdw.ExtractUserInfoMiddleware(log, jwt, data))
+
 	//spa := mdw.NewSpaMdw(assets.SpaDist, "dist")
 	//r.NoRoute(spa.ServeNotFound("index.html"))
 	//r.NoRoute(mdw.NotFoundMdw())
 
 	/*for html glob start*/
-	//r.SetFuncMap(template.FuncMap{
-	//	"join":       strings.Join,
-	//	"indexes":    utils.BuildSlice,
-	//	"hostname":   utils.MustHostname,
-	//	"b64encode":  utils.B64Encode,
-	//	"addutm":     utils.AddUTM,
-	//	"htmlx":      utils.HtmlX,
-	//	"formatdate": utils.FormatDate,
-	//})
-	//r.LoadHTMLGlob("web/front/**/*")
-	//r.Static("/static", "web/static")
+	r.SetFuncMap(template.FuncMap{
+		"join":       strings.Join,
+		"indexes":    utils.BuildSlice,
+		"hostname":   utils.MustHostname,
+		"b64encode":  utils.B64Encode,
+		"addutm":     utils.AddUTM,
+		"htmlx":      utils.HtmlX,
+		"formatdate": utils.FormatDate,
+	})
+	r.LoadHTMLGlob("web/front/**/*")
+	r.Static("/static", "web/static")
 	/*for html glob end*/
 
 	r.Use(mdw.DumpReqResMdw(isDebug, log))
@@ -85,7 +99,10 @@ type HttpEngine struct {
 	log    *zap.SugaredLogger
 	ctx    *system.AppContext
 
-	v1UserRoute *v1.UserRoute
+	v1UserRoute       *v1.UserRoute
+	v1SiteConfigRoute *v1.SiteConfigRoute
+	v1DataListRoute   *v1.DataListRoute
+	v1HtmlRoute       *v1.HtmlRoute
 }
 
 func NewHttpEngine(
@@ -94,15 +111,20 @@ func NewHttpEngine(
 	log *zap.SugaredLogger,
 	ctx *system.AppContext,
 	v1UserRoute *v1.UserRoute,
+	v1SiteConfigRoute *v1.SiteConfigRoute,
+	v1DataListRoute *v1.DataListRoute,
+	v1HtmlRoute *v1.HtmlRoute,
 ) (*HttpEngine, error) {
 
 	he := &HttpEngine{
-		conf:   conf,
-		log:    log,
-		router: router,
-		ctx:    ctx,
-
-		v1UserRoute: v1UserRoute,
+		conf:              conf,
+		log:               log,
+		router:            router,
+		ctx:               ctx,
+		v1UserRoute:       v1UserRoute,
+		v1SiteConfigRoute: v1SiteConfigRoute,
+		v1DataListRoute:   v1DataListRoute,
+		v1HtmlRoute:       v1HtmlRoute,
 	}
 
 	return he, nil
@@ -115,7 +137,7 @@ func (r *HttpEngine) Run() error {
 	port := r.conf.Int("app.port")
 	addr := fmt.Sprintf(":%d", port)
 
-	log.Infof("app running on port: %d", port)
+	log.Infof("app running on: http://127.0.0.1:%d", port)
 
 	srv := &http.Server{
 		Addr:    addr,
@@ -142,6 +164,9 @@ func (r *HttpEngine) Run() error {
 }
 func (r *HttpEngine) Register() {
 	r.v1UserRoute.Reg()
+	r.v1SiteConfigRoute.Reg()
+	r.v1DataListRoute.Reg()
+	r.v1HtmlRoute.Reg()
 }
 
 func (r *HttpEngine) Use(middleware ...gin.HandlerFunc) gin.IRoutes {

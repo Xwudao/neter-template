@@ -1,0 +1,67 @@
+html,body{
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+body{
+  background-color: var(--semi-color-bg-1);
+  color: var(--semi-color-text-2);
+}
+
+.app-hello {
+  color: var(--semi-color-text-1);
+  background-color: var(--semi-color-bg-1);
+  font-size: 18px;
+  height: 60px;
+  line-height: 60px;
+
+  & > ul {
+    display: flex;
+    align-items: center;
+    //justify-content: center;
+    list-style: none;
+    padding: 0;
+    li {
+      margin: 0 10px;
+      padding: 0 10px;
+
+      &.active,
+      &:hover {
+        background-color: rgba(var(--semi-blue-4), 0.8);
+        a {
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.disks-box {
+  width: 100%;
+}
+
+.disk-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--semi-color-border);
+  &:last-child {
+    border-bottom: none;
+  }
+  @include space-x(10px);
+
+  &__name {
+    max-width: 120px;
+    overflow: hidden;
+  }
+
+  &__docid {
+    max-width: 200px;
+  }
+
+  &__files {
+    flex: 1;
+    @include truncate;
+  }
+}

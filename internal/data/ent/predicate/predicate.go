@@ -6,5 +6,11 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// DataList is the predicate function for datalist builders.
+type DataList func(*sql.Selector)
+
+// SiteConfig is the predicate function for siteconfig builders.
+type SiteConfig func(*sql.Selector)
+
 // User is the predicate function for user builders.
 type User func(*sql.Selector)
