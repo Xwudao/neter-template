@@ -6,6 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "analyze": "tsc -b && vite build --mode analyze",
+    "build:lib": "tsc -b && vite build --mode lib",
+    "scss": "sass ./src/assets/styles/lib-imports.scss ./static/app.css  --no-source-map -w",
+    "build:app": "rollup -c",
+    "unocss": "unocss -w",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"sass,unocss\" -c \"yellow,cyan\" \"npm run scss\" \"npm run unocss\"",
     "lint": "eslint .",
     "preview": "vite preview"
   },
