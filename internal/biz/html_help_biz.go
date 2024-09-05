@@ -29,6 +29,7 @@ func NewHtmlHelpBiz(log *zap.SugaredLogger, appCtx *system.AppContext, scb *Site
 		jwt:    jwt,
 	}
 }
+
 func (h *HtmlHelpBiz) BuildBase(c *gin.Context) (*payloads.HtmlBaseData, *models.SiteInfoConfig, error) {
 	var cnf models.SiteInfoConfig
 	if err := h.scb.GetConfig(enum.ConfigKeySiteInfo, &cnf); err != nil {
@@ -61,6 +62,7 @@ func (h *HtmlHelpBiz) BuildBase(c *gin.Context) (*payloads.HtmlBaseData, *models
 
 	return &m, &cnf, nil
 }
+
 func (h *HtmlHelpBiz) BuildIndexMap(c *gin.Context) (*payloads.IndexMap, error) {
 	var base, cnf, err = h.BuildBase(c)
 	if err != nil {
