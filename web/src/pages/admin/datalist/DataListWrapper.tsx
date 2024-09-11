@@ -35,7 +35,7 @@ const DataListWrapper: FC<PropsWithChildren<IDataListWrapper>> = ({
         onSubmit={(data) => {
           onSubmit({
             ...data,
-            label: DataListKinds.find((item) => (item.value = data['kind']))?.label,
+            label: DataListKinds.find((item) => (item.value === data['kind']))?.label,
             key: md5(JSON.stringify(data)),
             value: JSON.stringify(data),
           });
