@@ -3,7 +3,7 @@ import { KEY_TOKEN } from '@/core/constants.ts';
 import useUserInfo from '@/store/userState.ts';
 import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
-import { createContext, ReactNode, useContext } from 'react';
+import { createContext, ReactNode } from 'react';
 
 export interface AuthContextType {
   toLogin: (user: User, ok?: () => void) => void;
@@ -14,11 +14,10 @@ export interface AuthContextType {
 const AuthContext = createContext<AuthContextType>(null!);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-  // const [logged, setLogged] = useState(false);
   const { userInfo, resetInfo, updateUser } = useUserInfo();
 
-  // const [user, setUser] = useState<Partial<User>>({ ...userInfo });
-  // const [logged, setLogged] = useState(!!userInfo.token);
+  const [userState, setUserState] = useState<User>(userInfo);
+
   const logged = useMemo(() => {
     return !!userInfo.token;
   }, [userInfo]);
@@ -36,6 +35,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [newUser, updateUser]);
 
   const toLogin = (user: User, onOk?: () => void) => {
+    setUserState(user);
     updateUser(user);
     localStorage.setItem(KEY_TOKEN, user.token || '');
     Cookies.set('token', user.token || '');
@@ -44,17 +44,15 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = (onOk?: () => void) => {
     resetInfo();
+    setUserState({} as User);
     localStorage.removeItem(KEY_TOKEN);
     Cookies.remove('token');
     onOk?.();
   };
 
-  return <AuthContext.Provider value={{ logout, user: userInfo, logged, toLogin }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ logout, user: userState, logged, toLogin }}>{children}</AuthContext.Provider>;
 };
-const useAuth = () => {
-  return useContext(AuthContext);
-};
-// eslint-disable-next-line react-refresh/only-export-components
-export { useAuth };
+
+export { AuthContext };
 
 export default AuthProvider;

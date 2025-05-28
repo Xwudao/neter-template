@@ -26,22 +26,19 @@ const SortBtn: FC<PropsWithChildren<ISortBtn>> = ({ data, disabled = false, load
         <div className={`p2 min-w-40 space-y-3`}>
           <h3 className={`fw-bold text-base`}>更新顺序</h3>
           <Divider margin={10} />
-          <SortBlock
-            className={`p1 max-w-60`}
-            data={inData}
-            labelKey={labelKey}
-            onSort={(data) => setInData(data)}
-          />
+          <SortBlock className={`p1 max-w-60`} data={inData} labelKey={labelKey} onSort={(data) => setInData(data)} />
           <Button
             block
             loading={loading}
             onClick={() => {
               onOk(inData);
-            }}>
+            }}
+          >
             确定
           </Button>
         </div>
-      }>
+      }
+    >
       <Button disabled={disabled} icon={<IconSort />} />
     </Popover>
   );

@@ -10,11 +10,7 @@ const ThemeContext = createContext<ThemeContextProp>(null!);
 const ThemeProvider: FC<PropsWithChildren> = ({ children }) => {
   const { isDark, toggleTheme } = useTheme();
 
-  return (
-    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ isDark, toggleTheme }}>{children}</ThemeContext.Provider>;
 };
 
 export default ThemeProvider;

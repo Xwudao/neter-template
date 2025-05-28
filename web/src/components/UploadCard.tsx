@@ -53,7 +53,8 @@ const UploadCard: FC<PropsWithChildren<IUploadCard>> = ({ onSuccess, initValues 
                       className={`cp`}
                       onClick={() => {
                         formApi.setValue('object', generateRandomString(12));
-                      }}>
+                      }}
+                    >
                       随机生成
                     </Typography.Text>
                   </>

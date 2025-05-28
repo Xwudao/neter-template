@@ -1,67 +1,27 @@
-html,body{
+html,
+body {
   min-height: 100vh;
   min-width: 100vw;
+  position: relative;
+  height: 100%;
+  scroll-behavior: smooth;
+
+  background-color: var(--semi-color-bg-0);
+  color: var(--semi-color-text-0);
 }
 
-body{
-  background-color: var(--semi-color-bg-1);
-  color: var(--semi-color-text-2);
+html.dark {
+  color-scheme: dark;
 }
 
-.app-hello {
-  color: var(--semi-color-text-1);
-  background-color: var(--semi-color-bg-1);
-  font-size: 18px;
-  height: 60px;
-  line-height: 60px;
-
-  & > ul {
-    display: flex;
-    align-items: center;
-    //justify-content: center;
-    list-style: none;
-    padding: 0;
-    li {
-      margin: 0 10px;
-      padding: 0 10px;
-
-      &.active,
-      &:hover {
-        background-color: rgba(var(--semi-blue-4), 0.8);
-        a {
-          color: white;
-        }
-      }
-    }
-  }
+body {
+  --box-bg-color: #{$app-box-bg-light};
+  --sur-bg-color: #{$app-sur-bg-light};
 }
 
-.disks-box {
-  width: 100%;
-}
-
-.disk-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 20px;
-  border-bottom: 1px solid var(--semi-color-border);
-  &:last-child {
-    border-bottom: none;
-  }
-  @include space-x(10px);
-
-  &__name {
-    max-width: 120px;
-    overflow: hidden;
-  }
-
-  &__docid {
-    max-width: 200px;
-  }
-
-  &__files {
-    flex: 1;
-    @include truncate;
-  }
+body[theme-mode='dark'] {
+  --app-box-bg: #{$app-box-bg-dark};
+  --cate-box-bg: rgba(var(--semi-grey-8), 0.08);
+  --box-bg-color: #{$app-box-bg-dark};
+  --sur-bg-color: #{$app-sur-bg-dark};
 }

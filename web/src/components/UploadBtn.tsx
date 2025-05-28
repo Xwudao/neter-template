@@ -40,7 +40,8 @@ const UploadBtn: FC<PropsWithChildren<IUploadBtn>> = ({ prefix = 'images' }) => 
               </div>
             )}
           </div>
-        }>
+        }
+      >
         <Button icon={<IconImage />} onClick={() => setShow(!show)} />
       </Popover>
     </>

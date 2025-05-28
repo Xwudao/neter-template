@@ -23,8 +23,7 @@ const useUserInfo = create<UserState>()(
     persist(
       (set, get) => ({
         userInfo: initUserInfo(),
-        updateUser: (userInfo: Partial<User>) =>
-          set({ userInfo: { ...get().userInfo, ...userInfo } }),
+        updateUser: (userInfo: Partial<User>) => set({ userInfo: { ...get().userInfo, ...userInfo } }),
         resetInfo: () => set({ userInfo: initUserInfo() }),
       }),
       {

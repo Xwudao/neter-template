@@ -25,12 +25,7 @@ type ISortBlock = {
   className?: string;
   onSort: (data: any[]) => void;
 };
-const SortBlock: FC<PropsWithChildren<ISortBlock>> = ({
-  data,
-  labelKey,
-  className = '',
-  onSort = EmptyFunc,
-}) => {
+const SortBlock: FC<PropsWithChildren<ISortBlock>> = ({ data, labelKey, className = '', onSort = EmptyFunc }) => {
   console.log('sortBlock render...');
 
   const [innerData, setInnerData] = useState([] as any[]);
@@ -91,7 +86,8 @@ const SortItem: FC<PropsWithChildren<ISortItem>> = ({ labelKey, data }) => {
       className={`cmn-text cursor-grab select-none max-w-full inline-flex items-start`}
       style={style}
       {...attributes}
-      {...listeners}>
+      {...listeners}
+    >
       <i className="i-carbon-drag-vertical"></i>
       <span className={`am truncate flex-1 ml-1`}>{data[labelKey]}</span>
     </div>

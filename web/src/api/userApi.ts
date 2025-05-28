@@ -1,4 +1,4 @@
-import { request } from "@/api/request.ts";
+import { request } from '@/api/request.ts';
 
 export interface PostUserLoginReq {
   username: string;
@@ -25,8 +25,8 @@ export interface PostUserLoginRes {
 
 const postApiUserLogin = (payload: PostUserLoginReq) => {
   return request<PostUserLoginRes>({
-    url: "/v1/user/login",
-    method: "post",
+    url: '/v1/user/login',
+    method: 'post',
     data: payload,
   });
 };
@@ -39,8 +39,8 @@ export interface GetUserInfoRes {
 
 const getApiUserInfo = () => {
   return request<GetUserInfoRes>({
-    url: "/auth/v1/user/info",
-    method: "get",
+    url: '/auth/v1/user/info',
+    method: 'get',
   });
 };
 
