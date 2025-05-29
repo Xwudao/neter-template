@@ -1,6 +1,6 @@
 import { getApiUserInfo, User } from '@/api/userApi.ts';
 import { KEY_TOKEN } from '@/core/constants.ts';
-import useUserInfo from '@/store/userState.ts';
+import useUserState from '@/store/userState.ts';
 import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { createContext, ReactNode } from 'react';
@@ -14,7 +14,7 @@ export interface AuthContextType {
 const AuthContext = createContext<AuthContextType>(null!);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { userInfo, resetInfo, updateUser } = useUserInfo();
+  const { userInfo, resetInfo, updateUser } = useUserState();
 
   const [userState, setUserState] = useState<User>(userInfo);
 

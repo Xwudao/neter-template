@@ -18,7 +18,7 @@ export const initUserInfo = (): User => ({
   token: '',
 });
 
-const useUserInfo = create<UserState>()(
+const useUserState = create<UserState>()(
   devtools(
     persist(
       (set, get) => ({
@@ -33,4 +33,4 @@ const useUserInfo = create<UserState>()(
   ),
 );
 
-export default useUserInfo;
+export default useUserState;

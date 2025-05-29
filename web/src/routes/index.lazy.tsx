@@ -1,4 +1,5 @@
 import useTheme from '@/hooks/useTheme';
+import useConfig from '@/provider/useConfig';
 import { Button, Input } from '@douyinfe/semi-ui';
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router';
 export const Route = createLazyFileRoute('/')({
@@ -8,6 +9,9 @@ export const Route = createLazyFileRoute('/')({
 const IndexComponent = () => {
   const nav = useNavigate();
   const { toggleTheme } = useTheme();
+  const {
+    config: { site_info },
+  } = useConfig();
   return (
     <div>
       <h1>Index Page</h1>
@@ -34,7 +38,9 @@ const IndexComponent = () => {
       </button>
 
       <hr />
-      {/* <Chart /> */}
+
+      {site_info.site_name} <br/>
+      {site_info.site_keywords}
     </div>
   );
 };

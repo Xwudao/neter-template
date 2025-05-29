@@ -14,7 +14,6 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as AdminRouteImport } from './routes/admin/route'
-import { Route as AdminDashboardImport } from './routes/admin/dashboard'
 
 // Create Virtual Routes
 
@@ -22,6 +21,8 @@ const LoginLazyImport = createFileRoute('/login')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 const AdminIndexLazyImport = createFileRoute('/admin/')()
+const AdminDashboardLazyImport = createFileRoute('/admin/dashboard')()
+const AdminConfigLazyImport = createFileRoute('/admin/config')()
 
 // Create/Update Routes
 
@@ -50,10 +51,17 @@ const AdminIndexLazyRoute = AdminIndexLazyImport.update({
   getParentRoute: () => AdminRouteRoute,
 } as any).lazy(() => import('./routes/admin/index.lazy').then((d) => d.Route))
 
-const AdminDashboardRoute = AdminDashboardImport.update({
+const AdminDashboardLazyRoute = AdminDashboardLazyImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRouteRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/dashboard.lazy').then((d) => d.Route),
+)
+
+const AdminConfigLazyRoute = AdminConfigLazyImport.update({
+  path: '/config',
+  getParentRoute: () => AdminRouteRoute,
+} as any).lazy(() => import('./routes/admin/config.lazy').then((d) => d.Route))
 
 // Populate the FileRoutesByPath interface
 
@@ -87,11 +95,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginLazyImport
       parentRoute: typeof rootRoute
     }
+    '/admin/config': {
+      id: '/admin/config'
+      path: '/config'
+      fullPath: '/admin/config'
+      preLoaderRoute: typeof AdminConfigLazyImport
+      parentRoute: typeof AdminRouteImport
+    }
     '/admin/dashboard': {
       id: '/admin/dashboard'
       path: '/dashboard'
       fullPath: '/admin/dashboard'
-      preLoaderRoute: typeof AdminDashboardImport
+      preLoaderRoute: typeof AdminDashboardLazyImport
       parentRoute: typeof AdminRouteImport
     }
     '/admin/': {
@@ -109,7 +124,8 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   AdminRouteRoute: AdminRouteRoute.addChildren({
-    AdminDashboardRoute,
+    AdminConfigLazyRoute,
+    AdminDashboardLazyRoute,
     AdminIndexLazyRoute,
   }),
   AboutLazyRoute,
@@ -136,6 +152,7 @@ export const routeTree = rootRoute.addChildren({
     "/admin": {
       "filePath": "admin/route.tsx",
       "children": [
+        "/admin/config",
         "/admin/dashboard",
         "/admin/"
       ]
@@ -146,8 +163,12 @@ export const routeTree = rootRoute.addChildren({
     "/login": {
       "filePath": "login.lazy.tsx"
     },
+    "/admin/config": {
+      "filePath": "admin/config.lazy.tsx",
+      "parent": "/admin"
+    },
     "/admin/dashboard": {
-      "filePath": "admin/dashboard.tsx",
+      "filePath": "admin/dashboard.lazy.tsx",
       "parent": "/admin"
     },
     "/admin/": {

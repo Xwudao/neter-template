@@ -27,7 +27,7 @@ const Login = () => {
           () => {
             setTimeout(() => {
               if (rtn.user.role?.includes(UserRole.ADMIN)) {
-                nav({ to: '/admin' });
+                nav({ to: '/admin', search: { tab: '' } });
               } else {
                 nav({ to: '/' });
               }

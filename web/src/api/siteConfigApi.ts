@@ -1,11 +1,13 @@
 import { request } from '@/api/request.ts';
 import { NullResp } from '@/api/types.ts';
 
+export interface SiteConfig {
+  site_info: string;
+  seo_config: string;
+}
+
 export interface GetGetSiteConfigRes {
-  data: {
-    site_info: string;
-    seo_config: string;
-  };
+  data: SiteConfig;
   code: number;
   msg: string;
 }
@@ -16,6 +18,7 @@ const getApiGetSiteConfig = () => {
     method: 'get',
   });
 };
+
 export interface PostUpdateSiteConfigReq {
   name: string;
   config: string;
@@ -41,4 +44,17 @@ const getApiGenSitemap = () => {
   });
 };
 
-export { getApiGetSiteConfig, getApiGenSitemap, postApiUpdateSiteConfig };
+export interface GetGetCmnSiteConfigRes {
+  code: number;
+  msg: string;
+  data: SiteConfig;
+}
+
+const getApiGetCmnSiteConfig = () => {
+  return request<GetGetCmnSiteConfigRes>({
+    url: '/v1/site_config/all',
+    method: 'get',
+  });
+};
+
+export { getApiGetSiteConfig, getApiGetCmnSiteConfig, getApiGenSitemap, postApiUpdateSiteConfig };

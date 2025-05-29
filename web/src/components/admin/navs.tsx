@@ -43,7 +43,7 @@ const Navs: NavItems = [
     itemKey: 'site-config',
     text: '站点配置',
     icon: <AppIcon icon={'i-ant-design-setting-outlined'} />,
-    path: '/admin/site_config',
+    path: '/admin/config',
   },
 ];
 const findKeyByPath = (navs: NavItems, path: string): string | undefined => {

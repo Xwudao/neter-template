@@ -1,4 +1,5 @@
 import { User } from '@/api/userApi';
+import NotFound from '@/components/admin/layout/NotFound';
 import { type QueryClient } from '@tanstack/react-query';
 import { Outlet, createRootRouteWithContext } from '@tanstack/react-router';
 
@@ -10,4 +11,5 @@ interface MyRouterContext {
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => <Outlet />,
+  notFoundComponent: () => <NotFound />,
 });

@@ -8,6 +8,7 @@ export const productionConfig = defineConfig({
     drop: isProd ? ['debugger', 'console'] : [],
   },
   build: {
+    manifest: true,
     rollupOptions: {
       // output: {
       //   manualChunks: (id) => {

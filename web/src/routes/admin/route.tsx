@@ -8,8 +8,16 @@ import { Avatar, Button, Divider, Dropdown, Layout, Nav, Toast } from '@douyinfe
 import { createFileRoute, Outlet, redirect, useLocation, useNavigate } from '@tanstack/react-router';
 import MaterialSymbolsLogoutSharp from '~icons/material-symbols/logout-sharp';
 import classes from '../styles.module.scss';
+import NotFound from '@/components/admin/layout/NotFound';
+import AdminConfigProvider from '@/provider/AdminConfigProvider';
+import z from 'zod';
 
 const { Header, Footer, Sider, Content } = Layout;
+
+const configSearchSchema = z.object({
+  tab: z.string().optional().default('config'),
+});
+
 
 const AdminLayout = () => {
   const nav = useNavigate();
@@ -66,13 +74,11 @@ const AdminLayout = () => {
                       {/*</Dropdown.Item>*/}
                       <Dropdown.Item
                         icon={<MaterialSymbolsLogoutSharp />}
-                        onClick={() => logout(() => nav({ to: '/login' }))}
-                      >
+                        onClick={() => logout(() => nav({ to: '/login' }))}>
                         退出
                       </Dropdown.Item>
                     </Dropdown.Menu>
-                  }
-                >
+                  }>
                   <Avatar alt="avatar" size={`small`}>
                     {(user.username || 'V')[0].toUpperCase()}
                   </Avatar>
@@ -110,7 +116,13 @@ const AdminLayout = () => {
 };
 
 export const Route = createFileRoute('/admin')({
-  component: AdminLayout,
+  component: () => (
+    <AdminConfigProvider>
+      <AdminLayout />
+    </AdminConfigProvider>
+  ),
+  notFoundComponent: () => <NotFound />,
+  validateSearch: configSearchSchema,
   beforeLoad: async ({ context, location }) => {
     if (!context.auth || !context.auth.role?.includes(UserRole.ADMIN)) {
       Toast.error('请先登录');
