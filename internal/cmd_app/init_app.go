@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/knadh/koanf/parsers/yaml"
+	"go-kitboxpro/pkg/config"
 )
 
 type InitApp struct {

@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/Xwudao/neter-template/internal/domain/payloads"
+	"go-kitboxpro/internal/domain/payloads"
 )
 
 func TestNewS3Client(t *testing.T) {

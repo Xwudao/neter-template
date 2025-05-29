@@ -1,0 +1,28 @@
+@@
+@@
+-import "github.com/bytedance/sonic"
++import json "github.com/json-iterator/go"
+
+-sonic.UnmarshalString(...)
++json.UnmarshalFromString(...)
+
+@@
+@@
+-import "github.com/bytedance/sonic"
++import json "github.com/json-iterator/go"
+-sonic.MarshalString(...)
++json.MarshalToString(...)
+
+@@
+@@
+-import "github.com/bytedance/sonic"
++import json "github.com/json-iterator/go"
+-sonic.Unmarshal(...)
++json.Unmarshal(...)
+
+@@
+@@
+-import "github.com/bytedance/sonic"
++import json "github.com/json-iterator/go"
+-sonic.Marshal(...)
++json.Marshal(...)

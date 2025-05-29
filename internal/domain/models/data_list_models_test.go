@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/Xwudao/neter-template/internal/data/ent"
+	"go-kitboxpro/internal/data/ent"
 )
 
 func TestUnmarshalDataList(t *testing.T) {

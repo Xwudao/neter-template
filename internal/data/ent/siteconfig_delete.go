@@ -8,8 +8,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/Xwudao/neter-template/internal/data/ent/predicate"
-	"github.com/Xwudao/neter-template/internal/data/ent/siteconfig"
+	"go-kitboxpro/internal/data/ent/predicate"
+	"go-kitboxpro/internal/data/ent/siteconfig"
 )
 
 // SiteConfigDelete is the builder for deleting a SiteConfig entity.

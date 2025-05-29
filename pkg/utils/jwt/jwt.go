@@ -7,7 +7,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 
-	"github.com/Xwudao/neter-template/internal/domain/payloads"
+	"go-kitboxpro/internal/domain/payloads"
 )
 
 type CustomClaims struct {

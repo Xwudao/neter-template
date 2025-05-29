@@ -4,11 +4,11 @@
 package core
 
 import (
-	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/google/wire"
+	"go-kitboxpro/internal/system"
 
-	"github.com/Xwudao/neter-template/pkg/config"
-	"github.com/Xwudao/neter-template/pkg/logger"
+	"go-kitboxpro/pkg/config"
+	"go-kitboxpro/pkg/logger"
 )
 
 // func CmdApp() (*App, func(), error) {

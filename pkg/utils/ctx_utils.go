@@ -6,9 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/Xwudao/neter-template/internal/data/ent"
-	"github.com/Xwudao/neter-template/internal/data/ent/user"
-	"github.com/Xwudao/neter-template/pkg/enum"
+	"go-kitboxpro/internal/data/ent"
+	"go-kitboxpro/internal/data/ent/user"
+	"go-kitboxpro/pkg/enum"
 )
 
 func GetIP(c *gin.Context) string {

@@ -6,12 +6,12 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/Xwudao/neter-template/internal/biz"
-	"github.com/Xwudao/neter-template/internal/core"
-	"github.com/Xwudao/neter-template/internal/data/ent/user"
-	"github.com/Xwudao/neter-template/internal/domain/params"
-	"github.com/Xwudao/neter-template/internal/routes/mdw"
-	"github.com/Xwudao/neter-template/internal/routes/valid"
+	"go-kitboxpro/internal/biz"
+	"go-kitboxpro/internal/core"
+	"go-kitboxpro/internal/data/ent/user"
+	"go-kitboxpro/internal/domain/params"
+	"go-kitboxpro/internal/routes/mdw"
+	"go-kitboxpro/internal/routes/valid"
 )
 
 type DataListRoute struct {

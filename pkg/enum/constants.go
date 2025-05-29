@@ -31,3 +31,9 @@ const (
 	KeyDebug         = "debug"
 	KeyRelease       = "release"
 )
+
+var (
+	ShowInFrontendConfig = []ConfigKey{
+		ConfigKeySiteInfo,
+	}
+)

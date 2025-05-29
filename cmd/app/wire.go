@@ -6,17 +6,17 @@ package main
 import (
 	"github.com/google/wire"
 
-	"github.com/Xwudao/neter-template/internal/cron"
-	"github.com/Xwudao/neter-template/internal/data"
-	"github.com/Xwudao/neter-template/internal/system"
-	"github.com/Xwudao/neter-template/pkg/utils"
+	"go-kitboxpro/internal/cron"
+	"go-kitboxpro/internal/data"
+	"go-kitboxpro/internal/system"
+	"go-kitboxpro/pkg/utils"
 
-	"github.com/Xwudao/neter-template/internal/biz"
-	"github.com/Xwudao/neter-template/internal/cmd"
-	"github.com/Xwudao/neter-template/internal/core"
-	"github.com/Xwudao/neter-template/internal/routes"
-	"github.com/Xwudao/neter-template/pkg/config"
-	"github.com/Xwudao/neter-template/pkg/logger"
+	"go-kitboxpro/internal/biz"
+	"go-kitboxpro/internal/cmd"
+	"go-kitboxpro/internal/core"
+	"go-kitboxpro/internal/routes"
+	"go-kitboxpro/pkg/config"
+	"go-kitboxpro/pkg/logger"
 )
 
 func mainApp() (*cmd.MainApp, func(), error) {

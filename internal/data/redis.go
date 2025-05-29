@@ -7,7 +7,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/knadh/koanf/v2"
 
-	"github.com/Xwudao/neter-template/internal/system"
+	"go-kitboxpro/internal/system"
 )
 
 type RedisClient struct {

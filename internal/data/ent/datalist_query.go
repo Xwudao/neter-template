@@ -11,8 +11,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/Xwudao/neter-template/internal/data/ent/datalist"
-	"github.com/Xwudao/neter-template/internal/data/ent/predicate"
+	"go-kitboxpro/internal/data/ent/datalist"
+	"go-kitboxpro/internal/data/ent/predicate"
 )
 
 // DataListQuery is the builder for querying DataList entities.

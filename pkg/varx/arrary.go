@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/bytedance/sonic"
+	json "github.com/json-iterator/go"
 	"github.com/spf13/cast"
 )
 
@@ -161,7 +161,7 @@ func ArrContainsIn(subStrArr []string, aim string) bool {
 }
 
 func ToWindowConfig(m map[string]any) string {
-	marshalString, err := sonic.MarshalString(m)
+	marshalString, err := json.MarshalToString(m)
 	if err != nil {
 		return ""
 	}

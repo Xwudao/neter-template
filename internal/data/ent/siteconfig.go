@@ -9,7 +9,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/Xwudao/neter-template/internal/data/ent/siteconfig"
+	"go-kitboxpro/internal/data/ent/siteconfig"
 )
 
 // SiteConfig is the model entity for the SiteConfig schema.

@@ -4,7 +4,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/Xwudao/neter-template/internal/domain/payloads"
+	"go-kitboxpro/internal/domain/payloads"
 )
 
 func BuildProxyUrl(proxyData *payloads.ProxyConfig) string {

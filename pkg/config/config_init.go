@@ -3,7 +3,7 @@ package config
 import (
 	"github.com/knadh/koanf/v2"
 
-	"github.com/Xwudao/neter-template/internal/domain/payloads"
+	"go-kitboxpro/internal/domain/payloads"
 )
 
 func NewJwtConfigData(conf *koanf.Koanf) (*payloads.JwtConfig, error) {

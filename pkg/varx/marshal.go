@@ -3,7 +3,7 @@ package varx
 import (
 	"encoding/json"
 
-	"github.com/Xwudao/neter-template/internal/domain/models"
+	"go-kitboxpro/internal/domain/models"
 )
 
 func MustMarshal(v any) string {

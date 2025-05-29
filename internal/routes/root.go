@@ -3,12 +3,10 @@ package routes
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"mime"
 	"net/http"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 
 	"github.com/gin-contrib/gzip"
@@ -18,13 +16,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
-	"github.com/Xwudao/neter-template/internal/data"
-	"github.com/Xwudao/neter-template/internal/routes/mdw"
-	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
-	"github.com/Xwudao/neter-template/internal/system"
-	"github.com/Xwudao/neter-template/pkg/logger"
-	"github.com/Xwudao/neter-template/pkg/utils"
-	"github.com/Xwudao/neter-template/pkg/utils/jwt"
+	"go-kitboxpro/assets"
+	"go-kitboxpro/internal/biz"
+	"go-kitboxpro/internal/data"
+	"go-kitboxpro/internal/routes/mdw"
+	v1 "go-kitboxpro/internal/routes/v1"
+	"go-kitboxpro/internal/system"
+	"go-kitboxpro/pkg/logger"
+	"go-kitboxpro/pkg/utils/jwt"
 )
 
 func NewEngine(
@@ -32,8 +31,9 @@ func NewEngine(
 	jwt *jwt.Client,
 	data *data.Data,
 	conf *koanf.Koanf,
+	sb *biz.SeoBizBiz,
 	log *zap.SugaredLogger,
-) *gin.Engine {
+) (*gin.Engine, error) {
 	var (
 		isDebug   = conf.String("app.mode") == "debug"
 		isRelease = conf.String("app.mode") == "release"
@@ -71,26 +71,17 @@ func NewEngine(
 	//spa := mdw.NewSpaMdw(assets.SpaDist, "dist")
 	//r.NoRoute(spa.ServeNotFound("index.html"))
 	//r.NoRoute(mdw.NotFoundMdw())
-
-	/*for html glob start*/
-	r.SetFuncMap(template.FuncMap{
-		"join":       strings.Join,
-		"indexes":    utils.BuildSlice,
-		"hostname":   utils.MustHostname,
-		"b64encode":  utils.B64Encode,
-		"addutm":     utils.AddUTM,
-		"htmlx":      utils.HtmlX,
-		"formatdate": utils.FormatDate,
-	})
-	r.LoadHTMLGlob("web/front/**/*")
-	r.Static("/static", "web/static")
-	/*for html glob end*/
+	spa, err := mdw.NewSpaMdw(assets.SpaDist, "dist", sb)
+	if err != nil {
+		return nil, err
+	}
+	r.NoRoute(spa.Serve("/"))
 
 	r.Use(mdw.DumpReqResMdw(isDebug, log))
 	r.Use(gin.Logger())
 	r.Use(gin.RecoveryWithWriter(zw), mdw.LoggerMiddleware(logFunc))
 
-	return r
+	return r, nil
 }
 
 type HttpEngine struct {
@@ -102,7 +93,6 @@ type HttpEngine struct {
 	v1UserRoute       *v1.UserRoute
 	v1SiteConfigRoute *v1.SiteConfigRoute
 	v1DataListRoute   *v1.DataListRoute
-	v1HtmlRoute       *v1.HtmlRoute
 }
 
 func NewHttpEngine(
@@ -113,7 +103,6 @@ func NewHttpEngine(
 	v1UserRoute *v1.UserRoute,
 	v1SiteConfigRoute *v1.SiteConfigRoute,
 	v1DataListRoute *v1.DataListRoute,
-	v1HtmlRoute *v1.HtmlRoute,
 ) (*HttpEngine, error) {
 
 	he := &HttpEngine{
@@ -124,7 +113,6 @@ func NewHttpEngine(
 		v1UserRoute:       v1UserRoute,
 		v1SiteConfigRoute: v1SiteConfigRoute,
 		v1DataListRoute:   v1DataListRoute,
-		v1HtmlRoute:       v1HtmlRoute,
 	}
 
 	return he, nil
@@ -166,7 +154,6 @@ func (r *HttpEngine) Register() {
 	r.v1UserRoute.Reg()
 	r.v1SiteConfigRoute.Reg()
 	r.v1DataListRoute.Reg()
-	r.v1HtmlRoute.Reg()
 }
 
 func (r *HttpEngine) Use(middleware ...gin.HandlerFunc) gin.IRoutes {

@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/Xwudao/neter-template/internal/data/ent"
+	"go-kitboxpro/internal/data/ent"
 )
 
 type CodeType int

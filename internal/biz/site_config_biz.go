@@ -4,15 +4,15 @@ import (
 	"context"
 	"sync"
 
-	"github.com/bytedance/sonic"
+	json "github.com/json-iterator/go"
 	"go.uber.org/zap"
 
-	"github.com/Xwudao/neter-template/internal/data/ent"
-	"github.com/Xwudao/neter-template/internal/domain/models"
-	"github.com/Xwudao/neter-template/internal/domain/params"
-	"github.com/Xwudao/neter-template/internal/system"
-	"github.com/Xwudao/neter-template/pkg/enum"
-	"github.com/Xwudao/neter-template/pkg/varx"
+	"go-kitboxpro/internal/data/ent"
+	"go-kitboxpro/internal/domain/models"
+	"go-kitboxpro/internal/domain/params"
+	"go-kitboxpro/internal/system"
+	"go-kitboxpro/pkg/enum"
+	"go-kitboxpro/pkg/varx"
 )
 
 type SiteConfigRepository interface {
@@ -77,7 +77,7 @@ func (h *SiteConfigBiz) Init() error {
 func (h *SiteConfigBiz) GetConfig(key enum.ConfigKey, target any) error {
 	if data, ok := h.Map.Load(key); ok {
 		//return json.Unmarshal([]byte(data.(string)), target)
-		return sonic.UnmarshalString(data.(string), target)
+		return json.UnmarshalFromString(data.(string), target)
 	}
 
 	config, err := h.scr.GetByName(h.appCtx.Ctx, string(key))
@@ -85,7 +85,7 @@ func (h *SiteConfigBiz) GetConfig(key enum.ConfigKey, target any) error {
 		return err
 	}
 
-	if err := sonic.UnmarshalString(config.Config, target); err != nil {
+	if err := json.UnmarshalFromString(config.Config, target); err != nil {
 		return err
 	}
 
@@ -116,7 +116,7 @@ func (h *SiteConfigBiz) Create(ctx context.Context, p *params.CreateSiteConfigPa
 	return h.scr.Create(ctx, p)
 }
 
-func (h *SiteConfigBiz) GetAll(ctx context.Context) (map[string]string, error) {
+func (h *SiteConfigBiz) GetAll(ctx context.Context, isAdmin bool) (map[string]string, error) {
 	data, err := h.scr.GetAll(ctx)
 	if err != nil {
 		return nil, err
@@ -125,6 +125,17 @@ func (h *SiteConfigBiz) GetAll(ctx context.Context) (map[string]string, error) {
 	var m = make(map[string]string)
 	for _, v := range data {
 		m[v.Name] = v.Config
+	}
+
+	if isAdmin {
+		return m, nil
+	}
+
+	// 如果不是管理员，则只返回公开的配置
+	for k := range m {
+		if !varx.ContainEqual(enum.ShowInFrontendConfig, enum.ConfigKey(k)) {
+			delete(m, k)
+		}
 	}
 
 	return m, nil

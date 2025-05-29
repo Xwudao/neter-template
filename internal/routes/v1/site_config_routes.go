@@ -9,14 +9,14 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/Xwudao/neter-template/internal/biz"
-	"github.com/Xwudao/neter-template/internal/core"
-	"github.com/Xwudao/neter-template/internal/data/ent/user"
-	"github.com/Xwudao/neter-template/internal/domain/params"
-	"github.com/Xwudao/neter-template/internal/libx"
-	"github.com/Xwudao/neter-template/internal/routes/mdw"
-	"github.com/Xwudao/neter-template/internal/routes/valid"
-	"github.com/Xwudao/neter-template/pkg/varx"
+	"go-kitboxpro/internal/biz"
+	"go-kitboxpro/internal/core"
+	"go-kitboxpro/internal/data/ent/user"
+	"go-kitboxpro/internal/domain/params"
+	"go-kitboxpro/internal/libx"
+	"go-kitboxpro/internal/routes/mdw"
+	"go-kitboxpro/internal/routes/valid"
+	"go-kitboxpro/pkg/varx"
 )
 
 type SiteConfigRoute struct {
@@ -52,7 +52,7 @@ func (r *SiteConfigRoute) Reg() {
 
 	group := r.g.Group("/v1/site_config")
 	{
-		group.GET("", core.WrapData(r.siteConfig()))
+		group.GET("/all", core.WrapData(r.getAll(false)))
 	}
 	authGroup := r.g.Group("/auth/v1/site_config").Use(mdw.MustLoginMiddleware())
 	{
@@ -61,7 +61,7 @@ func (r *SiteConfigRoute) Reg() {
 	}
 	adminGroup := r.g.Group("/admin/v1/site_config").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
 	{
-		adminGroup.GET("/all", core.WrapData(r.getAll()))
+		adminGroup.GET("/all", core.WrapData(r.getAll(true)))
 		adminGroup.GET("/gen_sitemap", core.WrapData(r.genSitemap()))
 		adminGroup.POST("/update", core.WrapData(r.update()))
 		adminGroup.POST("/write_file", core.WrapData(r.writeFile()))
@@ -77,12 +77,12 @@ func (r *SiteConfigRoute) siteConfig() core.WrappedHandlerFunc {
 	}
 }
 
-func (r *SiteConfigRoute) getAll() core.WrappedHandlerFunc {
+func (r *SiteConfigRoute) getAll(isAdmin bool) core.WrappedHandlerFunc {
 	return func(c *gin.Context) (any, *core.RtnStatus) {
 		var (
 			ctx = c.Request.Context()
 		)
-		configs, err := r.scb.GetAll(ctx)
+		configs, err := r.scb.GetAll(ctx, isAdmin)
 		if err != nil {
 			return nil, core.NewRtnWithErr(err)
 		}

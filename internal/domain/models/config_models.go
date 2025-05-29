@@ -16,19 +16,18 @@ type SiteInfoConfig struct {
 	SiteKeywords  []string `json:"site_keywords"`
 	SitMetaScript string   `json:"site_meta_script"` // 站点meta script
 
-	Disclaimer string `json:"disclaimer"` // 免责声明
 }
 
 func (s *SiteInfoConfig) GetDefault() {
-	s.SiteName = "V2FD"
-	s.SiteTitle = "有梦想的导航"
-	s.SiteDesc = "V2FD最方便的导航系统"
-	s.SiteKeywords = []string{"V2FD", "导航"}
+	s.SiteName = "无道后台"
+	s.SiteTitle = "无道后台管理系统"
+	s.SiteDesc = "无道后台是一个开源的内容管理系统，旨在提供简单易用的后台管理功能。"
+	s.SiteKeywords = []string{"无道", "后台"}
 	s.SubTitle = "Way to Find"
-	s.SiteUrl = "https://www.v2fd.com"
+	s.SiteUrl = "https://www.misiai.com"
 	s.SiteLogo = "./static/logo.svg"
 	s.MainTitle = "找寻自己的路"
-	s.Disclaimer = "本站资源均来自互联网，如有侵权请联系站长删除"
+	//s.Disclaimer = "本站资源均来自互联网，如有侵权请联系站长删除"
 }
 
 type SEOConfig struct {

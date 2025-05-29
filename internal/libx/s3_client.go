@@ -11,8 +11,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 
-	"github.com/Xwudao/neter-template/internal/domain/payloads"
-	"github.com/Xwudao/neter-template/pkg/utils"
+	"go-kitboxpro/internal/domain/payloads"
+	"go-kitboxpro/pkg/utils"
 )
 
 type S3Client struct {

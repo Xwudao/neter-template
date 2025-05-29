@@ -3,11 +3,11 @@ package data
 import (
 	"context"
 
-	"github.com/Xwudao/neter-template/internal/biz"
-	"github.com/Xwudao/neter-template/internal/data/ent"
-	"github.com/Xwudao/neter-template/internal/data/ent/siteconfig"
-	"github.com/Xwudao/neter-template/internal/domain/params"
-	"github.com/Xwudao/neter-template/internal/system"
+	"go-kitboxpro/internal/biz"
+	"go-kitboxpro/internal/data/ent"
+	"go-kitboxpro/internal/data/ent/siteconfig"
+	"go-kitboxpro/internal/domain/params"
+	"go-kitboxpro/internal/system"
 )
 
 var _ biz.SiteConfigRepository = (*siteConfigRepository)(nil)

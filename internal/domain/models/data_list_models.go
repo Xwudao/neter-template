@@ -1,9 +1,9 @@
 package models
 
 import (
-	"github.com/bytedance/sonic"
+	json "github.com/json-iterator/go"
 
-	"github.com/Xwudao/neter-template/internal/data/ent"
+	"go-kitboxpro/internal/data/ent"
 )
 
 //type DataListBase struct {
@@ -46,7 +46,7 @@ func UnmarshalDataList[T any](arr []*ent.DataList, kind string) []T {
 			continue
 		}
 		var item T
-		if err := sonic.UnmarshalString(v.Value, &item); err != nil {
+		if err := json.UnmarshalFromString(v.Value, &item); err != nil {
 			continue
 		}
 		res = append(res, item)

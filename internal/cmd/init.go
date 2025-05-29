@@ -6,8 +6,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/Xwudao/neter-template/internal/cmd_app"
 	"github.com/spf13/cobra"
+	"go-kitboxpro/internal/cmd_app"
 )
 
 // initCmd represents the init command

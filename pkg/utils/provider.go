@@ -3,7 +3,7 @@ package utils
 import (
 	"github.com/google/wire"
 
-	"github.com/Xwudao/neter-template/pkg/utils/jwt"
+	"go-kitboxpro/pkg/utils/jwt"
 )
 
 var (

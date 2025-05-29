@@ -1,7 +1,7 @@
 package params
 
 import (
-	"github.com/Xwudao/neter-template/internal/routes/valid"
+	"go-kitboxpro/internal/routes/valid"
 )
 
 // CreateDataListParams 创建参数

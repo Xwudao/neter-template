@@ -1,8 +1,8 @@
 package params
 
 import (
-	"github.com/Xwudao/neter-template/internal/data/ent/user"
-	"github.com/Xwudao/neter-template/internal/routes/valid"
+	"go-kitboxpro/internal/data/ent/user"
+	"go-kitboxpro/internal/routes/valid"
 )
 
 type CreateUserParams struct {

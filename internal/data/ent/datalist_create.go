@@ -10,7 +10,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/Xwudao/neter-template/internal/data/ent/datalist"
+	"go-kitboxpro/internal/data/ent/datalist"
 )
 
 // DataListCreate is the builder for creating a DataList entity.
