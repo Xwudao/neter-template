@@ -11,5 +11,9 @@ export const productionConfig = defineConfig({
   build: {
     manifest: true,
   },
-  plugins: [compression()],
+  plugins: [
+    compression({
+      algorithms: ['gzip'],
+    }),
+  ],
 });
