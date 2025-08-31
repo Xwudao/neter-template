@@ -15,8 +15,8 @@ const AuthContext = createContext<AuthContextType>(null!);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { userInfo, resetInfo, updateUser } = useUserState();
-
   const [userState, setUserState] = useState<User>(userInfo);
+  const storageToken = localStorage.getItem(KEY_TOKEN);
 
   const logged = useMemo(() => {
     return !!userInfo.token;
@@ -25,7 +25,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { data: newUser } = useQuery({
     queryKey: ['userInfo'],
     queryFn: () => getApiUserInfo(),
-    enabled: logged,
+    enabled: logged && !!storageToken,
   });
 
   useEffect(() => {
