@@ -36,6 +36,7 @@ func mainApp() (*cmd.MainApp, func(), error) {
 		return nil, nil, err
 	}
 	client := jwt.NewClient(jwtConfig)
+	appContext := system.NewAppContext()
 	dbConfig, err := config.NewDBConfig(koanf)
 	if err != nil {
 		return nil, nil, err
@@ -44,13 +45,12 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	appContext := system.NewAppContext()
+	userRepository := data.NewUserRepository(appContext, dataData)
 	seoBizBiz := biz.NewSeoBizBiz(sugaredLogger, appContext)
-	engine, err := routes.NewEngine(zapWriter, client, dataData, koanf, seoBizBiz, sugaredLogger)
+	engine, err := routes.NewEngine(zapWriter, client, userRepository, koanf, seoBizBiz, sugaredLogger)
 	if err != nil {
 		return nil, nil, err
 	}
-	userRepository := data.NewUserRepository(appContext, dataData)
 	userBiz := biz.NewUserBiz(sugaredLogger, userRepository, client, appContext)
 	userRoute := v1.NewUserRoute(engine, userBiz, koanf)
 	siteConfigRepository := data.NewSiteConfigRepository(appContext, dataData)

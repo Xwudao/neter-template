@@ -6,10 +6,9 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/cast"
 	"go.uber.org/zap"
 
-	"github.com/Xwudao/neter-template/internal/data"
+	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/data/ent"
 	"github.com/Xwudao/neter-template/internal/data/ent/user"
 	"github.com/Xwudao/neter-template/pkg/enum"
@@ -17,7 +16,7 @@ import (
 )
 
 // ExtractUserInfoMiddleware just extract the user info from the request, and save it to the context.
-func ExtractUserInfoMiddleware(logger *zap.SugaredLogger, jc *jwt.Client, data *data.Data) gin.HandlerFunc {
+func ExtractUserInfoMiddleware(logger *zap.SugaredLogger, jc *jwt.Client, ur biz.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var logged bool
 		defer func() {
@@ -29,21 +28,16 @@ func ExtractUserInfoMiddleware(logger *zap.SugaredLogger, jc *jwt.Client, data *
 			return
 		}
 
-		claims, err := jc.Parse(strings.ReplaceAll(authHeader, enum.KeyBearer, ""))
+		var tokenStr = strings.ReplaceAll(authHeader, enum.KeyBearer, "")
+
+		userID, err := jc.GetUserID(tokenStr)
 		if err != nil {
-			logger.Errorf("parse token failed: %v", err)
+			logger.Errorf("get user id from token failed: %v", err)
 			c.Next()
 			return
 		}
 
-		logger.Infof("user cliams: %#v", claims)
-
-		userID := cast.ToInt64(claims["user_id"])
-		logger.Infof("user id: %d", userID)
-		//userID = int64(claims["user_id"].(float64))
-		client := data.Client
-
-		userInfo, err := client.User.Query().Where(user.ID(userID)).First(c.Request.Context())
+		userInfo, err := ur.GetByID(c.Request.Context(), userID)
 		if err != nil {
 			c.Next()
 			return

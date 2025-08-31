@@ -17,7 +17,6 @@ import (
 
 	"github.com/Xwudao/neter-template/assets"
 	"github.com/Xwudao/neter-template/internal/biz"
-	"github.com/Xwudao/neter-template/internal/data"
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
 	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
 	"github.com/Xwudao/neter-template/internal/system"
@@ -28,7 +27,7 @@ import (
 func NewEngine(
 	zw *logger.ZapWriter,
 	jwt *jwt.Client,
-	data *data.Data,
+	ur biz.UserRepository,
 	conf *koanf.Koanf,
 	sb *biz.SeoBizBiz,
 	log *zap.SugaredLogger,
@@ -57,7 +56,7 @@ func NewEngine(
 	r := gin.New()
 	_ = r.SetTrustedProxies(nil)
 
-	r.Use(mdw.CacheMdw(), mdw.ExtractUserInfoMiddleware(log, jwt, data))
+	r.Use(mdw.CacheMdw(), mdw.ExtractUserInfoMiddleware(log, jwt, ur))
 
 	spa, err := mdw.NewSpaMdw(assets.SpaDist, "dist", sb)
 	if err != nil {
