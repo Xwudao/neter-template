@@ -8,7 +8,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"go-kitboxpro/internal/data/ent/user"
+	"github.com/Xwudao/neter-template/internal/data/ent/user"
 )
 
 // User is the model entity for the User schema.

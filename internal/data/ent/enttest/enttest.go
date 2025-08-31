@@ -5,12 +5,12 @@ package enttest
 import (
 	"context"
 
-	"go-kitboxpro/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/data/ent"
 	// required by schema hooks.
-	_ "go-kitboxpro/internal/data/ent/runtime"
+	_ "github.com/Xwudao/neter-template/internal/data/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
-	"go-kitboxpro/internal/data/ent/migrate"
+	"github.com/Xwudao/neter-template/internal/data/ent/migrate"
 )
 
 type (

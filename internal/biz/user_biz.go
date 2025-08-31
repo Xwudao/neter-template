@@ -6,11 +6,11 @@ import (
 
 	"go.uber.org/zap"
 
-	"go-kitboxpro/internal/data/ent"
-	"go-kitboxpro/internal/domain/params"
-	"go-kitboxpro/internal/system"
-	"go-kitboxpro/pkg/utils/bcrypt"
-	"go-kitboxpro/pkg/utils/jwt"
+	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/domain/params"
+	"github.com/Xwudao/neter-template/internal/system"
+	"github.com/Xwudao/neter-template/pkg/utils/bcrypt"
+	"github.com/Xwudao/neter-template/pkg/utils/jwt"
 )
 
 type UserRepository interface {

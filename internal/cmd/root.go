@@ -5,15 +5,15 @@ import (
 
 	"github.com/gin-contrib/cors"
 
-	"go-kitboxpro/internal/biz"
-	"go-kitboxpro/internal/cron"
-	"go-kitboxpro/internal/system"
+	"github.com/Xwudao/neter-template/internal/biz"
+	"github.com/Xwudao/neter-template/internal/cron"
+	"github.com/Xwudao/neter-template/internal/system"
 
 	"github.com/knadh/koanf/v2"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
-	"go-kitboxpro/internal/routes"
+	"github.com/Xwudao/neter-template/internal/routes"
 )
 
 // rootCmd represents the base command when called without any subcommands

@@ -9,7 +9,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"go-kitboxpro/internal/data/ent/datalist"
+	"github.com/Xwudao/neter-template/internal/data/ent/datalist"
 )
 
 // DataList is the model entity for the DataList schema.

@@ -5,11 +5,11 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
-	"go-kitboxpro/internal/biz"
-	"go-kitboxpro/internal/data/ent"
-	"go-kitboxpro/internal/data/ent/datalist"
-	"go-kitboxpro/internal/domain/params"
-	"go-kitboxpro/internal/system"
+	"github.com/Xwudao/neter-template/internal/biz"
+	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/data/ent/datalist"
+	"github.com/Xwudao/neter-template/internal/domain/params"
+	"github.com/Xwudao/neter-template/internal/system"
 )
 
 var _ biz.DataListRepository = (*dataListRepository)(nil)

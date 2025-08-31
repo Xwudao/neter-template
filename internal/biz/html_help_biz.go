@@ -4,11 +4,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
-	"go-kitboxpro/internal/domain/models"
-	"go-kitboxpro/internal/domain/payloads"
-	"go-kitboxpro/internal/system"
-	"go-kitboxpro/pkg/enum"
-	"go-kitboxpro/pkg/utils/jwt"
+	"github.com/Xwudao/neter-template/internal/domain/models"
+	"github.com/Xwudao/neter-template/internal/domain/payloads"
+	"github.com/Xwudao/neter-template/internal/system"
+	"github.com/Xwudao/neter-template/pkg/enum"
+	"github.com/Xwudao/neter-template/pkg/utils/jwt"
 )
 
 type HtmlHelpBiz struct {

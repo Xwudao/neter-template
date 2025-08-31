@@ -9,14 +9,14 @@ import (
 	"log"
 	"reflect"
 
-	"go-kitboxpro/internal/data/ent/migrate"
+	"github.com/Xwudao/neter-template/internal/data/ent/migrate"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
-	"go-kitboxpro/internal/data/ent/datalist"
-	"go-kitboxpro/internal/data/ent/siteconfig"
-	"go-kitboxpro/internal/data/ent/user"
+	"github.com/Xwudao/neter-template/internal/data/ent/datalist"
+	"github.com/Xwudao/neter-template/internal/data/ent/siteconfig"
+	"github.com/Xwudao/neter-template/internal/data/ent/user"
 )
 
 // Client is the client that holds all ent builders.

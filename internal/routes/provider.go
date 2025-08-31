@@ -3,7 +3,7 @@ package routes
 import (
 	"github.com/google/wire"
 
-	v1 "go-kitboxpro/internal/routes/v1"
+	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
 )
 
 var ProviderRouteSet = wire.NewSet(

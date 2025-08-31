@@ -7,9 +7,9 @@ import (
 	"github.com/snabb/sitemap"
 	"go.uber.org/zap"
 
-	"go-kitboxpro/internal/domain/models"
-	"go-kitboxpro/internal/system"
-	"go-kitboxpro/pkg/enum"
+	"github.com/Xwudao/neter-template/internal/domain/models"
+	"github.com/Xwudao/neter-template/internal/system"
+	"github.com/Xwudao/neter-template/pkg/enum"
 )
 
 // SiteHelpBiz sitemap, site helper

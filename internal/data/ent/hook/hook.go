@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"go-kitboxpro/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/data/ent"
 )
 
 // The DataListFunc type is an adapter to allow the use of ordinary

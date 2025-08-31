@@ -9,11 +9,11 @@ import (
 	"github.com/spf13/cast"
 	"go.uber.org/zap"
 
-	"go-kitboxpro/internal/data"
-	"go-kitboxpro/internal/data/ent"
-	"go-kitboxpro/internal/data/ent/user"
-	"go-kitboxpro/pkg/enum"
-	"go-kitboxpro/pkg/utils/jwt"
+	"github.com/Xwudao/neter-template/internal/data"
+	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/data/ent/user"
+	"github.com/Xwudao/neter-template/pkg/enum"
+	"github.com/Xwudao/neter-template/pkg/utils/jwt"
 )
 
 // ExtractUserInfoMiddleware just extract the user info from the request, and save it to the context.

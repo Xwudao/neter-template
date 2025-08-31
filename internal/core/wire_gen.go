@@ -7,9 +7,9 @@
 package core
 
 import (
-	"go-kitboxpro/internal/system"
-	"go-kitboxpro/pkg/config"
-	"go-kitboxpro/pkg/logger"
+	"github.com/Xwudao/neter-template/internal/system"
+	"github.com/Xwudao/neter-template/pkg/config"
+	"github.com/Xwudao/neter-template/pkg/logger"
 )
 
 // Injectors from wire.go:

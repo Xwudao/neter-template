@@ -12,21 +12,6 @@ export const libConfig = defineConfig({
       name: 'main',
       fileName: () => `main.js`,
     },
-    rollupOptions: {
-      external: ['react', 'react-dom'],
-      output: {
-        assetFileNames: function (chunkInfo) {
-          if (chunkInfo?.name?.endsWith('.css')) {
-            return 'main.css';
-          }
-          return '';
-        },
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-        },
-      },
-    },
   },
   define: { 'process.env.NODE_ENV': '"production"' },
 });

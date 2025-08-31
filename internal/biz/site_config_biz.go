@@ -7,12 +7,12 @@ import (
 	json "github.com/json-iterator/go"
 	"go.uber.org/zap"
 
-	"go-kitboxpro/internal/data/ent"
-	"go-kitboxpro/internal/domain/models"
-	"go-kitboxpro/internal/domain/params"
-	"go-kitboxpro/internal/system"
-	"go-kitboxpro/pkg/enum"
-	"go-kitboxpro/pkg/varx"
+	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/domain/models"
+	"github.com/Xwudao/neter-template/internal/domain/params"
+	"github.com/Xwudao/neter-template/internal/system"
+	"github.com/Xwudao/neter-template/pkg/enum"
+	"github.com/Xwudao/neter-template/pkg/varx"
 )
 
 type SiteConfigRepository interface {

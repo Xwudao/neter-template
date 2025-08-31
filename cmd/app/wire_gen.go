@@ -7,16 +7,16 @@
 package main
 
 import (
-	"go-kitboxpro/internal/biz"
-	"go-kitboxpro/internal/cmd"
-	"go-kitboxpro/internal/cron"
-	"go-kitboxpro/internal/data"
-	"go-kitboxpro/internal/routes"
-	"go-kitboxpro/internal/routes/v1"
-	"go-kitboxpro/internal/system"
-	"go-kitboxpro/pkg/config"
-	"go-kitboxpro/pkg/logger"
-	"go-kitboxpro/pkg/utils/jwt"
+	"github.com/Xwudao/neter-template/internal/biz"
+	"github.com/Xwudao/neter-template/internal/cmd"
+	"github.com/Xwudao/neter-template/internal/cron"
+	"github.com/Xwudao/neter-template/internal/data"
+	"github.com/Xwudao/neter-template/internal/routes"
+	"github.com/Xwudao/neter-template/internal/routes/v1"
+	"github.com/Xwudao/neter-template/internal/system"
+	"github.com/Xwudao/neter-template/pkg/config"
+	"github.com/Xwudao/neter-template/pkg/logger"
+	"github.com/Xwudao/neter-template/pkg/utils/jwt"
 )
 
 // Injectors from wire.go:

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"go-kitboxpro/internal/data/ent/predicate"
+	"github.com/Xwudao/neter-template/internal/data/ent/predicate"
 )
 
 // ID filters vertices based on their ID field.

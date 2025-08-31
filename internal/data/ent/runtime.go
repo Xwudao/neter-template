@@ -5,10 +5,10 @@ package ent
 import (
 	"time"
 
-	"go-kitboxpro/internal/data/ent/datalist"
-	"go-kitboxpro/internal/data/ent/schema"
-	"go-kitboxpro/internal/data/ent/siteconfig"
-	"go-kitboxpro/internal/data/ent/user"
+	"github.com/Xwudao/neter-template/internal/data/ent/datalist"
+	"github.com/Xwudao/neter-template/internal/data/ent/schema"
+	"github.com/Xwudao/neter-template/internal/data/ent/siteconfig"
+	"github.com/Xwudao/neter-template/internal/data/ent/user"
 )
 
 // The init function reads all schema descriptors with runtime code

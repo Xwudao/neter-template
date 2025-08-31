@@ -3,7 +3,7 @@ package params
 import (
 	"errors"
 
-	"go-kitboxpro/internal/routes/valid"
+	"github.com/Xwudao/neter-template/internal/routes/valid"
 )
 
 type DeleteIDParams struct {

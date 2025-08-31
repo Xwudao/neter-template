@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"go-kitboxpro/internal/cmd"
+	"github.com/Xwudao/neter-template/internal/cmd"
 )
 
 var (

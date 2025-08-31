@@ -1,4 +1,4 @@
-module go-kitboxpro
+module github.com/Xwudao/neter-template
 
 go 1.23.0
 

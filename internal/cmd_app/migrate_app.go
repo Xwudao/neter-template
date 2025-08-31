@@ -7,10 +7,10 @@ import (
 	"ariga.io/atlas/sql/sqltool"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql/schema"
+	"github.com/Xwudao/neter-template/internal/data/ent/migrate"
+	"github.com/Xwudao/neter-template/internal/system"
 	gomigrate "github.com/golang-migrate/migrate/v4"
 	"github.com/knadh/koanf/v2"
-	"go-kitboxpro/internal/data/ent/migrate"
-	"go-kitboxpro/internal/system"
 	"go.uber.org/zap"
 
 	_ "github.com/golang-migrate/migrate/v4/database/mysql"

@@ -7,8 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/knadh/koanf/v2"
 
-	"go-kitboxpro/internal/data/ent"
-	"go-kitboxpro/internal/domain/payloads"
+	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/domain/payloads"
 
 	_ "github.com/go-sql-driver/mysql"
 )

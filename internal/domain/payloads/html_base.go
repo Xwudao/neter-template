@@ -1,7 +1,7 @@
 package payloads
 
 import (
-	"go-kitboxpro/internal/domain/models"
+	"github.com/Xwudao/neter-template/internal/domain/models"
 )
 
 type HtmlBaseData struct {

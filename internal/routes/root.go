@@ -9,21 +9,19 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/gin-contrib/gzip"
 	"github.com/knadh/koanf/v2"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
-	"go-kitboxpro/assets"
-	"go-kitboxpro/internal/biz"
-	"go-kitboxpro/internal/data"
-	"go-kitboxpro/internal/routes/mdw"
-	v1 "go-kitboxpro/internal/routes/v1"
-	"go-kitboxpro/internal/system"
-	"go-kitboxpro/pkg/logger"
-	"go-kitboxpro/pkg/utils/jwt"
+	"github.com/Xwudao/neter-template/internal/biz"
+	"github.com/Xwudao/neter-template/internal/data"
+	"github.com/Xwudao/neter-template/internal/routes/mdw"
+	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
+	"github.com/Xwudao/neter-template/internal/system"
+	"github.com/Xwudao/neter-template/pkg/logger"
+	"github.com/Xwudao/neter-template/pkg/utils/jwt"
 )
 
 func NewEngine(
@@ -54,29 +52,20 @@ func NewEngine(
 	}
 
 	_ = mime.AddExtensionType(".js", "application/javascript")
+
 	r := gin.New()
 	_ = r.SetTrustedProxies(nil)
 
-	r.Use(mdw.CacheMdw(), gzip.Gzip(gzip.DefaultCompression, gzip.WithExcludedPaths([]string{
-		"/admin/",
-		"/auth/",
-		"/open/",
-		"/v1/",
-		"/v2/",
-		"/v3/",
-	})))
+	r.Use(mdw.CacheMdw(), mdw.ExtractUserInfoMiddleware(log, jwt, data))
 
-	r.Use(mdw.ExtractUserInfoMiddleware(log, jwt, data))
-
-	//spa := mdw.NewSpaMdw(assets.SpaDist, "dist")
-	//r.NoRoute(spa.ServeNotFound("index.html"))
-	//r.NoRoute(mdw.NotFoundMdw())
-	spa, err := mdw.NewSpaMdw(assets.SpaDist, "dist", sb)
-	if err != nil {
-		return nil, err
-	}
-	r.NoRoute(spa.Serve("/"))
-
+	/*	spa, err := mdw.NewSpaMdw(assets.SpaDist, "dist", sb)
+		if err != nil {
+			return nil, err
+		}
+		r.NoRoute(spa.Serve("/"))
+		//r.NoRoute(spa.Serve("index.html"))
+		//r.NoRoute(mdw.NotFoundMdw())
+	*/
 	r.Use(mdw.DumpReqResMdw(isDebug, log))
 	r.Use(gin.Logger())
 	r.Use(gin.RecoveryWithWriter(zw), mdw.LoggerMiddleware(logFunc))
@@ -123,7 +112,13 @@ func (r *HttpEngine) Run() error {
 	router := r.router
 
 	port := r.conf.Int("app.port")
-	addr := fmt.Sprintf(":%d", port)
+	host := r.conf.Bool("app.host")
+
+	addr := fmt.Sprintf("127.0.0.1:%d", port)
+
+	if host {
+		addr = fmt.Sprintf(":%d", port)
+	}
 
 	log.Infof("app running on: http://127.0.0.1:%d", port)
 
@@ -137,6 +132,7 @@ func (r *HttpEngine) Run() error {
 			log.Fatalf("listen: %s\n", err)
 		}
 	}()
+
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit

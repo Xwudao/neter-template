@@ -1,0 +1,133 @@
+@import '../assets/styles/variables.scss';
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $app-main-padding;
+    background: var(--sur-bg-color);
+}
+
+.main-card {
+    width: 100%;
+    max-width: 600px;
+    background: var(--semi-color-bg-1);
+    border-radius: $large-radius;
+    padding: 40px;
+    box-shadow: $large-shadow;
+    text-align: center;
+}
+
+.title {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--semi-color-text-0);
+    margin-bottom: 16px;
+}
+
+.description {
+    font-size: $large-text;
+    color: var(--semi-color-text-1);
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+}
+
+.button-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .nav-button {
+        min-width: 120px;
+        height: 40px;
+        border-radius: $medium-radius;
+        font-weight: 500;
+        transition: all 0.2s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: $base-shadow;
+        }
+    }
+}
+
+.theme-toggle {
+    margin-bottom: 8px;
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background: var(--semi-color-border);
+    margin: 0;
+    border: none;
+}
+
+.input-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+
+    .demo-input {
+        width: 300px;
+        max-width: 100%;
+    }
+
+    .input-label {
+        font-size: $small-text;
+        color: var(--semi-color-text-2);
+    }
+}
+
+.site-info {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--semi-color-border);
+
+    .site-name {
+        font-size: $large-text;
+        font-weight: 600;
+        color: var(--semi-color-text-0);
+        margin-bottom: 8px;
+    }
+
+    .site-keywords {
+        font-size: $small-text;
+        color: var(--semi-color-text-2);
+    }
+}
+
+@media (max-width: 768px) {
+    .main-card {
+        margin: 20px;
+        padding: 24px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .button-group {
+        flex-direction: column;
+        width: 100%;
+
+        .nav-button {
+            width: 100%;
+        }
+    }
+
+    .input-section .demo-input {
+        width: 100%;
+    }
+}

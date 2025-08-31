@@ -8,8 +8,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"go-kitboxpro/internal/data/ent/predicate"
-	"go-kitboxpro/internal/data/ent/user"
+	"github.com/Xwudao/neter-template/internal/data/ent/predicate"
+	"github.com/Xwudao/neter-template/internal/data/ent/user"
 )
 
 // UserDelete is the builder for deleting a User entity.

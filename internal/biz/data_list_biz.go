@@ -5,9 +5,9 @@ import (
 
 	"go.uber.org/zap"
 
-	"go-kitboxpro/internal/data/ent"
-	"go-kitboxpro/internal/domain/params"
-	"go-kitboxpro/internal/system"
+	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/domain/params"
+	"github.com/Xwudao/neter-template/internal/system"
 )
 
 type DataListRepository interface {

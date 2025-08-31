@@ -12,9 +12,9 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"go-kitboxpro/internal/data/ent/datalist"
-	"go-kitboxpro/internal/data/ent/siteconfig"
-	"go-kitboxpro/internal/data/ent/user"
+	"github.com/Xwudao/neter-template/internal/data/ent/datalist"
+	"github.com/Xwudao/neter-template/internal/data/ent/siteconfig"
+	"github.com/Xwudao/neter-template/internal/data/ent/user"
 )
 
 // ent aliases to avoid import conflicts in user's code.

@@ -11,8 +11,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"go-kitboxpro/internal/data/ent/predicate"
-	"go-kitboxpro/internal/data/ent/siteconfig"
+	"github.com/Xwudao/neter-template/internal/data/ent/predicate"
+	"github.com/Xwudao/neter-template/internal/data/ent/siteconfig"
 )
 
 // SiteConfigUpdate is the builder for updating SiteConfig entities.

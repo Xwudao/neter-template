@@ -1,8 +1,8 @@
 package core
 
 import (
+	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/knadh/koanf/v2"
-	"go-kitboxpro/internal/system"
 	"go.uber.org/zap"
 )
 

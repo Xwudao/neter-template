@@ -31,3 +31,181 @@ $app-box-bg-light: #fff;
 
 $app-sur-bg-dark: #202125;
 $app-sur-bg-light: #f0f0f0;
+
+// === Semi Design Tokens ===
+
+// Primary Colors
+$color-primary: var(--semi-color-primary);
+$color-primary-hover: var(--semi-color-primary-hover);
+$color-primary-active: var(--semi-color-primary-active);
+$color-primary-disabled: var(--semi-color-primary-disabled);
+$color-primary-light-default: var(--semi-color-primary-light-default);
+$color-primary-light-hover: var(--semi-color-primary-light-hover);
+$color-primary-light-active: var(--semi-color-primary-light-active);
+
+// Secondary Colors
+$color-secondary: var(--semi-color-secondary);
+$color-secondary-hover: var(--semi-color-secondary-hover);
+$color-secondary-active: var(--semi-color-secondary-active);
+$color-secondary-disabled: var(--semi-color-secondary-disabled);
+$color-secondary-light-default: var(--semi-color-secondary-light-default);
+$color-secondary-light-hover: var(--semi-color-secondary-light-hover);
+$color-secondary-light-active: var(--semi-color-secondary-light-active);
+
+// Tertiary Colors
+$color-tertiary: var(--semi-color-tertiary);
+$color-tertiary-hover: var(--semi-color-tertiary-hover);
+$color-tertiary-active: var(--semi-color-tertiary-active);
+$color-tertiary-light-default: var(--semi-color-tertiary-light-default);
+$color-tertiary-light-hover: var(--semi-color-tertiary-light-hover);
+$color-tertiary-light-active: var(--semi-color-tertiary-light-active);
+
+// Info Colors
+$color-info: var(--semi-color-info);
+$color-info-hover: var(--semi-color-info-hover);
+$color-info-active: var(--semi-color-info-active);
+$color-info-disabled: var(--semi-color-info-disabled);
+$color-info-light-default: var(--semi-color-info-light-default);
+$color-info-light-hover: var(--semi-color-info-light-hover);
+$color-info-light-active: var(--semi-color-info-light-active);
+
+// Success Colors
+$color-success: var(--semi-color-success);
+$color-success-hover: var(--semi-color-success-hover);
+$color-success-active: var(--semi-color-success-active);
+$color-success-disabled: var(--semi-color-success-disabled);
+$color-success-light-default: var(--semi-color-success-light-default);
+$color-success-light-hover: var(--semi-color-success-light-hover);
+$color-success-light-active: var(--semi-color-success-light-active);
+
+// Warning Colors
+$color-warning: var(--semi-color-warning);
+$color-warning-hover: var(--semi-color-warning-hover);
+$color-warning-active: var(--semi-color-warning-active);
+$color-warning-light-default: var(--semi-color-warning-light-default);
+$color-warning-light-hover: var(--semi-color-warning-light-hover);
+$color-warning-light-active: var(--semi-color-warning-light-active);
+
+// Danger Colors
+$color-danger: var(--semi-color-danger);
+$color-danger-hover: var(--semi-color-danger-hover);
+$color-danger-active: var(--semi-color-danger-active);
+$color-danger-light-default: var(--semi-color-danger-light-default);
+$color-danger-light-hover: var(--semi-color-danger-light-hover);
+$color-danger-light-active: var(--semi-color-danger-light-active);
+
+// Text Colors
+$color-text-0: var(--semi-color-text-0);
+$color-text-1: var(--semi-color-text-1);
+$color-text-2: var(--semi-color-text-2);
+$color-text-3: var(--semi-color-text-3);
+
+// Link Colors
+$color-link: var(--semi-color-link);
+$color-link-hover: var(--semi-color-link-hover);
+$color-link-active: var(--semi-color-link-active);
+$color-link-visited: var(--semi-color-link-visited);
+
+// Background Colors
+$color-bg-0: var(--semi-color-bg-0);
+$color-bg-1: var(--semi-color-bg-1);
+$color-bg-2: var(--semi-color-bg-2);
+$color-bg-3: var(--semi-color-bg-3);
+$color-bg-4: var(--semi-color-bg-4);
+
+// Fill Colors
+$color-fill-0: var(--semi-color-fill-0);
+$color-fill-1: var(--semi-color-fill-1);
+$color-fill-2: var(--semi-color-fill-2);
+
+// Border Colors
+$color-border: var(--semi-color-border);
+
+// Disabled Colors
+$color-disabled-text: var(--semi-color-disabled-text);
+$color-disabled-border: var(--semi-color-disabled-border);
+$color-disabled-bg: var(--semi-color-disabled-bg);
+$color-disabled-fill: var(--semi-color-disabled-fill);
+
+// Shadow Colors
+$color-shadow: var(--semi-color-shadow);
+
+// Typography - Font Sizes
+$font-size-small: 12px;
+$font-size-regular: 14px;
+$font-size-header-6: 16px;
+$font-size-header-5: 18px;
+$font-size-header-4: 20px;
+$font-size-header-3: 24px;
+$font-size-header-2: 28px;
+$font-size-header-1: 32px;
+
+// Typography - Font Weights
+$font-weight-light: 200;
+$font-weight-regular: 400;
+$font-weight-bold: 600;
+
+// Typography - Font Family
+$font-family-regular: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+// Border Radius
+$border-radius-extra-small: var(--semi-border-radius-extra-small);
+$border-radius-small: var(--semi-border-radius-small);
+$border-radius-medium: var(--semi-border-radius-medium);
+$border-radius-large: var(--semi-border-radius-large);
+$border-radius-circle: var(--semi-border-radius-circle);
+$border-radius-full: var(--semi-border-radius-full);
+
+// Shadows
+$shadow-elevated: var(--semi-shadow-elevated);
+
+// Control Heights
+$height-control-small: 24px;
+$height-control-default: 32px;
+$height-control-large: 40px;
+
+// Border Thickness
+$border-thickness: 0;
+$border-thickness-control: 1px;
+$border-thickness-control-focus: 1px;
+
+// Icon Sizes
+$width-icon-extra-small: 8px;
+$width-icon-small: 12px;
+$width-icon-medium: 16px;
+$width-icon-large: 20px;
+$width-icon-extra-large: 24px;
+
+// Spacing
+$spacing-none: 0;
+$spacing-super-tight: 2px;
+$spacing-extra-tight: 4px;
+$spacing-tight: 8px;
+$spacing-base-tight: 12px;
+$spacing-base: 16px;
+$spacing-base-loose: 20px;
+$spacing-loose: 24px;
+$spacing-extra-loose: 32px;
+$spacing-super-loose: 40px;
+
+// Z-Index
+$z-portal: 1;
+$z-affix: 10;
+$z-backtop: 10;
+$z-badge: 10;
+$z-table-fixed: 101;
+$z-modal: 1000;
+$z-modal-mask: 1000;
+$z-toast: 1010;
+$z-notification: 1010;
+$z-popover: 1030;
+
+// Transitions
+$transition-duration-slowest: var(--semi-transition_duration-slowest);
+$transition-duration-slower: var(--semi-transition_duration-slower);
+$transition-duration-slow: var(--semi-transition_duration-slow);
+$transition-duration-normal: var(--semi-transition_duration-normal);
+$transition-duration-fast: var(--semi-transition_duration-fast);
+$transition-duration-faster: var(--semi-transition_duration-faster);
+$transition-duration-fastest: var(--semi-transition_duration-fastest);
+$transition-duration-none: var(--semi-transition_duration-none);

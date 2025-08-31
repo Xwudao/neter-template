@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
-	"go-kitboxpro/internal/domain/payloads"
-	"go-kitboxpro/internal/system"
+	"github.com/Xwudao/neter-template/internal/domain/payloads"
+	"github.com/Xwudao/neter-template/internal/system"
 )
 
 type SeoBizBiz struct {

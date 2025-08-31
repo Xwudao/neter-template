@@ -1,7 +1,7 @@
 package params
 
 import (
-	"go-kitboxpro/internal/routes/valid"
+	"github.com/Xwudao/neter-template/internal/routes/valid"
 )
 
 type CreateSiteConfigParams struct {

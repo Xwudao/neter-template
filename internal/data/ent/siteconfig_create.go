@@ -10,7 +10,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"go-kitboxpro/internal/data/ent/siteconfig"
+	"github.com/Xwudao/neter-template/internal/data/ent/siteconfig"
 )
 
 // SiteConfigCreate is the builder for creating a SiteConfig entity.

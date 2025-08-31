@@ -3,7 +3,7 @@ package models
 import (
 	json "github.com/json-iterator/go"
 
-	"go-kitboxpro/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/data/ent"
 )
 
 //type DataListBase struct {

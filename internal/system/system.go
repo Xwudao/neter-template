@@ -5,7 +5,7 @@ import (
 
 	"github.com/knadh/koanf/v2"
 
-	"go-kitboxpro/pkg/utils/bcrypt"
+	"github.com/Xwudao/neter-template/pkg/utils/bcrypt"
 )
 
 type InitSystem struct {
