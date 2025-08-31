@@ -1,13 +1,12 @@
-import { Button, Form, Space } from '@douyinfe/semi-ui';
-import { IconHome, IconChevronLeft } from '@douyinfe/semi-icons';
-import { createLazyFileRoute, useNavigate, useRouter, Link } from '@tanstack/react-router';
-import clsx from 'clsx';
-import classes from './login.module.scss';
-import { useMutation } from '@tanstack/react-query';
 import { postApiUserLogin } from '@/api/userApi';
 import { onError, onSuccess } from '@/core/callback';
-import useAuth from '@/provider/useAuth';
 import { UserRole } from '@/core/constants';
+import useAuth from '@/provider/useAuth';
+import { Button, Form, Space } from '@douyinfe/semi-ui';
+import { useMutation } from '@tanstack/react-query';
+import { createLazyFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import clsx from 'clsx';
+import classes from './login.module.scss';
 const { Input } = Form;
 const Login = () => {
   const { mutate, isPending } = useMutation({
@@ -17,7 +16,6 @@ const Login = () => {
 
   const { toLogin } = useAuth();
   const nav = useNavigate();
-  const router = useRouter();
   const handleLogin = (values: any) => {
     mutate(values, {
       onSuccess: onSuccess('登录成功', (rtn) => {
@@ -39,10 +37,6 @@ const Login = () => {
       }),
       onError: onError(),
     });
-  };
-
-  const handleGoHome = () => {
-    nav({ to: '/' });
   };
 
   return (
