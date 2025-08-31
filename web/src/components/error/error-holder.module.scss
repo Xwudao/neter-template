@@ -1,0 +1,83 @@
+@use '../../assets/styles/variables' as vars;
+
+.error_holder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: vars.$spacing-base;
+    width: 100%;
+}
+
+.error_content {
+    text-align: center;
+    max-width: 400px;
+    padding: vars.$spacing-loose;
+    background: vars.$color-bg-1;
+    border-radius: vars.$border-radius-medium;
+    box-shadow: vars.$base-shadow;
+}
+
+.error_icon {
+    font-size: 48px;
+    margin-bottom: vars.$spacing-base;
+}
+
+.error_title {
+    font-size: vars.$h3-font-size;
+    font-weight: vars.$font-weight-bold;
+    color: vars.$color-text-0;
+    margin: 0 0 vars.$spacing-base-tight 0;
+}
+
+.error_message {
+    font-size: vars.$base-text;
+    color: vars.$color-text-2;
+    margin: 0 0 vars.$spacing-base-loose 0;
+    line-height: 1.5;
+}
+
+.retry_button {
+    background: vars.$color-primary;
+    color: white;
+    border: none;
+    padding: vars.$spacing-tight vars.$spacing-base;
+    border-radius: vars.$border-radius-small;
+    font-size: vars.$small-text;
+    font-weight: vars.$font-weight-regular;
+    cursor: pointer;
+    transition: all vars.$transition-duration-normal ease;
+
+    &:hover {
+        background: vars.$color-primary-hover;
+    }
+
+    &:active {
+        background: vars.$color-primary-active;
+    }
+}
+
+.error_details {
+    margin-top: vars.$spacing-base-loose;
+    text-align: left;
+
+    summary {
+        font-size: vars.$small-text;
+        color: vars.$color-text-3;
+        cursor: pointer;
+        margin-bottom: vars.$spacing-tight;
+    }
+}
+
+.error_stack {
+    background: vars.$color-fill-0;
+    padding: vars.$spacing-base-tight;
+    border-radius: vars.$border-radius-small;
+    font-size: vars.$extra-small-text;
+    color: vars.$color-text-2;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 200px;
+    overflow-y: auto;
+    margin: 0;
+}

@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRouter, RouterProvider, createBrowserHistory } from '@tanstack/react-router';
 import AuthProvider from './provider/AuthProvider.tsx';
 import ContentLoading from '@/components/loading/ContentLoading.tsx';
+import { ErrorHolder } from '@/components/error/ErrorHolder.tsx';
+import NotFound from '@/components/admin/layout/NotFound.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,6 +25,8 @@ const router = createRouter({
   defaultPendingComponent: ContentLoading,
   defaultPendingMs: 0,
   defaultPendingMinMs: 0,
+  defaultErrorComponent: ErrorHolder,
+  defaultNotFoundComponent: NotFound,
   context: {
     queryClient,
     auth: undefined!,

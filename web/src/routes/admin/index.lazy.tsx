@@ -1,5 +1,6 @@
 import AdminToolbarTitle from '@/components/admin/layout/AdminToolbarTitle';
 import AdminWrapper from '@/components/admin/layout/AdminWrapper';
+import ContentLoading from '@/components/loading/ContentLoading';
 import { createLazyFileRoute } from '@tanstack/react-router';
 
 const AdminIndexComponent = () => {
@@ -17,11 +18,11 @@ const AdminIndexComponent = () => {
           这是第 {i + 1} 行内容
         </p>
       ))}
-
     </AdminWrapper>
   );
 };
 
 export const Route = createLazyFileRoute('/admin/')({
   component: () => <AdminIndexComponent />,
+  pendingComponent: ContentLoading,
 });

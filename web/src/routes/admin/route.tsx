@@ -3,14 +3,14 @@ import Navs, { findKeyByPath, findPathByKey } from '@/components/admin/navs';
 import AppIcon from '@/components/AppIcon';
 import { UserRole } from '@/core/constants';
 import useTheme from '@/hooks/useTheme';
+import AdminConfigProvider from '@/provider/AdminConfigProvider';
 import useAuth from '@/provider/useAuth';
 import { Avatar, Button, Divider, Dropdown, Layout, Nav, Toast } from '@douyinfe/semi-ui';
 import { createFileRoute, Link, Outlet, redirect, useLocation, useNavigate } from '@tanstack/react-router';
+import { useMemo } from 'react';
+import z from 'zod';
 import MaterialSymbolsLogoutSharp from '~icons/material-symbols/logout-sharp';
 import classes from '../styles.module.scss';
-import NotFound from '@/components/admin/layout/NotFound';
-import AdminConfigProvider from '@/provider/AdminConfigProvider';
-import z from 'zod';
 import ContentLoading from '@/components/loading/ContentLoading';
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -122,12 +122,11 @@ export const Route = createFileRoute('/admin')({
     </AdminConfigProvider>
   ),
   pendingComponent: ContentLoading,
-  notFoundComponent: () => <NotFound />,
+  // notFoundComponent: () => <NotFound />,
   validateSearch: configSearchSchema,
   beforeLoad: async ({ context, location }) => {
     if (!context.auth || !context.auth.role?.includes(UserRole.ADMIN)) {
       Toast.error('请先登录');
-      // If the user is not authenticated or not an admin, redirect to login
       throw redirect({
         to: '/login',
         search: location.search,
