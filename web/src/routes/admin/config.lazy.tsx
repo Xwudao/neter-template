@@ -4,7 +4,6 @@ import SiteConfigTab from '@/components/admin/tabs/SiteConfigTab';
 import { Tabs } from '@douyinfe/semi-ui';
 import { createLazyFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
-
 // type ConfigSearch = z.infer<typeof configSearchSchema>;
 
 const ConfigComponent = () => {
@@ -23,6 +22,7 @@ const ConfigComponent = () => {
         activeKey={tab}
         onChange={(t) => {
           nav({
+            to: '/admin/config',
             search: { tab: t },
           });
         }}>
