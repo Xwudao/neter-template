@@ -6,7 +6,7 @@ import { FileSystemIconLoader } from 'unplugin-icons/loaders';
 import IconsResolver from 'unplugin-icons/resolver';
 import Icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
-import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
+import { tanstackRouter } from '@tanstack/router-plugin/vite';
 
 export const commonConfig = defineConfig({
   resolve: {
@@ -20,12 +20,13 @@ export const commonConfig = defineConfig({
     },
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "@/assets/styles/app-mixins.scss";\n`,
+        additionalData: `@use "@/assets/styles/app-mixins.scss";\n`,
       },
     },
   },
   plugins: [
-    TanStackRouterVite({
+    tanstackRouter({
+      target: 'react',
       quoteStyle: 'single',
       autoCodeSplitting: true,
     }),

@@ -1,6 +1,6 @@
 import UnocssIcons from '@unocss/preset-icons';
 import presetRemToPx from '@unocss/preset-rem-to-px';
-import { defineConfig, presetUno } from 'unocss';
+import { defineConfig, presetMini } from 'unocss';
 import presetAnimations from 'unocss-preset-animations';
 
 export default defineConfig({
@@ -21,7 +21,7 @@ export default defineConfig({
   },
   theme: {},
   presets: [
-    presetUno({ preflight: false }),
+    presetMini({ preflight: false }),
     presetRemToPx({ baseFontSize: 16 }),
     presetAnimations(),
     UnocssIcons({

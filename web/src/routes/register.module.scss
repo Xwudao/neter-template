@@ -1,4 +1,4 @@
-@import '@/assets/styles/variables.scss';
+@use '@/assets/styles/variables.scss' as *;
 
 .register_container {
     min-height: 100vh;

@@ -1,3 +1,5 @@
+@use "variables";
+
 html,
 body {
   min-height: 100vh;
@@ -15,13 +17,13 @@ html.dark {
 }
 
 body {
-  --box-bg-color: #{$app-box-bg-light};
-  --sur-bg-color: #{$app-sur-bg-light};
+  --box-bg-color: #{variables.$app-box-bg-light};
+  --sur-bg-color: #{variables.$app-sur-bg-light};
 }
 
 body[theme-mode='dark'] {
-  --app-box-bg: #{$app-box-bg-dark};
+  --app-box-bg: #{variables.$app-box-bg-dark};
   --cate-box-bg: rgba(var(--semi-grey-8), 0.08);
-  --box-bg-color: #{$app-box-bg-dark};
-  --sur-bg-color: #{$app-sur-bg-dark};
+  --box-bg-color: #{variables.$app-box-bg-dark};
+  --sur-bg-color: #{variables.$app-sur-bg-dark};
 }

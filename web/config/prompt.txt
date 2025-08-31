@@ -3,3 +3,4 @@
 2. 修改样式时，css文件的类名使用snake-case，在Jsx里面使用classes.snakeCase
 3. 如果没有特意指定对应的scss文件，且该组件需要写样式时，需要单独创建componet.module.scss文件
 4. 总体UI风格：小巧、精致（不需要特别大的边距或宽高）
+5. sass由于使用了最新版本，所以引入需要@use，变量有命名空间

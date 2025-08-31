@@ -1,4 +1,5 @@
-@import '../assets/styles/variables';
+@use '../assets/styles/variables.scss' as *;
+
 
 .about_page {
     min-height: 100vh;
