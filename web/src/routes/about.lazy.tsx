@@ -1,4 +1,5 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
+import ContentLoading from '@/components/loading/ContentLoading';
 import classes from './about.module.scss';
 
 const AboutPage = () => {
@@ -14,4 +15,5 @@ const AboutPage = () => {
 
 export const Route = createLazyFileRoute('/about')({
   component: AboutPage,
+  pendingComponent: ContentLoading,
 });

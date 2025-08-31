@@ -1,7 +1,6 @@
 import AdminToolbarTitle from '@/components/admin/layout/AdminToolbarTitle';
 import AdminWrapper from '@/components/admin/layout/AdminWrapper';
 import SiteConfigTab from '@/components/admin/tabs/SiteConfigTab';
-import ContentLoading from '@/components/loading/ContentLoading';
 import { Tabs } from '@douyinfe/semi-ui';
 import { createLazyFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
@@ -40,5 +39,4 @@ const ConfigComponent = () => {
 
 export const Route = createLazyFileRoute('/admin/config')({
   component: () => <ConfigComponent />,
-  pendingComponent: ContentLoading,
 });

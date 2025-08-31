@@ -1,6 +1,5 @@
 import AdminToolbarTitle from '@/components/admin/layout/AdminToolbarTitle';
 import AdminWrapper from '@/components/admin/layout/AdminWrapper';
-import ContentLoading from '@/components/loading/ContentLoading';
 import { createLazyFileRoute } from '@tanstack/react-router';
 
 const DashboardComponent = () => {
@@ -23,6 +22,5 @@ const DashboardComponent = () => {
 };
 
 export const Route = createLazyFileRoute('/admin/dashboard')({
-  pendingComponent: ContentLoading,
   component: () => <DashboardComponent />,
 });
