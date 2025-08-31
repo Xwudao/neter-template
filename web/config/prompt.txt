@@ -1,4 +1,4 @@
 准则：
 1. 不修改variables.scss文件
 2. 修改样式时，css文件使用snake-case，在Jsx里面使用classes.snakeCase
-3. 如果没有特意指定对应的scss文件，需要单独创建componet.module.scss文件
+3. 如果没有特意指定对应的scss文件，且该组件需要写样式时，需要单独创建componet.module.scss文件
