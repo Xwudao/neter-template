@@ -23,7 +23,7 @@ const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
   defaultPendingComponent: ContentLoading,
-  defaultPendingMs: 0, // 200ms 后显示 loading
+  defaultPendingMs: 1, // 200ms 后显示 loading
   defaultPendingMinMs: 1000, // 最少显示 500ms
   defaultErrorComponent: ErrorHolder,
   defaultNotFoundComponent: NotFound,
