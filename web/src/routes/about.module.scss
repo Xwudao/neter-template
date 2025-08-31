@@ -8,252 +8,36 @@
     max-width: $container-width;
     margin: 0 auto;
     padding: 0 $app-main-padding;
-}
-
-// Hero Section
-.hero_section {
-    background: linear-gradient(135deg, $color-primary-light-default, $color-secondary-light-default);
-    padding: 80px 0;
-    text-align: center;
-    color: $color-text-0;
-}
-
-.hero_title {
-    font-size: $font-size-header-1;
-    font-weight: $font-weight-bold;
-    margin-bottom: $spacing-base;
-    color: $color-text-0;
-}
-
-.hero_subtitle {
-    font-size: $font-size-header-5;
-    color: $color-text-1;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
-}
-
-// Company Section
-.company_section {
-    padding: 80px 0;
-    background-color: $color-bg-0;
-}
-
-.section_content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    min-height: calc(100vh - $header-height);
+    display: flex;
     align-items: center;
+    justify-content: center;
 }
 
-.text_content {
-    .section_title {
-        font-size: $font-size-header-2;
-        font-weight: $font-weight-bold;
-        color: $color-text-0;
-        margin-bottom: $spacing-base-loose;
-    }
-
-    .description {
-        font-size: $base-text;
-        color: $color-text-1;
-        line-height: 1.7;
-        margin-bottom: $spacing-base;
-
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
-}
-
-.stats_grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: $spacing-base-loose;
-}
-
-.stat_item {
-    text-align: center;
-    padding: $spacing-base-loose;
-    background-color: $color-bg-1;
+// Main Card
+.main_card {
+    background: $color-bg-1;
     border-radius: $large-radius;
-    box-shadow: $small-shadow;
-
-    .stat_number {
-        font-size: $font-size-header-2;
-        font-weight: $font-weight-bold;
-        color: $color-primary;
-        margin-bottom: $spacing-extra-tight;
-    }
-
-    .stat_label {
-        font-size: $small-text;
-        color: $color-text-2;
-    }
-}
-
-// Mission Section
-.mission_section {
-    padding: 80px 0;
-    background-color: $color-bg-1;
-
-    .section_title {
-        font-size: $font-size-header-2;
-        font-weight: $font-weight-bold;
-        color: $color-text-0;
-        text-align: center;
-        margin-bottom: 60px;
-    }
-}
-
-.mission_grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: $spacing-extra-loose;
-}
-
-.mission_card {
-    background-color: $color-bg-0;
-    padding: $spacing-extra-loose;
-    border-radius: $large-radius;
+    padding: 60px 40px;
+    max-width: 600px;
+    width: 100%;
     text-align: center;
     box-shadow: $base-shadow;
-    transition: transform $transition-duration-normal ease;
-
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: $large-shadow;
-    }
-
-    .mission_icon {
-        font-size: 48px;
-        margin-bottom: $spacing-base;
-    }
-
-    .mission_title {
-        font-size: $h3-font-size;
-        font-weight: $font-weight-bold;
-        color: $color-text-0;
-        margin-bottom: $spacing-base;
-    }
-
-    .mission_text {
-        font-size: $small-text;
-        color: $color-text-1;
-        line-height: 1.6;
-    }
 }
 
-// Team Section
-.team_section {
-    padding: 80px 0;
-    background-color: $color-bg-0;
-
-    .section_title {
-        font-size: $font-size-header-2;
-        font-weight: $font-weight-bold;
-        color: $color-text-0;
-        text-align: center;
-        margin-bottom: 60px;
-    }
+// Title and Description for Main Card
+.title {
+    font-size: $font-size-header-1;
+    font-weight: $font-weight-bold;
+    color: $color-text-0;
+    margin-bottom: $spacing-base-loose;
 }
 
-.team_grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: $spacing-extra-loose;
-}
-
-.team_card {
-    background-color: $color-bg-1;
-    padding: $spacing-extra-loose;
-    border-radius: $large-radius;
-    text-align: center;
-    box-shadow: $small-shadow;
-    transition: transform $transition-duration-normal ease;
-
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: $base-shadow;
-    }
-
-    .team_avatar {
-        font-size: 64px;
-        margin-bottom: $spacing-base;
-    }
-
-    .team_name {
-        font-size: $h4-font-size;
-        font-weight: $font-weight-bold;
-        color: $color-text-0;
-        margin-bottom: $spacing-extra-tight;
-    }
-
-    .team_role {
-        font-size: $small-text;
-        color: $color-primary;
-        font-weight: $font-weight-bold;
-        margin-bottom: $spacing-base;
-    }
-
-    .team_description {
-        font-size: $extra-small-text;
-        color: $color-text-2;
-        line-height: 1.5;
-    }
-}
-
-// Contact Section
-.contact_section {
-    padding: 80px 0;
-    background-color: $color-bg-1;
-
-    .section_title {
-        font-size: $font-size-header-2;
-        font-weight: $font-weight-bold;
-        color: $color-text-0;
-        text-align: center;
-        margin-bottom: 60px;
-    }
-}
-
-.contact_content {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.contact_info {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-base-loose;
-}
-
-.contact_item {
-    display: flex;
-    align-items: center;
-    gap: $spacing-base;
-    padding: $spacing-base-loose;
-    background-color: $color-bg-0;
-    border-radius: $medium-radius;
-    box-shadow: $small-shadow;
-
-    .contact_icon {
-        font-size: 32px;
-        flex-shrink: 0;
-    }
-
-    h4 {
-        font-size: $h5-font-size;
-        font-weight: $font-weight-bold;
-        color: $color-text-0;
-        margin-bottom: $spacing-super-tight;
-    }
-
-    p {
-        font-size: $small-text;
-        color: $color-text-1;
-        margin: 0;
-    }
+.description {
+    font-size: $base-text;
+    color: $color-text-1;
+    line-height: 1.6;
+    margin: 0;
 }
 
 // Responsive Design
@@ -291,5 +75,18 @@
 
     .hero_subtitle {
         font-size: $base-text;
+    }
+
+    .main_card {
+        padding: 40px 24px;
+        margin: 0 16px;
+    }
+
+    .title {
+        font-size: $font-size-header-2;
+    }
+
+    .description {
+        font-size: $small-text;
     }
 }

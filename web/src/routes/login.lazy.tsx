@@ -1,5 +1,6 @@
-import { Button, Form } from '@douyinfe/semi-ui';
-import { createLazyFileRoute, useNavigate } from '@tanstack/react-router';
+import { Button, Form, Space } from '@douyinfe/semi-ui';
+import { IconHome, IconChevronLeft } from '@douyinfe/semi-icons';
+import { createLazyFileRoute, useNavigate, useRouter } from '@tanstack/react-router';
 import clsx from 'clsx';
 import classes from './login.module.scss';
 import { useMutation } from '@tanstack/react-query';
@@ -16,6 +17,7 @@ const Login = () => {
 
   const { toLogin } = useAuth();
   const nav = useNavigate();
+  const router = useRouter();
   const handleLogin = (values: any) => {
     mutate(values, {
       onSuccess: onSuccess('登录成功', (rtn) => {
@@ -37,6 +39,14 @@ const Login = () => {
       }),
       onError: onError(),
     });
+  };
+
+  const handleGoHome = () => {
+    nav({ to: '/' });
+  };
+
+  const handleGoBack = () => {
+    router.history.back();
   };
 
   return (
@@ -63,6 +73,17 @@ const Login = () => {
             登录
           </Button>
         </Form>
+
+        <div className={clsx(classes.navigationButtons)}>
+          <Space>
+            <Button icon={<IconChevronLeft />} onClick={handleGoBack} type="tertiary">
+              返回上页
+            </Button>
+            <Button icon={<IconHome />} onClick={handleGoHome} type="tertiary">
+              返回首页
+            </Button>
+          </Space>
+        </div>
       </div>
     </section>
   );
