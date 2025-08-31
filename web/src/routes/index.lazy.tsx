@@ -20,7 +20,7 @@ const IndexComponent = () => {
       <div className={styles['main-card']}>
         <h1 className={styles.title}>Welcome to {site_info.site_name}</h1>
         <p className={styles.description}>
-          This is the index page of the application. Explore the features and navigate through different sections.
+          This is the neter template starter page. Explore the features and navigate through different sections.
         </p>
 
         <div className={styles.actions}>

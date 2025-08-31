@@ -2,7 +2,7 @@ import ConfigProvider from '@/provider/ConfigProvider.tsx';
 import useAuth from '@/provider/useAuth.tsx';
 import { routeTree } from '@/routeTree.gen.ts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createRouter, RouterProvider } from '@tanstack/react-router';
+import { createRouter, RouterProvider, createBrowserHistory } from '@tanstack/react-router';
 import AuthProvider from './provider/AuthProvider.tsx';
 
 const queryClient = new QueryClient({
@@ -13,6 +13,8 @@ const queryClient = new QueryClient({
   },
 });
 
+const history = createBrowserHistory();
+
 // Set up a Router instance
 const router = createRouter({
   routeTree,
@@ -21,6 +23,7 @@ const router = createRouter({
     queryClient,
     auth: undefined!,
   },
+  history,
 });
 
 // Register things for typesafety
@@ -41,7 +44,7 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <ConfigProvider>
-              <AuthApp />
+            <AuthApp />
           </ConfigProvider>
         </AuthProvider>
       </QueryClientProvider>

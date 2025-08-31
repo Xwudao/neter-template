@@ -15,6 +15,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
+	"github.com/Xwudao/neter-template/assets"
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/data"
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
@@ -58,14 +59,14 @@ func NewEngine(
 
 	r.Use(mdw.CacheMdw(), mdw.ExtractUserInfoMiddleware(log, jwt, data))
 
-	/*	spa, err := mdw.NewSpaMdw(assets.SpaDist, "dist", sb)
-		if err != nil {
-			return nil, err
-		}
-		r.NoRoute(spa.Serve("/"))
-		//r.NoRoute(spa.Serve("index.html"))
-		//r.NoRoute(mdw.NotFoundMdw())
-	*/
+	spa, err := mdw.NewSpaMdw(assets.SpaDist, "dist", sb)
+	if err != nil {
+		return nil, err
+	}
+	r.NoRoute(spa.Serve("/"))
+	//r.NoRoute(spa.Serve("index.html"))
+	//r.NoRoute(mdw.NotFoundMdw())
+
 	r.Use(mdw.DumpReqResMdw(isDebug, log))
 	r.Use(gin.Logger())
 	r.Use(gin.RecoveryWithWriter(zw), mdw.LoggerMiddleware(logFunc))

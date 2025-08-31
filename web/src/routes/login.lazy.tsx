@@ -1,6 +1,6 @@
 import { Button, Form, Space } from '@douyinfe/semi-ui';
 import { IconHome, IconChevronLeft } from '@douyinfe/semi-icons';
-import { createLazyFileRoute, useNavigate, useRouter } from '@tanstack/react-router';
+import { createLazyFileRoute, useNavigate, useRouter, Link } from '@tanstack/react-router';
 import clsx from 'clsx';
 import classes from './login.module.scss';
 import { useMutation } from '@tanstack/react-query';
@@ -45,10 +45,6 @@ const Login = () => {
     nav({ to: '/' });
   };
 
-  const handleGoBack = () => {
-    router.history.back();
-  };
-
   return (
     <section className={clsx(classes.loginContainer)}>
       <div className={clsx(classes.loginBox)}>
@@ -58,30 +54,24 @@ const Login = () => {
             field="username"
             label="用户名"
             placeholder="请输入用户名"
-            size="large"
             rules={[{ required: true, message: '请输入用户名' }]}
           />
           <Input
             field="password"
             label="密码"
             mode="password"
-            size="large"
             rules={[{ required: true, message: '请输入密码' }]}
             placeholder="请输入密码"
           />
-          <Button htmlType={'submit'} type="primary" size="large" block loading={isPending}>
+          <Button htmlType={'submit'} type="primary" block loading={isPending}>
             登录
           </Button>
         </Form>
 
         <div className={clsx(classes.navigationButtons)}>
           <Space>
-            <Button icon={<IconChevronLeft />} onClick={handleGoBack} type="tertiary">
-              返回上页
-            </Button>
-            <Button icon={<IconHome />} onClick={handleGoHome} type="tertiary">
-              返回首页
-            </Button>
+            <Link to="/">返回首页</Link>
+            <Link to="..">返回上页</Link>
           </Space>
         </div>
       </div>
