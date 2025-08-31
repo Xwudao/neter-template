@@ -74,8 +74,9 @@ const Login = () => {
         </Form>
 
         <div className={clsx(classes.navigationButtons)}>
-          <Space>
+          <Space spacing={'loose'}>
             <Link to="/">返回首页</Link>
+            <Link to="/register">注册账号</Link>
             <Link to="..">返回上页</Link>
           </Space>
         </div>
