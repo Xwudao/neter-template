@@ -1,0 +1,105 @@
+@use '@/assets/styles/variables.scss' as vars;
+@use '@/assets/styles/mixins/response.scss';
+
+.container {
+    width: 100%;
+    padding: var(--semi-spacing-base);
+}
+
+.loading-state,
+.error-state {
+    padding: vars.$spacing-base-loose;
+    text-align: center;
+    font-size: vars.$font-size-regular;
+    border-radius: var(--semi-border-radius-medium);
+    margin: var(--semi-spacing-base);
+}
+
+.error-state {
+    color: var(--semi-color-danger);
+}
+
+.data-container {
+    display: flex;
+    flex-direction: column;
+    gap: vars.$spacing-base;
+    transition: all 0.2s ease-in-out;
+    border-radius: var(--semi-border-radius-medium);
+    padding: vars.$spacing-base;
+    margin: 10px 0;
+    border: 1px solid var(--semi-color-border);
+}
+
+.data-item {
+    // margin-bottom: var(--semi-spacing-loose);
+
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.item-header {
+    font-weight: vars.$font-weight-bold;
+    font-size: vars.$font-size-small;
+    margin-bottom: vars.$spacing-base-tight;
+    color: var(--semi-color-text-0);
+    // padding-bottom: vars.$spacing-base;
+}
+
+.status-container {
+    margin-bottom: var(--semi-spacing-base);
+    display: flex;
+    align-items: center;
+    gap: vars.$spacing-tight;
+}
+
+.status-label {
+    font-size: vars.$font-size-regular;
+    color: var(--semi-color-text-1);
+    font-weight: vars.$font-weight-regular;
+}
+
+.status-enabled,
+.status-disabled {
+    padding: var(--semi-spacing-extra-tight) var(--semi-spacing-tight);
+    border-radius: var(--semi-border-radius-full);
+    font-size: vars.$font-size-small;
+    font-weight: vars.$font-weight-bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-enabled {
+    color: var(--semi-color-success);
+}
+
+.status-disabled {
+    color: var(--semi-color-danger);
+}
+
+.values-container {
+    .values-label {
+        font-size: vars.$font-size-regular;
+        color: var(--semi-color-text-1);
+        // font-weight: vars.$font-weight-bold;
+        display: block;
+        margin-bottom: var(--semi-spacing-tight);
+    }
+}
+
+.values-text {
+    font-size: vars.$font-size-small;
+    color: var(--semi-color-text-0);
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    line-height: 1.5;
+    word-break: break-all;
+}
+
+.error-item {
+    color: var(--semi-color-danger);
+    font-size: vars.$font-size-regular;
+    padding: var(--semi-spacing-base);
+    margin-bottom: var(--semi-spacing-base);
+    font-weight: vars.$font-weight-bold;
+}

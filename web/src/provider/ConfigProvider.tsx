@@ -41,7 +41,7 @@ const ConfigProvider = ({ children }: { children: ReactNode }) => {
         resetConfig,
         updateRawConfig,
       }}>
-      {error && <div className="text-red-500">Error loading configuration: {error.message}</div>}
+      {error && <div className="text-red-500 text-center">Error loading configuration: {error.message}</div>}
       {isLoading && !hasCache() && <PageLoading text="Loading..." />}
       {(cmnConfig?.data || hasCache()) && children}
     </ConfigContext.Provider>

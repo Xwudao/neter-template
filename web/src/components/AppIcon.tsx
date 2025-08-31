@@ -23,10 +23,10 @@ const AppIcon = forwardRef<HTMLElement, Props>((props, ref) => {
       svg={
         <i
           ref={ref}
-          className={clsx(icon, className, {
-            'semi-icon-spinning': spin,
-          })}
-        ></i>
+          className={clsx(className, {
+            'i-svg-spinners-bars-rotate-fade': spin,
+            [icon]: !spin,
+          })}></i>
       }
     />
   );

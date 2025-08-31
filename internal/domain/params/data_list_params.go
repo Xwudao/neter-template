@@ -47,7 +47,7 @@ func (u *UpdateDataListParams) GetMessages() valid.ValidatorMessages {
 }
 
 type ListDataByKindParams struct {
-	Kind string `json:"kind" binding:"required" form:"kind"`
+	Kind string `json:"kind" form:"kind"`
 	Page int    `json:"page" binding:"min=1" form:"page"`
 	Size int    `json:"size" binding:"min=1,max=100" form:"size"`
 

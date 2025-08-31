@@ -37,7 +37,7 @@ const Navs: NavItems = [
     itemKey: 'data-list',
     text: '数据管理',
     icon: <AppIcon icon={'i-ant-design-ordered-list-outlined'} />,
-    path: '/admin/data_list',
+    path: '/admin/data-list',
   },
   {
     itemKey: 'site-config',

@@ -1,0 +1,29 @@
+@use '@/assets/styles/variables.scss' as vars;
+@use '@/assets/styles/mixins/response.scss';
+
+.modal-content {
+  max-height: 60vh;
+  overflow: auto;
+  padding: var(--semi-spacing-base);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--semi-spacing-base);
+  border-bottom: 1px solid var(--semi-color-border);
+}
+
+.modal-title {
+  font-size: vars.$font-size-header-5;
+  font-weight: vars.$font-weight-bold;
+  color: var(--semi-color-text-0);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--semi-spacing-base);
+  border-top: 1px solid var(--semi-color-border);
+}

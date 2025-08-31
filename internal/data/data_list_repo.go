@@ -73,7 +73,11 @@ func (u *dataListRepository) GetAllByKinds(ctx context.Context, p *params.GetAll
 
 // ListByKind 根据Kind查询
 func (u *dataListRepository) ListByKind(ctx context.Context, p *params.ListDataByKindParams) ([]*ent.DataList, int, error) {
-	var builder = u.data.Client.DataList.Query().Where(datalist.KindEQ(p.Kind))
+	var builder = u.data.Client.DataList.Query()
+
+	if p.Kind != "" {
+		builder.Where(datalist.KindEQ(p.Kind))
+	}
 
 	var total = builder.CountX(ctx)
 

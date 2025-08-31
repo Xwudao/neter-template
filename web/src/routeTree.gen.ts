@@ -18,6 +18,7 @@ const LoginLazyRouteImport = createFileRoute('/login')()
 const AboutLazyRouteImport = createFileRoute('/about')()
 const IndexLazyRouteImport = createFileRoute('/')()
 const AdminIndexLazyRouteImport = createFileRoute('/admin/')()
+const AdminDataListLazyRouteImport = createFileRoute('/admin/data-list')()
 const AdminDashboardLazyRouteImport = createFileRoute('/admin/dashboard')()
 const AdminConfigLazyRouteImport = createFileRoute('/admin/config')()
 
@@ -51,6 +52,13 @@ const AdminIndexLazyRoute = AdminIndexLazyRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRouteRoute,
 } as any).lazy(() => import('./routes/admin/index.lazy').then((d) => d.Route))
+const AdminDataListLazyRoute = AdminDataListLazyRouteImport.update({
+  id: '/data-list',
+  path: '/data-list',
+  getParentRoute: () => AdminRouteRoute,
+} as any).lazy(() =>
+  import('./routes/admin/data-list.lazy').then((d) => d.Route),
+)
 const AdminDashboardLazyRoute = AdminDashboardLazyRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -72,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterLazyRoute
   '/admin/config': typeof AdminConfigLazyRoute
   '/admin/dashboard': typeof AdminDashboardLazyRoute
+  '/admin/data-list': typeof AdminDataListLazyRoute
   '/admin/': typeof AdminIndexLazyRoute
 }
 export interface FileRoutesByTo {
@@ -81,6 +90,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterLazyRoute
   '/admin/config': typeof AdminConfigLazyRoute
   '/admin/dashboard': typeof AdminDashboardLazyRoute
+  '/admin/data-list': typeof AdminDataListLazyRoute
   '/admin': typeof AdminIndexLazyRoute
 }
 export interface FileRoutesById {
@@ -92,6 +102,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterLazyRoute
   '/admin/config': typeof AdminConfigLazyRoute
   '/admin/dashboard': typeof AdminDashboardLazyRoute
+  '/admin/data-list': typeof AdminDataListLazyRoute
   '/admin/': typeof AdminIndexLazyRoute
 }
 export interface FileRouteTypes {
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/admin/config'
     | '/admin/dashboard'
+    | '/admin/data-list'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -113,6 +125,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/admin/config'
     | '/admin/dashboard'
+    | '/admin/data-list'
     | '/admin'
   id:
     | '__root__'
@@ -123,6 +136,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/admin/config'
     | '/admin/dashboard'
+    | '/admin/data-list'
     | '/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -178,6 +192,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexLazyRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/data-list': {
+      id: '/admin/data-list'
+      path: '/data-list'
+      fullPath: '/admin/data-list'
+      preLoaderRoute: typeof AdminDataListLazyRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/dashboard': {
       id: '/admin/dashboard'
       path: '/dashboard'
@@ -198,12 +219,14 @@ declare module '@tanstack/react-router' {
 interface AdminRouteRouteChildren {
   AdminConfigLazyRoute: typeof AdminConfigLazyRoute
   AdminDashboardLazyRoute: typeof AdminDashboardLazyRoute
+  AdminDataListLazyRoute: typeof AdminDataListLazyRoute
   AdminIndexLazyRoute: typeof AdminIndexLazyRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminConfigLazyRoute: AdminConfigLazyRoute,
   AdminDashboardLazyRoute: AdminDashboardLazyRoute,
+  AdminDataListLazyRoute: AdminDataListLazyRoute,
   AdminIndexLazyRoute: AdminIndexLazyRoute,
 }
 
