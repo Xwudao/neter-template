@@ -14,8 +14,19 @@ const Login = () => {
     mutationFn: postApiUserLogin,
   });
 
-  const { toLogin } = useAuth();
+  const { toLogin, logged, isAdmin } = useAuth();
   const nav = useNavigate();
+
+  useEffect(() => {
+    if (!logged) return;
+
+    if (isAdmin) {
+      nav({ to: '/admin', search: { tab: '' } }).then(() => {});
+    } else {
+      nav({ to: '/' });
+    }
+  }, [logged, nav, isAdmin]);
+
   const handleLogin = (values: any) => {
     mutate(values, {
       onSuccess: onSuccess('登录成功', (rtn) => {

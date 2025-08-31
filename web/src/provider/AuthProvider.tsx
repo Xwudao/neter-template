@@ -1,5 +1,5 @@
 import { getApiUserInfo, User } from '@/api/userApi.ts';
-import { KEY_TOKEN } from '@/core/constants.ts';
+import { KEY_TOKEN, UserRole } from '@/core/constants.ts';
 import useUserState from '@/store/userState.ts';
 import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
@@ -9,6 +9,7 @@ export interface AuthContextType {
   toLogin: (user: User, ok?: () => void) => void;
   user: User;
   logged: boolean;
+  isAdmin: boolean;
   logout: (onOk?: () => void) => void;
 }
 const AuthContext = createContext<AuthContextType>(null!);
@@ -21,6 +22,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logged = useMemo(() => {
     return !!userInfo.token;
   }, [userInfo]);
+
+  const isAdmin = useMemo(() => {
+    return logged && userInfo.role?.includes(UserRole.ADMIN);
+  }, [logged, userInfo]);
 
   const { data: newUser } = useQuery({
     queryKey: ['userInfo'],
@@ -50,7 +55,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     onOk?.();
   };
 
-  return <AuthContext.Provider value={{ logout, user: userState, logged, toLogin }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ logout, isAdmin, user: userState, logged, toLogin }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export { AuthContext };

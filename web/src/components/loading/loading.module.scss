@@ -1,0 +1,21 @@
+.page-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--semi-color-bg-0);
+    z-index: 9999;
+}
+
+.content-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // min-height: 200px;
+    height: 100%;
+    width: 100%;
+}

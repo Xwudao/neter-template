@@ -5,19 +5,19 @@ import { UserRole } from '@/core/constants';
 import useTheme from '@/hooks/useTheme';
 import useAuth from '@/provider/useAuth';
 import { Avatar, Button, Divider, Dropdown, Layout, Nav, Toast } from '@douyinfe/semi-ui';
-import { createFileRoute, Outlet, redirect, useLocation, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, Link, Outlet, redirect, useLocation, useNavigate } from '@tanstack/react-router';
 import MaterialSymbolsLogoutSharp from '~icons/material-symbols/logout-sharp';
 import classes from '../styles.module.scss';
 import NotFound from '@/components/admin/layout/NotFound';
 import AdminConfigProvider from '@/provider/AdminConfigProvider';
 import z from 'zod';
+import ContentLoading from '@/components/loading/ContentLoading';
 
 const { Header, Footer, Sider, Content } = Layout;
 
 const configSearchSchema = z.object({
   tab: z.string().optional().default('config'),
 });
-
 
 const AdminLayout = () => {
   const nav = useNavigate();
@@ -43,10 +43,10 @@ const AdminLayout = () => {
             <Nav.Footer>
               <section className={`space-x-2`}>
                 {/*<Typography.Text icon={<IconHome />} link={{ href: '/' }} className={`btn`} />*/}
-                <a href="/" className={`btn icon-btn`}>
+                <Link to="/" className={`btn icon-btn`}>
                   {/* <i className="i-ic-baseline-home"></i> */}
                   <AppIcon icon={'i-ic-baseline-home'} />
-                </a>
+                </Link>
                 <Button
                   theme="borderless"
                   onClick={toggleTheme}
@@ -121,6 +121,7 @@ export const Route = createFileRoute('/admin')({
       <AdminLayout />
     </AdminConfigProvider>
   ),
+  pendingComponent: ContentLoading,
   notFoundComponent: () => <NotFound />,
   validateSearch: configSearchSchema,
   beforeLoad: async ({ context, location }) => {

@@ -4,6 +4,7 @@ import { routeTree } from '@/routeTree.gen.ts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRouter, RouterProvider, createBrowserHistory } from '@tanstack/react-router';
 import AuthProvider from './provider/AuthProvider.tsx';
+import ContentLoading from '@/components/loading/ContentLoading.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,6 +20,9 @@ const history = createBrowserHistory();
 const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
+  defaultPendingComponent: ContentLoading,
+  defaultPendingMs: 0,
+  defaultPendingMinMs: 0,
   context: {
     queryClient,
     auth: undefined!,
