@@ -75,6 +75,7 @@ function DataListViewer(props: Props) {
                 </div>
               </div>
             );
+            // oxlint-disable-next-line no-unused-vars
           } catch (e) {
             return (
               <div key={item.id} className={classes.errorItem}>

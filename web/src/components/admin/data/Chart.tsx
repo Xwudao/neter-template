@@ -1,5 +1,5 @@
-import { RadioGroup, Radio } from "@douyinfe/semi-ui";
-import { VChart } from "@visactor/react-vchart";
+import { RadioGroup, Radio } from '@douyinfe/semi-ui';
+import { VChart } from '@visactor/react-vchart';
 
 const commonSpec = {
   type: 'bar',
@@ -27,12 +27,11 @@ const commonSpec = {
   yField: 'sales',
   seriesField: 'type',
 };
-interface Props {}
 
-function Chart(props: Props) {
-//   const {} = props;
+function Chart() {
+  //   const {} = props;
   const [direction, setDirection] = useState('vertical');
-  const onChange = useCallback((e:any) => setDirection(e.target.value), []);
+  const onChange = useCallback((e: any) => setDirection(e.target.value), []);
   const spec = useMemo(() => {
     const isVertical = direction === 'vertical';
     return {

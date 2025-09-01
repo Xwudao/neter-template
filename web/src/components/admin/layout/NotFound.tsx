@@ -5,9 +5,7 @@ import classes from './styles.module.scss';
 import useTheme from '@/hooks/useTheme';
 import { IllustrationNotFound, IllustrationNotFoundDark } from '@douyinfe/semi-illustrations';
 
-interface Props {}
-
-function NotFound(props: Props) {
+function NotFound() {
   // const {} = props
 
   const nav = useNavigate();

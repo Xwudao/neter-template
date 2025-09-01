@@ -1,9 +1,8 @@
 import { Form, Typography, useFormApi } from '@douyinfe/semi-ui';
 
-interface Props {}
 const { TextArea, Input, Select } = Form;
 
-function SiteConfigForm(props: Props) {
+function SiteConfigForm() {
   // const {} = props
 
   const formApi = useFormApi();

@@ -57,7 +57,7 @@ const SortBlock: FC<PropsWithChildren<ISortBlock>> = ({ data, labelKey, classNam
     <div className={classnames(className, 'flex flex-col items-start')}>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={innerData} strategy={verticalListSortingStrategy}>
-          {innerData.map((item, idx) => (
+          {innerData.map((item) => (
             <SortItem key={item.id} data={item} labelKey={labelKey} />
           ))}
         </SortableContext>
@@ -86,8 +86,7 @@ const SortItem: FC<PropsWithChildren<ISortItem>> = ({ labelKey, data }) => {
       className={`cmn-text cursor-grab select-none max-w-full inline-flex items-start`}
       style={style}
       {...attributes}
-      {...listeners}
-    >
+      {...listeners}>
       <i className="i-carbon-drag-vertical"></i>
       <span className={`am truncate flex-1 ml-1`}>{data[labelKey]}</span>
     </div>

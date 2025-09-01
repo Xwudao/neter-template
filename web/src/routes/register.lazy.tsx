@@ -52,7 +52,7 @@ const Register = () => {
             rules={[
               { required: true, message: '请确认密码' },
               {
-                validator: (rule, value, callback, source, options) => {
+                validator: (rule, value, callback, source) => {
                   if (value && value !== source.password) {
                     return new Error('两次输入的密码不一致');
                   }
