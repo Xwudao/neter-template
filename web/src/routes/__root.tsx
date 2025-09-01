@@ -7,6 +7,8 @@ import { Suspense } from 'react';
 interface MyRouterContext {
   // The ReturnType of your useAuth hook or the value of your AuthContext
   auth: User;
+  isAdmin: boolean;
+  logged: boolean;
   queryClient: QueryClient;
 }
 

@@ -51,7 +51,7 @@ instance.interceptors.response.use(
       const { code } = resp.data;
       if (status === 403 || (code && code === 403)) {
         Toast.error('请刷新页面登录');
-        // location.href = '/login';
+        localStorage.removeItem(KEY_TOKEN);
         reject(resp);
       }
       resolve(resp);
@@ -62,6 +62,7 @@ instance.interceptors.response.use(
       const status = error.response.status || 0;
       if (status === 403) {
         // location.href = '/login';
+        localStorage.removeItem(KEY_TOKEN);
         Toast.error('请刷新页面登录');
       }
       reject(error);

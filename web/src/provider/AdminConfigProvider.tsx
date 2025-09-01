@@ -86,7 +86,7 @@ const AdminConfigProvider = ({ children }: { children: ReactNode }) => {
         updating: isPending,
         updateRawConfig,
       }}>
-      {error && <div className="text-red-500">Error loading configuration: {error.message}</div>}
+      {error && <div className="text-red-500 text-center">Error loading configuration: {error.message}</div>}
       {isLoading && !hasCache() && <PageLoading text="Loading..." />}
       {(adminConfig?.data || hasCache()) && children}
     </AdminConfigContext.Provider>

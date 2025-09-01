@@ -20,7 +20,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const storageToken = localStorage.getItem(KEY_TOKEN);
 
   const logged = useMemo(() => {
-    return !!userInfo.token;
+    return !!userInfo.token && !!storageToken;
   }, [userInfo]);
 
   const isAdmin = useMemo(() => {

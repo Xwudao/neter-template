@@ -1,7 +1,7 @@
 import appLogo from '@/assets/images/app.svg';
 import Navs, { findKeyByPath, findPathByKey } from '@/components/admin/navs';
 import AppIcon from '@/components/AppIcon';
-import { UserRole } from '@/core/constants';
+import ContentLoading from '@/components/loading/ContentLoading';
 import useTheme from '@/hooks/useTheme';
 import AdminConfigProvider from '@/provider/AdminConfigProvider';
 import useAuth from '@/provider/useAuth';
@@ -11,7 +11,6 @@ import { Suspense, useMemo } from 'react';
 import z from 'zod';
 import MaterialSymbolsLogoutSharp from '~icons/material-symbols/logout-sharp';
 import classes from '../styles.module.scss';
-import ContentLoading from '@/components/loading/ContentLoading';
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -126,7 +125,8 @@ export const Route = createFileRoute('/admin')({
   pendingComponent: ContentLoading,
   validateSearch: configSearchSchema,
   beforeLoad: async ({ context, location }) => {
-    if (!context.auth || !context.auth.role?.includes(UserRole.ADMIN)) {
+    console.log('🚀 ~ context:', context);
+    if (!context.auth || !context.isAdmin) {
       Toast.error('请先登录');
       throw redirect({
         to: '/login',

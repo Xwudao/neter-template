@@ -30,6 +30,8 @@ const router = createRouter({
   context: {
     queryClient,
     auth: undefined!,
+    isAdmin: false,
+    logged: false,
   },
   history,
 });
@@ -42,8 +44,9 @@ declare module '@tanstack/react-router' {
 }
 
 const AuthApp = () => {
-  const { user } = useAuth();
-  return <RouterProvider router={router} context={{ auth: user }} />;
+  const { user, isAdmin, logged } = useAuth();
+
+  return <RouterProvider router={router} context={{ auth: user, isAdmin, logged }} />;
 };
 
 const App = () => {
