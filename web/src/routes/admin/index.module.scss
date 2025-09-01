@@ -1,0 +1,75 @@
+@use '@/assets/styles/variables' as vars;
+
+.sticky-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .title {
+        font-size: vars.$small-text;
+        font-weight: 600;
+        color: vars.$color-text-1;
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: vars.$spacing-tight;
+    }
+}
+
+.action-button {
+    padding: vars.$spacing-extra-tight vars.$spacing-base-tight;
+    font-size: vars.$extra-small-text;
+    color: white;
+    border: none;
+    border-radius: vars.$small-radius;
+    cursor: pointer;
+    transition: all vars.$transition-duration-fast;
+
+    &.primary {
+        background-color: vars.$color-primary;
+
+        &:hover {
+            background-color: vars.$color-primary-hover;
+        }
+    }
+
+    &.success {
+        background-color: vars.$color-success;
+
+        &:hover {
+            background-color: vars.$color-success-hover;
+        }
+    }
+}
+
+.toolbar-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: vars.$spacing-tight;
+    flex-wrap: wrap;
+}
+
+.content-line {
+    font-size: vars.$small-text;
+    padding: vars.$spacing-extra-tight 0;
+}
+
+.bottom-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .status-text {
+        font-size: vars.$extra-small-text;
+        color: vars.$color-text-3;
+    }
+}

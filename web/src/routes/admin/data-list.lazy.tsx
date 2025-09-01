@@ -221,31 +221,33 @@ const DataListComponent = () => {
             </div>
           </div>
         }>
-        <Table
-          className="w-full"
-          dataSource={dataLists?.data?.list || []}
-          columns={columns}
-          rowKey="id"
-          loading={isLoading}
-          // rowSelection={{
-          //   onChange: (selectedRowKeys) => {
-          //     setSelectedIDs(selectedRowKeys as number[]);
-          //   },
-          // }}
-          pagination={{
-            total: dataLists?.data?.total || 0,
-            pageSize: size,
-            currentPage: page,
-            onPageChange: (currentPage) => setPage(currentPage),
-            pageSizeOpts: [10, 20, 30, 40, 50],
-            showSizeChanger: true,
-            onPageSizeChange: (size) => {
-              setPage(1);
-              setSize(size);
-              setMemSize(size);
-            },
-          }}
-        />
+        <div className={'py3'}>
+          <Table
+            className="w-full"
+            dataSource={dataLists?.data?.list || []}
+            columns={columns}
+            rowKey="id"
+            loading={isLoading}
+            // rowSelection={{
+            //   onChange: (selectedRowKeys) => {
+            //     setSelectedIDs(selectedRowKeys as number[]);
+            //   },
+            // }}
+            pagination={{
+              total: dataLists?.data?.total || 0,
+              pageSize: size,
+              currentPage: page,
+              onPageChange: (currentPage) => setPage(currentPage),
+              pageSizeOpts: [10, 20, 30, 40, 50],
+              showSizeChanger: true,
+              onPageSizeChange: (size) => {
+                setPage(1);
+                setSize(size);
+                setMemSize(size);
+              },
+            }}
+          />
+        </div>
       </AdminWrapper>
     </>
   );

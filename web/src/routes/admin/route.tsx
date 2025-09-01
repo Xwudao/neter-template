@@ -40,21 +40,25 @@ const AdminLayout = () => {
               <span className={'text-lg ml2'}>无道后台</span>
             </Nav.Header>
             <Nav.Footer>
-              <section className={`space-x-2`}>
+              <section className={`inline-flex gap1`}>
                 {/*<Typography.Text icon={<IconHome />} link={{ href: '/' }} className={`btn`} />*/}
-                <Link to="/" className={`btn icon-btn`}>
-                  {/* <i className="i-ic-baseline-home"></i> */}
-                  <AppIcon icon={'i-ic-baseline-home'} />
-                </Link>
-                <Button
-                  theme="borderless"
-                  onClick={toggleTheme}
-                  className={`${classes.btnIcon}`}
-                  icon={
-                    <AppIcon icon={isDark ? 'i-line-md-moon-rising-filled-loop' : 'i-line-md-sun-rising-filled-loop'} />
-                  }
-                  style={{ color: 'var(--semi-color-text-2)' }}
-                />
+                <div className={'inline-flex items-center gap2'}>
+                  <Link to="/" className={`btn icon-btn`}>
+                    {/* <i className="i-ic-baseline-home"></i> */}
+                    <AppIcon icon={'i-ic-baseline-home'} />
+                  </Link>
+                  <Button
+                    theme="borderless"
+                    onClick={toggleTheme}
+                    className={`${classes.btnIcon}`}
+                    icon={
+                      <AppIcon
+                        icon={isDark ? 'i-line-md-moon-rising-filled-loop' : 'i-line-md-sun-rising-filled-loop'}
+                      />
+                    }
+                    style={{ color: 'var(--semi-color-text-2)' }}
+                  />
+                </div>
                 <Divider layout={`vertical`} margin={10} />
                 <Dropdown
                   trigger="click"
