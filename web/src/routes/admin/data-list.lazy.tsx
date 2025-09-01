@@ -1,5 +1,5 @@
 import { DataList, postApiDeleteDataList } from '@/api/dataListApi';
-import { getAdminApiListDataListByKind } from '@/api/dataListApi copy';
+import { getAdminApiListDataListByKind } from '@/api/dataListApi';
 import AddDataListBtn from '@/components/admin/buttons/AddDataListBtn';
 import DataViewBtn from '@/components/admin/buttons/DataViewBtn';
 import ReverseStorePropBtn from '@/components/admin/buttons/ReverseStorePropBtn';
@@ -185,7 +185,7 @@ const DataListComponent = () => {
             />
           )}
 
-          <DataViewBtn kind_type={row.kind as KindTypes} disabled={row.kind !== KindTypes.BanUA} />
+          <DataViewBtn kind_type={row.kind as KindTypes} disabled={row.kind !== KindTypes.BanUA} onRefresh={refetch} />
 
           <Popconfirm title="确认删除" content="删除后无法恢复，确定要删除吗？" onConfirm={() => handleDelete(row.id)}>
             <Button size="small" type="danger" icon={<IconDelete />} loading={deleting} />

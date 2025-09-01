@@ -7,7 +7,7 @@ import AdminConfigProvider from '@/provider/AdminConfigProvider';
 import useAuth from '@/provider/useAuth';
 import { Avatar, Button, Divider, Dropdown, Layout, Nav, Toast } from '@douyinfe/semi-ui';
 import { createFileRoute, Link, Outlet, redirect, useLocation, useNavigate } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
 import z from 'zod';
 import MaterialSymbolsLogoutSharp from '~icons/material-symbols/logout-sharp';
 import classes from '../styles.module.scss';
@@ -117,14 +117,13 @@ const AdminLayout = () => {
 
 export const Route = createFileRoute('/admin')({
   component: () => (
-    <AdminConfigProvider>
-      <AdminLayout />
-    </AdminConfigProvider>
+    <Suspense fallback={<ContentLoading />}>
+      <AdminConfigProvider>
+        <AdminLayout />
+      </AdminConfigProvider>
+    </Suspense>
   ),
-
   pendingComponent: ContentLoading,
-  pendingMs: 1, // 200ms 后显示 loading
-  pendingMinMs: 1000, // 最少显示 500ms
   validateSearch: configSearchSchema,
   beforeLoad: async ({ context, location }) => {
     if (!context.auth || !context.auth.role?.includes(UserRole.ADMIN)) {

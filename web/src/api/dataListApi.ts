@@ -65,13 +65,22 @@ export interface GetListDataListByKindRes {
   msg: string;
 }
 
-const getApiListDataListByKind = (query: GetListDataListByKindQuery) => {
+const getAdminApiListDataListByKind = (query: GetListDataListByKindQuery) => {
   return request<GetListDataListByKindRes>({
     url: '/admin/v1/data_list/list',
     method: 'get',
     params: query,
   });
 };
+
+const getApiListDataListByKind = (query: GetListDataListByKindQuery) => {
+  return request<GetListDataListByKindRes>({
+    url: '/v1/data_list/list',
+    method: 'get',
+    params: query,
+  });
+};
+
 export interface PostDeleteDataListReq {
   id: number;
 }
@@ -93,9 +102,16 @@ export interface GetGetDataListSortDataRes {
   data: Array<DataList>;
 }
 
-const getApiGetDataListSortData = (query: GetGetDataListSortDataQuery) => {
+const getAdminApiGetDataListSortData = (query: GetGetDataListSortDataQuery) => {
   return request<GetGetDataListSortDataRes>({
     url: '/admin/v1/data_list/sort_data',
+    method: 'get',
+    params: query,
+  });
+};
+const getApiGetDataListSortData = (query: GetGetDataListSortDataQuery) => {
+  return request<GetGetDataListSortDataRes>({
+    url: '/v1/data_list/sort_data',
     method: 'get',
     params: query,
   });
@@ -117,8 +133,10 @@ const postApiUpdateSortDataList = (payload: PostUpdateSortDataListReq) => {
 export {
   postApiUpdateSortDataList,
   postApiCreateDataList,
+  getAdminApiGetDataListSortData,
   getApiGetDataListSortData,
   postApiDeleteDataList,
   postApiUpdateDataList,
   getApiListDataListByKind,
+  getAdminApiListDataListByKind,
 };
