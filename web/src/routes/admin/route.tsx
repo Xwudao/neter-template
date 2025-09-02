@@ -107,7 +107,9 @@ const AdminLayout = () => {
             />
           </Sider>
           <Content className={classes.adminMainRightCnt}>
-            <Outlet />
+            <Suspense fallback={<ContentLoading />}>
+              <Outlet />
+            </Suspense>
           </Content>
         </Layout>
         <Footer className={classes.adminMainFooter}>
@@ -120,11 +122,9 @@ const AdminLayout = () => {
 
 export const Route = createFileRoute('/admin')({
   component: () => (
-    <Suspense fallback={<ContentLoading />}>
-      <AdminConfigProvider>
-        <AdminLayout />
-      </AdminConfigProvider>
-    </Suspense>
+    <AdminConfigProvider>
+      <AdminLayout />
+    </AdminConfigProvider>
   ),
   pendingComponent: ContentLoading,
   validateSearch: configSearchSchema,
