@@ -1,4 +1,5 @@
 import { User } from '@/api/userApi';
+import ContentLoading from '@/components/loading/ContentLoading';
 import { type QueryClient } from '@tanstack/react-query';
 import { Outlet, createRootRouteWithContext } from '@tanstack/react-router';
 
@@ -12,4 +13,5 @@ interface MyRouterContext {
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => <Outlet />,
+  pendingComponent: ContentLoading,
 });
