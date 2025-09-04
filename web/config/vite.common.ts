@@ -7,11 +7,12 @@ import IconsResolver from 'unplugin-icons/resolver';
 import Icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
+import { semiTheming } from 'vite-plugin-semi-theming';
 
 export const commonConfig = defineConfig({
   resolve: {
-    alias: { '@': resolve('src') },
-    extensions: ['.tsx', '.js', '.ts'],
+    alias: { '@': resolve('src'), '~': resolve(__dirname, 'node_modules') },
+    extensions: ['.tsx', '.js', '.ts', 'scss'],
   },
   css: {
     modules: {
@@ -25,6 +26,9 @@ export const commonConfig = defineConfig({
     },
   },
   plugins: [
+    semiTheming({
+      theme: '@semi-bot/semi-theme-reman-purple',
+    }),
     tanstackRouter({
       target: 'react',
       quoteStyle: 'single',
