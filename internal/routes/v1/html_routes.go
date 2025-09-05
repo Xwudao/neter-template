@@ -1,6 +1,8 @@
 package v1
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/knadh/koanf/v2"
 
@@ -28,23 +30,15 @@ func NewHtmlRoute(g *gin.Engine, hhb *biz.HtmlHelpBiz, log *zap.SugaredLogger, c
 }
 
 func (r *HtmlRoute) Reg() {
-	// r.g.GET("/v1/html", core.WrapData(r.html()))
+	r.g.LoadHTMLGlob("templates/*.html")
+	r.g.Static("/static", "./templates/static")
 
-	group := r.g.Group("/")
-	{
-		group.GET("/", r.index())
-	}
-
-}
-
-func (r *HtmlRoute) index() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var m, err = r.hhb.BuildIndexMap(c)
+	r.g.GET("/", func(c *gin.Context) {
+		md, err := r.hhb.BuildIndexMap(c)
 		if err != nil {
-			r.log.Errorw("BuildIndexMap error", "error", err)
-			c.AbortWithStatus(500)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.HTML(200, "pages/index.tpl", m)
-	}
+		c.HTML(http.StatusOK, "index.html", md)
+	})
 }
