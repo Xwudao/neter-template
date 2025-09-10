@@ -52,3 +52,13 @@ func NewS3Config(conf *koanf.Koanf) (*payloads.S3Config, error) {
 
 	return &s3Config, nil
 }
+
+// NewRedisConfig reads the redis configuration from the koanf config
+func NewRedisConfig(conf *koanf.Koanf) (*payloads.RedisConfig, error) {
+	var redisConfig payloads.RedisConfig
+	if err := conf.Unmarshal("redis", &redisConfig); err != nil {
+		return nil, err
+	}
+
+	return &redisConfig, nil
+}

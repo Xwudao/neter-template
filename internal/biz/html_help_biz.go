@@ -5,7 +5,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/Xwudao/neter-template/internal/domain/models"
-	"github.com/Xwudao/neter-template/internal/domain/payloads"
 	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/enum"
 	"github.com/Xwudao/neter-template/pkg/utils/jwt"
@@ -20,7 +19,13 @@ type HtmlHelpBiz struct {
 	jwt *jwt.Client
 }
 
-func NewHtmlHelpBiz(log *zap.SugaredLogger, appCtx *system.AppContext, scb *SiteConfigBiz, dlb *DataListBiz, jwt *jwt.Client) *HtmlHelpBiz {
+func NewHtmlHelpBiz(
+	log *zap.SugaredLogger,
+	appCtx *system.AppContext,
+	scb *SiteConfigBiz,
+	dlb *DataListBiz,
+	jwt *jwt.Client,
+) *HtmlHelpBiz {
 	return &HtmlHelpBiz{
 		log:    log.Named("html-help-biz"),
 		appCtx: appCtx,
@@ -30,10 +35,10 @@ func NewHtmlHelpBiz(log *zap.SugaredLogger, appCtx *system.AppContext, scb *Site
 	}
 }
 
-func (h *HtmlHelpBiz) BuildBase(c *gin.Context) (*payloads.HtmlBaseData, *models.SiteInfoConfig, error) {
+func (h *HtmlHelpBiz) BuildBase(c *gin.Context) (*models.HtmlBaseModel, error) {
 	var cnf models.SiteInfoConfig
 	if err := h.scb.GetConfig(enum.ConfigKeySiteInfo, &cnf); err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	var (
@@ -46,40 +51,24 @@ func (h *HtmlHelpBiz) BuildBase(c *gin.Context) (*payloads.HtmlBaseData, *models
 		logged = true
 	}
 
-	var m payloads.HtmlBaseData
+	var m models.HtmlBaseModel
 	m.IsDark = isDark == "true"
-	m.SiteName = cnf.SiteName
-	m.SubTitle = cnf.SubTitle
-	m.SiteDesc = cnf.SiteDesc
-	m.SiteUrl = cnf.SiteUrl
-	m.SiteImage = cnf.SiteImage // OpenGraph
-	m.SiteLogo = cnf.SiteLogo
-	m.SiteKeywords = cnf.SiteKeywords
-	//m.Disclaimer = cnf.Disclaimer
-	m.SiteMetaScript = cnf.SitMetaScript
-
 	m.Logged = logged
 
-	return &m, &cnf, nil
+	m.SiteInfoConfig = cnf
+
+	return &m, nil
 }
 
-func (h *HtmlHelpBiz) BuildIndexMap(c *gin.Context) (*payloads.IndexMap, error) {
-	var base, cnf, err = h.BuildBase(c)
+func (h *HtmlHelpBiz) BuildIndexMap(c *gin.Context) (*models.IndexHtmlModel, error) {
+	var base, err = h.BuildBase(c)
 	if err != nil {
 		return nil, err
 	}
 
-	var m payloads.IndexMap
+	var m models.IndexHtmlModel
 
-	m.HtmlBaseData = *base
-	m.Title = cnf.SiteTitle
-	m.MainTitle = cnf.MainTitle
-
-	/*meta*/
-	var (
-		canonical = m.SiteUrl
-	)
-	m.Canonical = canonical
+	m.HtmlBaseModel = *base
 
 	return &m, nil
 }

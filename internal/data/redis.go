@@ -2,11 +2,12 @@ package data
 
 import (
 	"context"
-	"time"
+	"errors"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/knadh/koanf/v2"
 
+	"github.com/Xwudao/neter-template/internal/domain/payloads"
 	"github.com/Xwudao/neter-template/internal/system"
 )
 
@@ -14,35 +15,31 @@ type RedisClient struct {
 	Client *redis.Client
 	conf   *koanf.Koanf
 	ctx    context.Context
+
+	rcf *payloads.RedisConfig
 }
 
-func NewRedisClient(conf *koanf.Koanf, app *system.AppContext) (*RedisClient, error) {
+func NewRedisClient(conf *koanf.Koanf, rcf *payloads.RedisConfig, app *system.AppContext) (*RedisClient, error) {
 	client := redis.NewClient(&redis.Options{
-		Addr:     conf.String("redis.addr"),
-		Password: conf.String("redis.password"),
-		DB:       conf.Int("redis.db"),
+		Addr:     rcf.Addr,
+		Password: rcf.Password,
+		DB:       rcf.DB,
 	})
 	ctx := context.Background()
 	_, err := client.Ping(ctx).Result()
-	if err != nil && err != redis.Nil {
+	if err != nil && !errors.Is(err, redis.Nil) {
 		return nil, err
 	}
 	rc := &RedisClient{
 		conf:   conf,
 		Client: client,
 		ctx:    app.Ctx,
+		rcf:    rcf,
 	}
 
 	return rc, nil
 }
 
-func (rc *RedisClient) CachedExpire(key string, expir time.Duration) (existed bool) {
-	ctx := rc.ctx
-	_, err := rc.Client.Get(ctx, key).Result()
-	if err == nil {
-		return true
-	}
-	rc.Client.SetNX(ctx, key, "1", expir)
-
-	return false
+func (rc *RedisClient) CachedExpire(ctx context.Context, key string, val any) error {
+	return rc.Client.Set(ctx, key, val, 0).Err()
 }
