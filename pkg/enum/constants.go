@@ -33,6 +33,10 @@ const (
 )
 
 var (
+	AllowHeaders = []string{
+		"Origin", "Content-Type", "Authorization",
+	}
+
 	ShowInFrontendConfig = []ConfigKey{
 		ConfigKeySiteInfo,
 	}

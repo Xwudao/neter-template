@@ -5,9 +5,9 @@ app:
   host: true
 cors:
   allowCredentials: true
-  allowOrigin:
-    - http://localhost:*
-    - http://127.0.0.1:*
+  domains:
+    - localhost
+    - 127.0.0.1
   maxAge: 24h
 db:
   database: nr-demo

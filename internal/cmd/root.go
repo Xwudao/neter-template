@@ -1,13 +1,16 @@
 package cmd
 
 import (
-	"regexp"
+	"slices"
 
 	"github.com/gin-contrib/cors"
 
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/cron"
 	"github.com/Xwudao/neter-template/internal/system"
+	"github.com/Xwudao/neter-template/pkg/enum"
+	"github.com/Xwudao/neter-template/pkg/utils"
+	"github.com/Xwudao/neter-template/pkg/varx"
 
 	"github.com/knadh/koanf/v2"
 	"github.com/spf13/cobra"
@@ -95,37 +98,25 @@ func (m *MainApp) checkSystem() {
 }
 
 func (m *MainApp) cors() {
-	//config cors
-	origins := m.conf.Strings("cors.allowOrigin")
+	isDev := m.conf.String("app.mode") == "debug"
+
 	credentials := m.conf.Bool("cors.allowCredentials")
-	headers := []string{"Origin", "Content-Type", "Accept", "Authorization"}
 	exposeHeaders := []string{"Content-Type", "Authorization", "X-Login"}
 	methods := []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	maxAge := m.conf.Duration("cors.maxAge")
-	m.logger.Debugf("cors config: origins: %v, credentials: %v, headers: %v, exposeHeaders: %v, methods: %v, maxAge: %v", origins, credentials, headers, exposeHeaders, methods, maxAge)
-	var originMap = make(map[string]*regexp.Regexp)
-	for i := 0; i < len(origins); i++ {
-		re, err := regexp.Compile(origins[i])
-		if err != nil {
-			m.logger.Warnf("cors.allowOrigin[%s] is invalid, skip it", origins[i])
-			continue
-		}
-		m.logger.Debugf("cors.allowOrigin[%s] is valid", origins[i])
-		originMap[origins[i]] = re
-	}
+	domains := m.conf.Strings("cors.domains")
 
 	var c = cors.Config{
 		AllowOriginFunc: func(origin string) bool {
-			for k, v := range originMap {
-				if v.MatchString(origin) {
-					return true
-				}
-				m.logger.Debugf("cors.allowOrigin[%s] is not match origin[%s]", k, origin)
+			if isDev {
+				return varx.ContainLike([]string{"localhost", "127.0.0.1"}, origin)
 			}
-			return false
+			domain, _ := utils.ExtractRootDomain(origin)
+			//m.logger.Infof("cors check domain: %s, origin: %s", domain, origin)
+			return slices.Contains(domains, domain)
 		},
 		AllowMethods:     methods,
-		AllowHeaders:     headers,
+		AllowHeaders:     enum.AllowHeaders,
 		AllowCredentials: credentials,
 		ExposeHeaders:    exposeHeaders,
 		MaxAge:           maxAge,
