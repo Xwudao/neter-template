@@ -56,6 +56,8 @@ func NewEngine(
 	r := gin.New()
 	_ = r.SetTrustedProxies(nil)
 
+	r.Use(mdw.CorsMdw(conf))
+
 	r.Use(mdw.CacheMdw(), mdw.ExtractUserInfoMiddleware(log, jwt, ur))
 
 	spa, err := mdw.NewSpaMdw(assets.SpaDist, "dist", sb)
