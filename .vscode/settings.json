@@ -1,0 +1,39 @@
+{
+  "js/ts.tsdk.path": "web/node_modules/typescript/lib",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSaveMode": "file",
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true
+  },
+  "oxc.requireConfig": true,
+  "oxc.lint.run": "onSave",
+  "oxc.enable.oxlint": true,
+  "oxc.configPath": "web/.oxlintrc.json",
+  "oxc.fmt.configPath": "web/.oxfmtrc.json",
+  "oxc.enable.oxfmt": true,
+  "oxc.enable": true,
+  "chat.tools.terminal.autoApprove": {
+    "pnpm": true
+  }
+}

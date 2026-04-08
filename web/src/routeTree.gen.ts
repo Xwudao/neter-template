@@ -8,238 +8,51 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AdminRouteRouteImport } from './routes/admin/route'
+import { Route as IndexRouteImport } from './routes/index'
 
-const RegisterLazyRouteImport = createFileRoute('/register')()
-const LoginLazyRouteImport = createFileRoute('/login')()
-const AboutLazyRouteImport = createFileRoute('/about')()
-const IndexLazyRouteImport = createFileRoute('/')()
-const AdminIndexLazyRouteImport = createFileRoute('/admin/')()
-const AdminDataListLazyRouteImport = createFileRoute('/admin/data-list')()
-const AdminDashboardLazyRouteImport = createFileRoute('/admin/dashboard')()
-const AdminConfigLazyRouteImport = createFileRoute('/admin/config')()
-
-const RegisterLazyRoute = RegisterLazyRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/register.lazy').then((d) => d.Route))
-const LoginLazyRoute = LoginLazyRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
-const AboutLazyRoute = AboutLazyRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
-const AdminRouteRoute = AdminRouteRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexLazyRoute = IndexLazyRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
-const AdminIndexLazyRoute = AdminIndexLazyRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminRouteRoute,
-} as any).lazy(() => import('./routes/admin/index.lazy').then((d) => d.Route))
-const AdminDataListLazyRoute = AdminDataListLazyRouteImport.update({
-  id: '/data-list',
-  path: '/data-list',
-  getParentRoute: () => AdminRouteRoute,
-} as any).lazy(() =>
-  import('./routes/admin/data-list.lazy').then((d) => d.Route),
-)
-const AdminDashboardLazyRoute = AdminDashboardLazyRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AdminRouteRoute,
-} as any).lazy(() =>
-  import('./routes/admin/dashboard.lazy').then((d) => d.Route),
-)
-const AdminConfigLazyRoute = AdminConfigLazyRouteImport.update({
-  id: '/config',
-  path: '/config',
-  getParentRoute: () => AdminRouteRoute,
-} as any).lazy(() => import('./routes/admin/config.lazy').then((d) => d.Route))
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexLazyRoute
-  '/admin': typeof AdminRouteRouteWithChildren
-  '/about': typeof AboutLazyRoute
-  '/login': typeof LoginLazyRoute
-  '/register': typeof RegisterLazyRoute
-  '/admin/config': typeof AdminConfigLazyRoute
-  '/admin/dashboard': typeof AdminDashboardLazyRoute
-  '/admin/data-list': typeof AdminDataListLazyRoute
-  '/admin/': typeof AdminIndexLazyRoute
+  '/': typeof IndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexLazyRoute
-  '/about': typeof AboutLazyRoute
-  '/login': typeof LoginLazyRoute
-  '/register': typeof RegisterLazyRoute
-  '/admin/config': typeof AdminConfigLazyRoute
-  '/admin/dashboard': typeof AdminDashboardLazyRoute
-  '/admin/data-list': typeof AdminDataListLazyRoute
-  '/admin': typeof AdminIndexLazyRoute
+  '/': typeof IndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexLazyRoute
-  '/admin': typeof AdminRouteRouteWithChildren
-  '/about': typeof AboutLazyRoute
-  '/login': typeof LoginLazyRoute
-  '/register': typeof RegisterLazyRoute
-  '/admin/config': typeof AdminConfigLazyRoute
-  '/admin/dashboard': typeof AdminDashboardLazyRoute
-  '/admin/data-list': typeof AdminDataListLazyRoute
-  '/admin/': typeof AdminIndexLazyRoute
+  '/': typeof IndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/admin'
-    | '/about'
-    | '/login'
-    | '/register'
-    | '/admin/config'
-    | '/admin/dashboard'
-    | '/admin/data-list'
-    | '/admin/'
+  fullPaths: '/'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/about'
-    | '/login'
-    | '/register'
-    | '/admin/config'
-    | '/admin/dashboard'
-    | '/admin/data-list'
-    | '/admin'
-  id:
-    | '__root__'
-    | '/'
-    | '/admin'
-    | '/about'
-    | '/login'
-    | '/register'
-    | '/admin/config'
-    | '/admin/dashboard'
-    | '/admin/data-list'
-    | '/admin/'
+  to: '/'
+  id: '__root__' | '/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute
-  AdminRouteRoute: typeof AdminRouteRouteWithChildren
-  AboutLazyRoute: typeof AboutLazyRoute
-  LoginLazyRoute: typeof LoginLazyRoute
-  RegisterLazyRoute: typeof RegisterLazyRoute
+  IndexRoute: typeof IndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterLazyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginLazyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutLazyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexLazyRouteImport
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/admin/': {
-      id: '/admin/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexLazyRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/data-list': {
-      id: '/admin/data-list'
-      path: '/data-list'
-      fullPath: '/admin/data-list'
-      preLoaderRoute: typeof AdminDataListLazyRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/dashboard': {
-      id: '/admin/dashboard'
-      path: '/dashboard'
-      fullPath: '/admin/dashboard'
-      preLoaderRoute: typeof AdminDashboardLazyRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/config': {
-      id: '/admin/config'
-      path: '/config'
-      fullPath: '/admin/config'
-      preLoaderRoute: typeof AdminConfigLazyRouteImport
-      parentRoute: typeof AdminRouteRoute
     }
   }
 }
 
-interface AdminRouteRouteChildren {
-  AdminConfigLazyRoute: typeof AdminConfigLazyRoute
-  AdminDashboardLazyRoute: typeof AdminDashboardLazyRoute
-  AdminDataListLazyRoute: typeof AdminDataListLazyRoute
-  AdminIndexLazyRoute: typeof AdminIndexLazyRoute
-}
-
-const AdminRouteRouteChildren: AdminRouteRouteChildren = {
-  AdminConfigLazyRoute: AdminConfigLazyRoute,
-  AdminDashboardLazyRoute: AdminDashboardLazyRoute,
-  AdminDataListLazyRoute: AdminDataListLazyRoute,
-  AdminIndexLazyRoute: AdminIndexLazyRoute,
-}
-
-const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
-  AdminRouteRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
-  IndexLazyRoute: IndexLazyRoute,
-  AdminRouteRoute: AdminRouteRouteWithChildren,
-  AboutLazyRoute: AboutLazyRoute,
-  LoginLazyRoute: LoginLazyRoute,
-  RegisterLazyRoute: RegisterLazyRoute,
+  IndexRoute: IndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

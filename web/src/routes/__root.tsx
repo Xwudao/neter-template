@@ -1,17 +1,9 @@
-import { User } from '@/api/userApi';
-import ContentLoading from '@/components/loading/ContentLoading';
-import { type QueryClient } from '@tanstack/react-query';
-import { Outlet, createRootRouteWithContext } from '@tanstack/react-router';
+import { Outlet, createRootRoute } from '@tanstack/react-router'
 
-interface MyRouterContext {
-  // The ReturnType of your useAuth hook or the value of your AuthContext
-  auth: User;
-  isAdmin: boolean;
-  logged: boolean;
-  queryClient: QueryClient;
+export const Route = createRootRoute({
+  component: RootLayout,
+})
+
+function RootLayout() {
+  return <Outlet />
 }
-
-export const Route = createRootRouteWithContext<MyRouterContext>()({
-  component: () => <Outlet />,
-  pendingComponent: ContentLoading,
-});

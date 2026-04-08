@@ -12,7 +12,7 @@ cors:
 db:
   database: nr-demo
   dialect: mysql
-  host: 192.168.1.21
+  host: 192.168.1.10
   username: root
   password: 123456
   port: 3306
@@ -28,7 +28,7 @@ log:
   path: ./logs
 
 redis:
-  addr: 192.168.1.21:6379
+  addr: 192.168.1.10:6379
   db: 0
   password: ""
   prefix: ""

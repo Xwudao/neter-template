@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react"],
+  "plugins": ["react", "typescript"],
   "categories": {
     "correctness": "off"
   },
@@ -10,5 +10,5 @@
   "rules": {
     "no-unused-vars": "warn"
   },
-  "ignorePatterns": ["src/assets/wasm/**.js"]
+  "ignorePatterns": ["dist/**", "**/dist/**", "**/node_modules/**"]
 }
