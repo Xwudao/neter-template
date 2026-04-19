@@ -5,7 +5,7 @@ app:
   host: true
 cors:
   allowCredentials: true
-  domains:
+  allowOrigin:
     - localhost
     - 127.0.0.1
   maxAge: 24h
