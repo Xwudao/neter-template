@@ -16,10 +16,10 @@ import (
 type UserRoute struct {
 	conf *koanf.Koanf
 	g    *gin.Engine
-	ub   *biz.UserBiz
+	ub   biz.UserBizIface
 }
 
-func NewUserRoute(g *gin.Engine, uz *biz.UserBiz, conf *koanf.Koanf) *UserRoute {
+func NewUserRoute(g *gin.Engine, uz biz.UserBizIface, conf *koanf.Koanf) *UserRoute {
 	r := &UserRoute{
 		conf: conf,
 		g:    g,

@@ -16,10 +16,10 @@ type HtmlRoute struct {
 	g    *gin.Engine
 	log  *zap.SugaredLogger
 
-	hhb *biz.HtmlHelpBiz
+	hhb biz.HtmlHelpBizIface
 }
 
-func NewHtmlRoute(g *gin.Engine, hhb *biz.HtmlHelpBiz, log *zap.SugaredLogger, conf *koanf.Koanf) *HtmlRoute {
+func NewHtmlRoute(g *gin.Engine, hhb biz.HtmlHelpBizIface, log *zap.SugaredLogger, conf *koanf.Koanf) *HtmlRoute {
 	r := &HtmlRoute{
 		conf: conf,
 		g:    g, hhb: hhb,

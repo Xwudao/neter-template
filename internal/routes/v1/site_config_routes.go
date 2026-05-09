@@ -24,16 +24,16 @@ type SiteConfigRoute struct {
 	g    *gin.Engine
 	log  *zap.SugaredLogger
 
-	scb *biz.SiteConfigBiz
-	shb *biz.SiteHelpBiz
+	scb biz.SiteConfigBizIface
+	shb biz.SiteHelpBizIface
 
 	sf *libx.StaticFile
 }
 
 func NewSiteConfigRoute(
 	g *gin.Engine,
-	scb *biz.SiteConfigBiz,
-	shb *biz.SiteHelpBiz,
+	scb biz.SiteConfigBizIface,
+	shb biz.SiteHelpBizIface,
 	log *zap.SugaredLogger,
 	conf *koanf.Koanf,
 ) *SiteConfigRoute {

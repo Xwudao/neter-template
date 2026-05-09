@@ -19,10 +19,10 @@ type DataListRoute struct {
 	g    *gin.Engine
 	log  *zap.SugaredLogger
 
-	dlb *biz.DataListBiz
+	dlb biz.DataListBizIface
 }
 
-func NewDataListRoute(g *gin.Engine, dlb *biz.DataListBiz, log *zap.SugaredLogger, conf *koanf.Koanf) *DataListRoute {
+func NewDataListRoute(g *gin.Engine, dlb biz.DataListBizIface, log *zap.SugaredLogger, conf *koanf.Koanf) *DataListRoute {
 	r := &DataListRoute{
 		conf: conf,
 		g:    g, dlb: dlb,
