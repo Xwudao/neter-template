@@ -47,15 +47,12 @@ func NewSiteConfigRoute(
 }
 
 func (r *SiteConfigRoute) Register() {
-	// r.g.GET("/v1/site_config", core.WrapData(r.siteConfig()))
-
 	group := r.g.Group("/v1/site_config")
 	{
 		group.GET("/all", core.NoInput(func(c *gin.Context) (map[string]string, *core.RtnStatus) { return r.getAll(c, false) }))
 	}
 	authGroup := r.g.Group("/auth/v1/site_config").Use(mdw.MustLoginMiddleware())
 	{
-		// authGroup.GET("/auth", core.WrapData(r.siteConfig()))
 		_ = authGroup
 	}
 	adminGroup := r.g.Group("/admin/v1/site_config").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))

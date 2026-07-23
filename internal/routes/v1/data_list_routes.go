@@ -38,7 +38,7 @@ type DataListPageResponse struct {
 }
 
 func (r *DataListRoute) Register() {
-	// r.g.GET("/v1/data_list", core.WrapData(r.dataList()))
+	// r.g.GET("/v1/data_list", core.NoInput(r.dataList))
 
 	group := r.g.Group("/v1/data_list")
 	{
@@ -46,7 +46,7 @@ func (r *DataListRoute) Register() {
 	}
 	authGroup := r.g.Group("/auth/v1/data_list").Use(mdw.MustLoginMiddleware())
 	{
-		// authGroup.GET("/auth", core.WrapData(r.dataList()))
+		// authGroup.GET("/auth", core.NoInput(r.dataList))
 		_ = authGroup
 	}
 	adminGroup := r.g.Group("/admin/v1/data_list").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))

@@ -35,7 +35,7 @@ type UserLoginResponse struct {
 }
 
 func (r *UserRoute) Register() {
-	// r.g.GET("/v1/user", core.WrapData(r.user()))
+	// r.g.GET("/v1/user", core.NoInput(r.user))
 
 	group := r.g.Group("/v1/user")
 	{
