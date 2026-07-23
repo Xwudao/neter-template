@@ -18,7 +18,6 @@ import (
 	"github.com/Xwudao/neter-template/assets"
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
-	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
 	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/logger"
 	"github.com/Xwudao/neter-template/pkg/utils/jwt"
@@ -81,9 +80,7 @@ type HttpEngine struct {
 	log    *zap.SugaredLogger
 	ctx    *system.AppContext
 
-	v1UserRoute       *v1.UserRoute
-	v1SiteConfigRoute *v1.SiteConfigRoute
-	v1DataListRoute   *v1.DataListRoute
+	routes RouteRegistry
 }
 
 func NewHttpEngine(
@@ -91,19 +88,15 @@ func NewHttpEngine(
 	conf *koanf.Koanf,
 	log *zap.SugaredLogger,
 	ctx *system.AppContext,
-	v1UserRoute *v1.UserRoute,
-	v1SiteConfigRoute *v1.SiteConfigRoute,
-	v1DataListRoute *v1.DataListRoute,
+	routes RouteRegistry,
 ) (*HttpEngine, error) {
 
 	he := &HttpEngine{
-		conf:              conf,
-		log:               log,
-		router:            router,
-		ctx:               ctx,
-		v1UserRoute:       v1UserRoute,
-		v1SiteConfigRoute: v1SiteConfigRoute,
-		v1DataListRoute:   v1DataListRoute,
+		conf:   conf,
+		log:    log,
+		router: router,
+		ctx:    ctx,
+		routes: routes,
 	}
 
 	return he, nil
@@ -149,9 +142,7 @@ func (r *HttpEngine) Run() error {
 	return nil
 }
 func (r *HttpEngine) Register() {
-	r.v1UserRoute.Reg()
-	r.v1SiteConfigRoute.Reg()
-	r.v1DataListRoute.Reg()
+	r.routes.RegisterAll()
 }
 
 func (r *HttpEngine) Use(middleware ...gin.HandlerFunc) gin.IRoutes {

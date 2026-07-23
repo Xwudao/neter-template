@@ -29,7 +29,7 @@ func newTestUserRoute(t *testing.T, mockBiz *mocks.MockUserBizIface) *gin.Engine
 	g := gin.New()
 	conf := koanf.New(".")
 	route := v1.NewUserRoute(g, mockBiz, conf)
-	route.Reg()
+	route.Register()
 	return g
 }
 

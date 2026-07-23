@@ -60,7 +60,8 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	dataListRepository := data.NewDataListRepository(appContext, dataData)
 	dataListBiz := biz.NewDataListBiz(sugaredLogger, dataListRepository, appContext)
 	dataListRoute := v1.NewDataListRoute(engine, dataListBiz, sugaredLogger, koanf)
-	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, appContext, userRoute, siteConfigRoute, dataListRoute)
+	routeRegistry := routes.NewRouteRegistry(userRoute, siteConfigRoute, dataListRoute)
+	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, appContext, routeRegistry)
 	if err != nil {
 		return nil, nil, err
 	}

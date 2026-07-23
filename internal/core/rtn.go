@@ -93,20 +93,62 @@ type WrappedResp struct {
 
 type WrappedHandlerFunc func(*gin.Context) (any, *RtnStatus)
 
+// Handler declares an API contract directly at the handler boundary.  Gin
+// receives an ordinary HandlerFunc, while Request and Response remain visible
+// to generators and static tooling.
+type Handler[Request any, Response any] func(*gin.Context, *Request) (Response, *RtnStatus)
+
+type EmptyResponse struct{}
+
+func JSON[Request any, Response any](handler Handler[Request, Response]) gin.HandlerFunc {
+	return bindAndRespond(func(c *gin.Context, request *Request) error {
+		return c.ShouldBindJSON(request)
+	}, handler)
+}
+
+func Request[Request any, Response any](handler Handler[Request, Response]) gin.HandlerFunc {
+	return bindAndRespond(func(c *gin.Context, request *Request) error {
+		return c.ShouldBind(request)
+	}, handler)
+}
+
+func NoInput[Response any](handler func(*gin.Context) (Response, *RtnStatus)) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		data, status := handler(c)
+		writeResponse(c, data, status)
+	}
+}
+
+func bindAndRespond[Request any, Response any](bind func(*gin.Context, *Request) error, handler Handler[Request, Response]) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var request Request
+		if err := bind(c, &request); err != nil {
+			var zero Response
+			writeResponse(c, zero, NewRtnWithErr(err))
+			return
+		}
+		data, status := handler(c, &request)
+		writeResponse(c, data, status)
+	}
+}
+
+func writeResponse(c *gin.Context, data any, status *RtnStatus) {
+	resp := new(WrappedResp)
+	if status != nil {
+		resp.Code = status.Code
+		resp.Msg = status.Message
+	} else {
+		resp.Code = Success.Code
+		resp.Msg = Success.Message
+	}
+	resp.Data = data
+	c.JSON(http.StatusOK, resp)
+}
+
 // WrapData 包装响应结果
 func WrapData(handler WrappedHandlerFunc) func(*gin.Context) {
 	return func(c *gin.Context) {
 		data, stat := handler(c)
-
-		resp := new(WrappedResp)
-		if stat != nil {
-			resp.Code = stat.Code
-			resp.Msg = stat.Message
-		} else {
-			resp.Code = Success.Code
-			resp.Msg = Success.Message
-		}
-		resp.Data = data
-		c.JSON(http.StatusOK, resp)
+		writeResponse(c, data, stat)
 	}
 }

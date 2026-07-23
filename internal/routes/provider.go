@@ -9,6 +9,7 @@ import (
 var ProviderRouteSet = wire.NewSet(
 	NewEngine,
 	NewHttpEngine,
+	NewRouteRegistry,
 	v1.NewUserRoute,
 	v1.NewSiteConfigRoute,
 	v1.NewDataListRoute,
