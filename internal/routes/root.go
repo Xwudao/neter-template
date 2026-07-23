@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"mime"
@@ -8,6 +9,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/knadh/koanf/v2"
 
@@ -105,6 +107,7 @@ func NewHttpEngine(
 func (r *HttpEngine) Run() error {
 	log := r.log
 	router := r.router
+	defer r.ctx.Cancel()
 
 	port := r.conf.Int("app.port")
 	host := r.conf.Bool("app.host")
@@ -122,21 +125,27 @@ func (r *HttpEngine) Run() error {
 		Handler: router,
 	}
 
+	serverErr := make(chan error, 1)
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalf("listen: %s\n", err)
+			serverErr <- err
 		}
 	}()
 
-	quit := make(chan os.Signal)
+	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
-	ctx := r.ctx.Ctx
-	cancel := r.ctx.Cancel
+	defer signal.Stop(quit)
 
+	select {
+	case err := <-serverErr:
+		return fmt.Errorf("listen on %s: %w", addr, err)
+	case <-quit:
+	}
+
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatal("Server Shutdown:", err)
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		return fmt.Errorf("shutdown server: %w", err)
 	}
 	log.Infof("server exiting")
 	return nil

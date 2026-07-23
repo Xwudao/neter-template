@@ -19,12 +19,12 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+		defer cleanup()
+
 		err = app.Run()
 		if err != nil {
 			panic(err)
 		}
-
-		defer cleanup()
 
 	})
 	if err != nil {
