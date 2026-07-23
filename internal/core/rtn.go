@@ -1,12 +1,14 @@
 package core
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 
 	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/domain/errs"
 )
 
 type CodeType int
@@ -47,8 +49,11 @@ func NewRtnStatus(code CodeType, message string) *RtnStatus {
 
 func NewRtnWithErr(err error) *RtnStatus {
 	var msg = err.Error()
+	var businessErr *errs.Error
 
 	switch {
+	case errors.As(err, &businessErr):
+		msg = businessErr.Message
 	case ent.IsNotFound(err):
 		msg = "记录不存在"
 	case strings.Contains(msg, "Duplicate entry"):
