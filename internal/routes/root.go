@@ -142,7 +142,7 @@ func (r *HttpEngine) Run() error {
 	return nil
 }
 func (r *HttpEngine) Register() {
-	r.routes.RegisterAll()
+	r.routes.RegisterAll(r.router)
 }
 
 func (r *HttpEngine) Use(middleware ...gin.HandlerFunc) gin.IRoutes {

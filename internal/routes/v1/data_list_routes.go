@@ -16,17 +16,16 @@ import (
 
 type DataListRoute struct {
 	conf *koanf.Koanf
-	g    *gin.Engine
 	log  *zap.SugaredLogger
 
 	dlb biz.DataListBizIface
 }
 
-func NewDataListRoute(g *gin.Engine, dlb biz.DataListBizIface, log *zap.SugaredLogger, conf *koanf.Koanf) *DataListRoute {
+func NewDataListRoute(dlb biz.DataListBizIface, log *zap.SugaredLogger, conf *koanf.Koanf) *DataListRoute {
 	r := &DataListRoute{
 		conf: conf,
-		g:    g, dlb: dlb,
-		log: log.Named("data-list-route"),
+		dlb:  dlb,
+		log:  log.Named("data-list-route"),
 	}
 
 	return r
@@ -37,19 +36,19 @@ type DataListPageResponse struct {
 	Total int             `json:"total"`
 }
 
-func (r *DataListRoute) Register() {
-	// r.g.GET("/v1/data_list", core.NoInput(r.dataList))
+func (r *DataListRoute) Register(router gin.IRouter) {
+	// router.GET("/v1/data_list", core.NoInput(r.dataList))
 
-	group := r.g.Group("/v1/data_list")
+	group := router.Group("/v1/data_list")
 	{
 		group.GET("", core.NoInput(r.dataList))
 	}
-	authGroup := r.g.Group("/auth/v1/data_list").Use(mdw.MustLoginMiddleware())
+	authGroup := router.Group("/auth/v1/data_list").Use(mdw.MustLoginMiddleware())
 	{
 		// authGroup.GET("/auth", core.NoInput(r.dataList))
 		_ = authGroup
 	}
-	adminGroup := r.g.Group("/admin/v1/data_list").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
+	adminGroup := router.Group("/admin/v1/data_list").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
 	{
 		adminGroup.GET("/list", core.Request(r.list))
 		adminGroup.GET("/sort_data", core.Request(r.sortData))

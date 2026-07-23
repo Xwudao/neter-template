@@ -52,14 +52,14 @@ func mainApp() (*cmd.MainApp, func(), error) {
 		return nil, nil, err
 	}
 	userBiz := biz.NewUserBiz(sugaredLogger, userRepository, client, appContext)
-	userRoute := v1.NewUserRoute(engine, userBiz, koanf)
+	userRoute := v1.NewUserRoute(userBiz, koanf)
 	siteConfigRepository := data.NewSiteConfigRepository(appContext, dataData)
 	siteConfigBiz := biz.NewSiteConfigBiz(sugaredLogger, siteConfigRepository, appContext)
 	siteHelpBiz := biz.NewSiteHelpBiz(sugaredLogger, siteConfigBiz, appContext)
-	siteConfigRoute := v1.NewSiteConfigRoute(engine, siteConfigBiz, siteHelpBiz, sugaredLogger, koanf)
+	siteConfigRoute := v1.NewSiteConfigRoute(siteConfigBiz, siteHelpBiz, sugaredLogger, koanf)
 	dataListRepository := data.NewDataListRepository(appContext, dataData)
 	dataListBiz := biz.NewDataListBiz(sugaredLogger, dataListRepository, appContext)
-	dataListRoute := v1.NewDataListRoute(engine, dataListBiz, sugaredLogger, koanf)
+	dataListRoute := v1.NewDataListRoute(dataListBiz, sugaredLogger, koanf)
 	routeRegistry := routes.NewRouteRegistry(userRoute, siteConfigRoute, dataListRoute)
 	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, appContext, routeRegistry)
 	if err != nil {

@@ -1,11 +1,15 @@
 package routes
 
-import v1 "github.com/Xwudao/neter-template/internal/routes/v1"
+import (
+	"github.com/gin-gonic/gin"
+
+	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
+)
 
 // Registrar is the only lifecycle contract HttpEngine needs from a route.
 // Individual routes still own their Gin groups and middleware.
 type Registrar interface {
-	Register()
+	Register(gin.IRouter)
 }
 
 type RouteRegistry []Registrar
@@ -22,8 +26,8 @@ func NewRouteRegistry(
 	}
 }
 
-func (r RouteRegistry) RegisterAll() {
+func (r RouteRegistry) RegisterAll(router gin.IRouter) {
 	for _, route := range r {
-		route.Register()
+		route.Register(router)
 	}
 }

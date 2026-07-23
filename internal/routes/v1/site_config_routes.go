@@ -20,7 +20,6 @@ import (
 
 type SiteConfigRoute struct {
 	conf *koanf.Koanf
-	g    *gin.Engine
 	log  *zap.SugaredLogger
 
 	scb biz.SiteConfigBizIface
@@ -30,7 +29,6 @@ type SiteConfigRoute struct {
 }
 
 func NewSiteConfigRoute(
-	g *gin.Engine,
 	scb biz.SiteConfigBizIface,
 	shb biz.SiteHelpBizIface,
 	log *zap.SugaredLogger,
@@ -38,7 +36,7 @@ func NewSiteConfigRoute(
 ) *SiteConfigRoute {
 	r := &SiteConfigRoute{
 		conf: conf,
-		g:    g, scb: scb, sf: libx.NewStaticFile(),
+		scb:  scb, sf: libx.NewStaticFile(),
 		shb: shb,
 		log: log.Named("site-config-route"),
 	}
@@ -46,16 +44,16 @@ func NewSiteConfigRoute(
 	return r
 }
 
-func (r *SiteConfigRoute) Register() {
-	group := r.g.Group("/v1/site_config")
+func (r *SiteConfigRoute) Register(router gin.IRouter) {
+	group := router.Group("/v1/site_config")
 	{
 		group.GET("/all", core.NoInput(func(c *gin.Context) (map[string]string, *core.RtnStatus) { return r.getAll(c, false) }))
 	}
-	authGroup := r.g.Group("/auth/v1/site_config").Use(mdw.MustLoginMiddleware())
+	authGroup := router.Group("/auth/v1/site_config").Use(mdw.MustLoginMiddleware())
 	{
 		_ = authGroup
 	}
-	adminGroup := r.g.Group("/admin/v1/site_config").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
+	adminGroup := router.Group("/admin/v1/site_config").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
 	{
 		adminGroup.GET("/all", core.NoInput(func(c *gin.Context) (map[string]string, *core.RtnStatus) { return r.getAll(c, true) }))
 		adminGroup.GET("/gen_sitemap", core.NoInput(r.genSitemap))

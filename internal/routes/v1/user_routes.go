@@ -15,14 +15,12 @@ import (
 
 type UserRoute struct {
 	conf *koanf.Koanf
-	g    *gin.Engine
 	ub   biz.UserBizIface
 }
 
-func NewUserRoute(g *gin.Engine, uz biz.UserBizIface, conf *koanf.Koanf) *UserRoute {
+func NewUserRoute(uz biz.UserBizIface, conf *koanf.Koanf) *UserRoute {
 	r := &UserRoute{
 		conf: conf,
-		g:    g,
 		ub:   uz,
 	}
 
@@ -34,19 +32,19 @@ type UserLoginResponse struct {
 	Token string    `json:"token"`
 }
 
-func (r *UserRoute) Register() {
-	// r.g.GET("/v1/user", core.NoInput(r.user))
+func (r *UserRoute) Register(router gin.IRouter) {
+	// router.GET("/v1/user", core.NoInput(r.user))
 
-	group := r.g.Group("/v1/user")
+	group := router.Group("/v1/user")
 	{
 		group.GET("", core.NoInput(r.user))
 		group.POST("/login", core.JSON(r.login))
 	}
-	authGroup := r.g.Group("/auth/v1/user").Use(mdw.MustLoginMiddleware())
+	authGroup := router.Group("/auth/v1/user").Use(mdw.MustLoginMiddleware())
 	{
 		authGroup.GET("/info", core.NoInput(r.info))
 	}
-	adminGroup := r.g.Group("/admin/v1/user").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
+	adminGroup := router.Group("/admin/v1/user").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
 	{
 		_ = adminGroup
 	}
