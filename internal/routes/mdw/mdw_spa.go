@@ -1,252 +1,282 @@
 package mdw
 
 import (
-	"embed"
 	"io"
 	"io/fs"
 	"mime"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/domain/payloads"
 	"github.com/Xwudao/neter-template/pkg/libx"
 )
 
-const INDEX = "index.html"
+const indexFile = "index.html"
 
 type ServeFileSystem interface {
 	http.FileSystem
-	Exists(prefix string, path string) bool
+}
+
+// IndexModifier keeps SPA rendering testable without coupling the middleware to SeoBizBiz.
+type IndexModifier interface {
+	SEO(html []byte, c *gin.Context) (*payloads.SeoPayload, error)
 }
 
 type SpaMdw struct {
-	fsData embed.FS
-	target string
-
-	sb *biz.SeoBizBiz
-	mf libx.ViteManifest
+	fsData    fs.FS
+	target    string
+	staticDir string
+	modifier  IndexModifier
 }
 
-func NewSpaMdw(fsData embed.FS, target string, sb *biz.SeoBizBiz) (*SpaMdw, error) {
-	sm := &SpaMdw{
-		fsData: fsData,
-		target: target,
-		sb:     sb,
+func NewSpaMdw(fsData fs.FS, target string, modifier IndexModifier) (*SpaMdw, error) {
+	workingDir, err := os.Getwd()
+	staticDir := ""
+	if err == nil {
+		staticDir = filepath.Join(workingDir, "static")
 	}
 
-	err := sm.parseManifest()
-	if err != nil {
+	sm := &SpaMdw{
+		fsData:    fsData,
+		target:    target,
+		staticDir: staticDir,
+		modifier:  modifier,
+	}
+	if err := sm.parseManifest(); err != nil {
 		return nil, err
 	}
-
 	return sm, nil
 }
 
-// parseManifest 解析manifest.json
+// parseManifest validates the embedded Vite bundle at startup.
 func (m *SpaMdw) parseManifest() error {
 	fd := EmbedFolder(m.fsData, m.target)
-	mFile, err := fd.Open(".vite/manifest.json")
+	manifest, err := readEmbedFile(fd, ".vite/manifest.json")
 	if err != nil {
 		return err
 	}
-	defer mFile.Close()
-	mCnt, _ := io.ReadAll(mFile)
-
-	manifestString, err := libx.ParseManifestString(string(mCnt))
-	if err != nil {
-		return err
-	}
-
-	m.mf = manifestString
-	return nil
-}
-
-// acceptsGzip 检查客户端是否支持 gzip 压缩
-func (m *SpaMdw) acceptsGzip(c *gin.Context) bool {
-	acceptEncoding := c.GetHeader("Accept-Encoding")
-	return strings.Contains(strings.ToLower(acceptEncoding), "gzip")
-}
-
-// servePrecompressed 尝试提供预压缩的静态文件
-func (m *SpaMdw) servePrecompressed(c *gin.Context, path string) bool {
-	// 检查客户端是否支持 gzip
-	if !m.acceptsGzip(c) {
-		return false
-	}
-
-	fd := EmbedFolder(m.fsData, m.target)
-	gzPath := path + ".gz"
-
-	// 检查是否存在预压缩文件
-	if !fd.Exists("", gzPath) {
-		return false
-	}
-
-	// 打开并读取预压缩文件
-	gzFile, err := fd.Open(gzPath)
-	if err != nil {
-		return false
-	}
-	defer gzFile.Close()
-
-	gzContent, err := io.ReadAll(gzFile)
-	if err != nil {
-		return false
-	}
-
-	// 设置正确的响应头
-	mimeType := mime.TypeByExtension(filepath.Ext(path))
-	if mimeType == "" {
-		mimeType = "application/octet-stream"
-	}
-
-	// 设置 gzip 相关的响应头
-	c.Header("Content-Encoding", "gzip")
-	c.Header("Content-Type", mimeType)
-	c.Header("Vary", "Accept-Encoding")
-
-	// 可选：设置缓存头
-	c.Header("Cache-Control", "public, max-age=604800") // 1周缓存
-
-	c.Data(http.StatusOK, mimeType, gzContent)
-	return true
+	_, err = libx.ParseManifestString(string(manifest))
+	return err
 }
 
 func (m *SpaMdw) Serve(urlPrefix string) gin.HandlerFunc {
 	fd := EmbedFolder(m.fsData, m.target)
-	fileServer := http.FileServer(fd)
-	if urlPrefix != "" {
-		fileServer = http.StripPrefix(urlPrefix, fileServer)
-	}
+	indexHTML, indexErr := readEmbedFile(fd, indexFile)
 
 	return func(c *gin.Context) {
-		var path = c.Request.URL.Path
-		switch {
-		case m.mf.IsStaticFileExists(path):
-			// 尝试提供 gzip 预压缩文件
-			if m.servePrecompressed(c, path) {
+		relativePath, valid := spaRelativePath(c.Request.URL.Path, urlPrefix)
+		if !valid || strings.HasPrefix(relativePath, ".vite/") || strings.HasSuffix(relativePath, ".gz") {
+			c.String(http.StatusNotFound, "404 page not found")
+			c.Abort()
+			return
+		}
+
+		if isIndexRequest(relativePath) {
+			m.serveIndex(c, indexHTML, indexErr)
+			return
+		}
+
+		// Runtime-generated files (for example, sitemap files) belong only to the primary SPA.
+		if urlPrefix == "/" && m.serveStaticFile(relativePath, c) {
+			c.Abort()
+			return
+		}
+
+		if f, info, ok := openEmbedFile(fd, relativePath); ok {
+			defer f.Close()
+			if m.servePrecompressed(fd, relativePath, c) {
 				c.Abort()
 				return
 			}
-			// 如果没有预压缩文件或客户端不支持压缩，使用原始文件
-			fileServer.ServeHTTP(c.Writer, c.Request)
-			c.Abort()
-			return
-
-		case m.hasStaticFile(path):
-			cnt, mimeType := m.readStaticFile(path, c)
-			c.Data(http.StatusOK, mimeType, cnt)
-			c.Abort()
-			return
-
-		default:
-			rtn := m.modifierIndex(fd, c)
-			c.Header("Cache-Control", "no-cache, no-store, must-revalidate")
-			c.Header("Pragma", "no-cache")
-			c.Header("Expires", "0")
-			c.Data(rtn.StatusCode, "text/html; charset=utf-8", rtn.Ret)
+			serveContent(c, filepath.Base(relativePath), info.ModTime(), f)
 			c.Abort()
 			return
 		}
+
+		m.serveIndex(c, indexHTML, indexErr)
 	}
 }
 
-func (m *SpaMdw) hasStaticFile(path string) bool {
-	pw, _ := os.Getwd()
-	// 检查 gzip 文件
-	gzPath := filepath.Join(pw, "static", path+".gz")
-	if info, err := os.Stat(gzPath); err == nil && !info.IsDir() {
-		return true
+func (m *SpaMdw) serveIndex(c *gin.Context, html []byte, indexErr error) {
+	if indexErr != nil {
+		c.String(http.StatusNotFound, "404 page not found")
+		c.Abort()
+		return
 	}
-	// 检查原始文件
-	fp := filepath.Join(pw, "static", path)
-	info, err := os.Stat(fp)
-	if err != nil {
+
+	rtn := m.modifierIndex(html, c)
+	c.Header("Cache-Control", "no-cache, no-store, must-revalidate")
+	c.Header("Pragma", "no-cache")
+	c.Header("Expires", "0")
+	c.Data(rtn.StatusCode, "text/html; charset=utf-8", rtn.Ret)
+	c.Abort()
+}
+
+func (m *SpaMdw) servePrecompressed(fd ServeFileSystem, path string, c *gin.Context) bool {
+	if !acceptsGzip(c.Request) || path == "" || path == indexFile {
 		return false
 	}
 
-	return !info.IsDir()
-}
-
-func (m *SpaMdw) readStaticFile(path string, c *gin.Context) ([]byte, string) {
-	pw, _ := os.Getwd()
-
-	// 优先尝试 gzip 文件
-	if m.acceptsGzip(c) {
-		gzPath := filepath.Join(pw, "static", path+".gz")
-		if gzCnt, err := os.ReadFile(gzPath); err == nil {
-			mimeType := mime.TypeByExtension(filepath.Ext(path))
-			// 设置 gzip 相关的响应头
-			c.Header("Content-Encoding", "gzip")
-			c.Header("Vary", "Accept-Encoding")
-			c.Header("Cache-Control", "public, max-age=604800")
-			return gzCnt, mimeType
-		}
-	}
-
-	// 最后使用原始文件
-	fp := filepath.Join(pw, "static", path)
-	cnt, err := os.ReadFile(fp)
-	if err != nil {
-		return nil, ""
-	}
-	mimeType := mime.TypeByExtension(filepath.Ext(fp))
-
-	return cnt, mimeType
-}
-
-func (m *SpaMdw) modifierIndex(fs ServeFileSystem, c *gin.Context) *payloads.SeoPayload {
-	var rtn = &payloads.SeoPayload{
-		StatusCode: http.StatusOK,
-		Ret:        nil,
-	}
-
-	f, err := fs.Open(INDEX)
-	if err != nil {
-		return rtn
+	f, info, ok := openEmbedFile(fd, path+".gz")
+	if !ok {
+		return false
 	}
 	defer f.Close()
 
-	all, err := io.ReadAll(f)
+	if contentType := mime.TypeByExtension(filepath.Ext(path)); contentType != "" {
+		c.Header("Content-Type", contentType)
+	}
+	c.Header("Content-Encoding", "gzip")
+	c.Writer.Header().Add("Vary", "Accept-Encoding")
+	http.ServeContent(c.Writer, c.Request, filepath.Base(path), info.ModTime(), f)
+	return true
+}
+
+func (m *SpaMdw) serveStaticFile(relativePath string, c *gin.Context) bool {
+	if m.staticDir == "" {
+		return false
+	}
+
+	root, err := os.OpenRoot(m.staticDir)
 	if err != nil {
+		return false
+	}
+	defer root.Close()
+
+	f, err := root.Open(relativePath)
+	if err != nil {
+		return false
+	}
+	defer f.Close()
+
+	info, err := f.Stat()
+	if err != nil || info.IsDir() {
+		return false
+	}
+
+	serveContent(c, filepath.Base(relativePath), info.ModTime(), f)
+	return true
+}
+
+func acceptsGzip(r *http.Request) bool {
+	var wildcardQuality *float64
+	for _, value := range r.Header.Values("Accept-Encoding") {
+		for _, encoding := range strings.Split(value, ",") {
+			parts := strings.Split(encoding, ";")
+			name := strings.TrimSpace(parts[0])
+			if name == "" {
+				continue
+			}
+
+			quality := 1.0
+			for _, parameter := range parts[1:] {
+				key, value, ok := strings.Cut(strings.TrimSpace(parameter), "=")
+				if !ok || !strings.EqualFold(strings.TrimSpace(key), "q") {
+					continue
+				}
+				parsed, err := strconv.ParseFloat(strings.TrimSpace(value), 64)
+				if err != nil || parsed < 0 || parsed > 1 {
+					quality = 0
+					break
+				}
+				quality = parsed
+			}
+
+			switch {
+			case strings.EqualFold(name, "gzip"):
+				return quality > 0
+			case name == "*":
+				wildcardQuality = &quality
+			}
+		}
+	}
+	return wildcardQuality != nil && *wildcardQuality > 0
+}
+
+func spaRelativePath(requestPath, urlPrefix string) (string, bool) {
+	if urlPrefix != "" {
+		if !strings.HasPrefix(requestPath, urlPrefix) {
+			return "", false
+		}
+		requestPath = strings.TrimPrefix(requestPath, urlPrefix)
+	}
+
+	requestPath = strings.TrimPrefix(requestPath, "/")
+	if requestPath == "" {
+		return "", true
+	}
+	if !fs.ValidPath(requestPath) || path.Clean(requestPath) != requestPath {
+		return "", false
+	}
+	return requestPath, true
+}
+
+func isIndexRequest(relativePath string) bool {
+	return relativePath == "" || relativePath == indexFile
+}
+
+func serveContent(c *gin.Context, name string, modTime time.Time, content io.ReadSeeker) {
+	if contentType := mime.TypeByExtension(filepath.Ext(name)); contentType != "" {
+		c.Header("Content-Type", contentType)
+	}
+	http.ServeContent(c.Writer, c.Request, name, modTime, content)
+}
+
+func openEmbedFile(fileSystem ServeFileSystem, name string) (http.File, fs.FileInfo, bool) {
+	f, err := fileSystem.Open(name)
+	if err != nil {
+		return nil, nil, false
+	}
+
+	info, err := f.Stat()
+	if err != nil || info.IsDir() {
+		_ = f.Close()
+		return nil, nil, false
+	}
+	return f, info, true
+}
+
+func readEmbedFile(fileSystem ServeFileSystem, name string) ([]byte, error) {
+	f, _, ok := openEmbedFile(fileSystem, name)
+	if !ok {
+		return nil, fs.ErrNotExist
+	}
+	defer f.Close()
+	return io.ReadAll(f)
+}
+
+func (m *SpaMdw) modifierIndex(html []byte, c *gin.Context) *payloads.SeoPayload {
+	rtn := &payloads.SeoPayload{Ret: html, StatusCode: http.StatusOK}
+	if m.modifier == nil {
 		return rtn
 	}
 
-	ret, _ := m.sb.SEO(all, c)
-	if ret == nil {
+	ret, err := m.modifier.SEO(html, c)
+	if err != nil || ret == nil {
 		return rtn
 	}
 	return ret
-
 }
 
 type embedFileSystem struct {
 	http.FileSystem
 }
 
-func (e embedFileSystem) Exists(prefix string, path string) bool {
-	_, err := e.Open(path)
-	if err != nil {
-		return false
-	}
-	return true
-}
-
-func EmbedFolder(fsEmbed embed.FS, targetPath string) ServeFileSystem {
-	sub, err := fs.Sub(fsEmbed, targetPath)
+func EmbedFolder(fileSystem fs.FS, targetPath string) ServeFileSystem {
+	sub, err := fs.Sub(fileSystem, targetPath)
 	if err != nil {
 		panic(err)
 	}
-	return embedFileSystem{
-		FileSystem: http.FS(sub),
-	}
+	return embedFileSystem{FileSystem: http.FS(sub)}
 }
 
-func Embed(fsEmbed embed.FS) ServeFileSystem {
-	return EmbedFolder(fsEmbed, ".")
+func Embed(fileSystem fs.FS) ServeFileSystem {
+	return EmbedFolder(fileSystem, ".")
 }
