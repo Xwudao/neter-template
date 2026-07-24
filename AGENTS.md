@@ -77,4 +77,7 @@ skills:
   load: ".github/skills/page-hook-split/SKILL.md"
 - task: "deciding where icons should be added or refined, polishing UI with UnoCSS icons for buttons, status labels, section headers, or empty states"
   load: ".github/skills/ui-ux-icon-usage/SKILL.md"
+- task: "creating or modifying styles, theme, design tokens, CSS variables, SCSS, or visual components"
+  load: ".github/skills/styles-skill/SKILL.md"
+
 <!-- intent-skills:end -->

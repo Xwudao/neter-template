@@ -1,0 +1,60 @@
+// ========================================
+// ThemePicker — neter-template
+// ========================================
+
+@use '@/styles/mixins' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    background: var(--color-surface-muted);
+  }
+}
+
+.toggleIcon {
+  font-size: var(--font-size-base);
+}
+
+.accentList {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+}
+
+.accentBtn {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.accentBtnActive {
+  border-color: var(--color-accent);
+  transform: scale(1.1);
+}

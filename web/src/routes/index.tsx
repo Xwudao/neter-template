@@ -1,14 +1,24 @@
 import { createFileRoute } from '@tanstack/react-router'
+import clsx from 'clsx'
+
+import { Logo } from '@/components/Logo'
+import { ThemePicker } from '@/components/ThemePicker'
+
+import classes from './index.module.scss'
 
 export const Route = createFileRoute('/')({
-  component: IndexPage,
+  component: HomePage,
 })
 
-function IndexPage() {
+function HomePage() {
   return (
-    <main style={{ padding: '2rem', fontFamily: 'var(--font-sans)' }}>
-      <h1 style={{ color: 'var(--text-h)' }}>neter-template</h1>
-      <p style={{ color: 'var(--text)' }}>Get started by editing src/routes/index.tsx</p>
+    <main className={clsx(classes.page)}>
+      <Logo />
+      <h1 className={clsx(classes.title)}>neter-template</h1>
+      <p className={clsx(classes.desc)}>
+        Start editing <code className={clsx(classes.code)}>src/routes/index.tsx</code>
+      </p>
+      <ThemePicker />
     </main>
   )
 }

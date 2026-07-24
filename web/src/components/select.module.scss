@@ -1,0 +1,43 @@
+// ========================================
+// Select — neter-template
+// ========================================
+
+@use '@/styles/mixins' as *;
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-strong);
+}
+
+.select {
+  padding: var(--padding-control-sm);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-sans);
+  background: var(--color-input);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--duration-normal) var(--ease-standard);
+
+  &:focus {
+    border-color: var(--color-accent);
+  }
+}
+
+.selectError {
+  border-color: var(--color-danger);
+}
+
+.error {
+  font-size: var(--font-size-xs);
+  color: var(--color-danger);
+}

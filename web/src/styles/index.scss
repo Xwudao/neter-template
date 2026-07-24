@@ -6,8 +6,8 @@
   line-height: var(--line-height-normal);
   letter-spacing: var(--letter-spacing-normal);
   color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
+  color: var(--color-text);
+  background: var(--color-canvas);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -15,12 +15,16 @@
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
+  min-height: 100dvh;
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-text);
   font-family: var(--font-sans);
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -31,6 +35,12 @@ select {
   font: inherit;
 }
 
+button:focus-visible,
+a:focus-visible {
+  outline: none;
+}
+
 a {
   color: inherit;
+  text-decoration: none;
 }

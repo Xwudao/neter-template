@@ -8,8 +8,6 @@ export {}
 declare global {
   const Activity: typeof import('react').Activity
   const Fragment: typeof import('react').Fragment
-  const Link: typeof import('@tanstack/react-router').Link
-  const Outlet: typeof import('@tanstack/react-router').Outlet
   const Suspense: typeof import('react').Suspense
   const cache: typeof import('react').cache
   const cacheSignal: typeof import('react').cacheSignal
@@ -32,12 +30,9 @@ declare global {
   const useInsertionEffect: typeof import('react').useInsertionEffect
   const useLayoutEffect: typeof import('react').useLayoutEffect
   const useMemo: typeof import('react').useMemo
-  const useNavigate: typeof import('@tanstack/react-router').useNavigate
   const useOptimistic: typeof import('react').useOptimistic
   const useReducer: typeof import('react').useReducer
   const useRef: typeof import('react').useRef
-  const useRouter: typeof import('@tanstack/react-router').useRouter
-  const useRouterState: typeof import('@tanstack/react-router').useRouterState
   const useState: typeof import('react').useState
   const useSyncExternalStore: typeof import('react').useSyncExternalStore
   const useTransition: typeof import('react').useTransition

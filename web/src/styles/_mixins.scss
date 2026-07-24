@@ -1,3 +1,7 @@
+// ========================================
+// Token accessor functions
+// ========================================
+
 @function color-token($name) {
   @return var(--color-#{$name});
 }
@@ -13,6 +17,10 @@
 @function font-size($size) {
   @return var(--font-size-#{$size});
 }
+
+// ========================================
+// Mixins
+// ========================================
 
 @mixin focus-ring($color: var(--color-accent-border), $offset: 2px) {
   outline: 2px solid $color;
@@ -65,7 +73,10 @@
   justify-content: space-between;
 }
 
-/* Responsive breakpoints */
+// ========================================
+// Responsive breakpoints
+// ========================================
+
 @mixin sm {
   @media (min-width: 640px) {
     @content;

@@ -1,6 +1,9 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript"],
+  "plugins": [
+    "react",
+    "typescript"
+  ],
   "categories": {
     "correctness": "off"
   },
@@ -10,5 +13,10 @@
   "rules": {
     "no-unused-vars": "warn"
   },
-  "ignorePatterns": ["dist/**", "**/dist/**", "**/node_modules/**"]
+  "ignorePatterns": [
+    "dist/*",
+    "**/node_modules/**",
+    "src/auto-imports.d.ts",
+    "src/routeTree.gen.ts"
+  ]
 }

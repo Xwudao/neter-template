@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+.tanstack
+auto-imports.d.ts
+routeTree.gen.ts
 
 # Editor directories and files
 .vscode/*
