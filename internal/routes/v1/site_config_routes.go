@@ -47,7 +47,7 @@ func NewSiteConfigRoute(
 func (r *SiteConfigRoute) Register(router gin.IRouter) {
 	group := router.Group("/v1/site_config")
 	{
-		group.GET("/all", core.NoInput(func(c *gin.Context) (map[string]string, *core.RtnStatus) { return r.getAll(c, false) }))
+		group.GET("/all", core.NoInput(func(c *gin.Context) (map[string]string, error) { return r.getAll(c, false) }))
 	}
 	authGroup := router.Group("/auth/v1/site_config").Use(mdw.MustLoginMiddleware())
 	{
@@ -55,40 +55,40 @@ func (r *SiteConfigRoute) Register(router gin.IRouter) {
 	}
 	adminGroup := router.Group("/admin/v1/site_config").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
 	{
-		adminGroup.GET("/all", core.NoInput(func(c *gin.Context) (map[string]string, *core.RtnStatus) { return r.getAll(c, true) }))
-		adminGroup.GET("/gen_sitemap", core.NoInput(r.genSitemap))
-		adminGroup.POST("/update", core.JSON(r.update))
-		adminGroup.POST("/write_file", core.JSON(r.writeFile))
+		adminGroup.GET("/all", core.NoInput(func(c *gin.Context) (map[string]string, error) { return r.getAll(c, true) }))
+		adminGroup.GET("/gen_sitemap", core.NoInputE(r.genSitemap))
+		adminGroup.POST("/update", core.JSONE(r.update))
+		adminGroup.POST("/write_file", core.JSONE(r.writeFile))
 	}
 }
 
-func (r *SiteConfigRoute) getAll(c *gin.Context, isAdmin bool) (map[string]string, *core.RtnStatus) {
+func (r *SiteConfigRoute) getAll(c *gin.Context, isAdmin bool) (map[string]string, error) {
 	configs, err := r.scb.GetAll(c.Request.Context(), isAdmin)
 	if err != nil {
-		return nil, core.NewRtnWithErr(err)
+		return nil, err
 	}
-	return configs, core.Success
+	return configs, nil
 }
 
-func (r *SiteConfigRoute) update(c *gin.Context, pm *params.UpdateSiteConfigParams) (*core.EmptyResponse, *core.RtnStatus) {
+func (r *SiteConfigRoute) update(c *gin.Context, pm *params.UpdateSiteConfigParams) (*core.EmptyResponse, error) {
 	if err := r.scb.UpdateConfig(c.Request.Context(), pm); err != nil {
-		return nil, core.NewRtnWithErr(err)
+		return nil, err
 	}
-	return nil, core.Success
+	return nil, nil
 }
 
-func (r *SiteConfigRoute) writeFile(c *gin.Context, pm *params.WriteFileParams) (*core.EmptyResponse, *core.RtnStatus) {
+func (r *SiteConfigRoute) writeFile(c *gin.Context, pm *params.WriteFileParams) (*core.EmptyResponse, error) {
 	var allowedFiles = []string{"robots.txt"}
 	if !varx.ContainEqual(allowedFiles, pm.Filename) {
-		return nil, core.NewRtnWithErr(errors.New("文件名不合法"))
+		return nil, errors.New("文件名不合法")
 	}
 	if err := r.sf.WriteFile(pm.Filename, []byte(pm.Data)); err != nil {
-		return nil, core.NewRtnWithErr(err)
+		return nil, err
 	}
-	return nil, core.Success
+	return nil, nil
 }
 
-func (r *SiteConfigRoute) genSitemap(c *gin.Context) (string, *core.RtnStatus) {
+func (r *SiteConfigRoute) genSitemap(c *gin.Context) (string, error) {
 	wd, _ := os.Getwd()
 	mapPath := wd + "/web/public/sitemap.xml"
 	go func() {
@@ -96,5 +96,5 @@ func (r *SiteConfigRoute) genSitemap(c *gin.Context) (string, *core.RtnStatus) {
 			r.log.Errorf("GenSitemap error: %v", err)
 		}
 	}()
-	return "后台生成中", core.Success
+	return "后台生成中", nil
 }

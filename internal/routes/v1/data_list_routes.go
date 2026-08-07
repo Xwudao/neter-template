@@ -37,74 +37,74 @@ type DataListPageResponse struct {
 }
 
 func (r *DataListRoute) Register(router gin.IRouter) {
-	// router.GET("/v1/data_list", core.NoInput(r.dataList))
+	// router.GET("/v1/data_list", core.NoInputE(r.dataList))
 
 	group := router.Group("/v1/data_list")
 	{
-		group.GET("", core.NoInput(r.dataList))
+		group.GET("", core.NoInputE(r.dataList))
 	}
 	authGroup := router.Group("/auth/v1/data_list").Use(mdw.MustLoginMiddleware())
 	{
-		// authGroup.GET("/auth", core.NoInput(r.dataList))
+		// authGroup.GET("/auth", core.NoInputE(r.dataList))
 		_ = authGroup
 	}
 	adminGroup := router.Group("/admin/v1/data_list").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
 	{
-		adminGroup.GET("/list", core.Request(r.list))
-		adminGroup.GET("/sort_data", core.Request(r.sortData))
-		adminGroup.POST("/create", core.JSON(r.create))
-		adminGroup.POST("/update", core.JSON(r.update))
-		adminGroup.POST("/update_order", core.JSON(r.updateOrder))
-		adminGroup.POST("/delete", core.JSON(r.delete))
+		adminGroup.GET("/list", core.RequestE(r.list))
+		adminGroup.GET("/sort_data", core.RequestE(r.sortData))
+		adminGroup.POST("/create", core.JSONE(r.create))
+		adminGroup.POST("/update", core.JSONE(r.update))
+		adminGroup.POST("/update_order", core.JSONE(r.updateOrder))
+		adminGroup.POST("/delete", core.JSONE(r.delete))
 	}
 }
 
-func (r *DataListRoute) dataList(c *gin.Context) (string, *core.RtnStatus) {
+func (r *DataListRoute) dataList(c *gin.Context) (string, error) {
 	return "hello", nil
 }
 
-func (r *DataListRoute) list(c *gin.Context, pm *params.ListDataByKindParams) (DataListPageResponse, *core.RtnStatus) {
+func (r *DataListRoute) list(c *gin.Context, pm *params.ListDataByKindParams) (DataListPageResponse, error) {
 	data, total, err := r.dlb.ListByKind(c.Request.Context(), pm)
 	if err != nil {
-		return DataListPageResponse{}, core.NewRtnWithErr(err)
+		return DataListPageResponse{}, err
 	}
 	return DataListPageResponse{List: data, Total: total}, nil
 }
 
-func (r *DataListRoute) create(c *gin.Context, pm *params.CreateDataListParams) (*ent.DataList, *core.RtnStatus) {
+func (r *DataListRoute) create(c *gin.Context, pm *params.CreateDataListParams) (*ent.DataList, error) {
 	data, err := r.dlb.Create(c.Request.Context(), pm)
 	if err != nil {
-		return nil, core.NewRtnWithErr(err)
+		return nil, err
 	}
 	return data, nil
 }
 
-func (r *DataListRoute) delete(c *gin.Context, pm *params.DeleteIDParams) (*core.EmptyResponse, *core.RtnStatus) {
+func (r *DataListRoute) delete(c *gin.Context, pm *params.DeleteIDParams) (*core.EmptyResponse, error) {
 	if err := r.dlb.Delete(c.Request.Context(), pm.ID); err != nil {
-		return nil, core.NewRtnWithErr(err)
+		return nil, err
 	}
 	return nil, nil
 }
 
-func (r *DataListRoute) update(c *gin.Context, pm *params.UpdateDataListParams) (*ent.DataList, *core.RtnStatus) {
+func (r *DataListRoute) update(c *gin.Context, pm *params.UpdateDataListParams) (*ent.DataList, error) {
 	data, err := r.dlb.Update(c.Request.Context(), pm)
 	if err != nil {
-		return nil, core.NewRtnWithErr(err)
+		return nil, err
 	}
 	return data, nil
 }
 
-func (r *DataListRoute) sortData(c *gin.Context, pm *params.GetDataListSortDataParams) ([]*ent.DataList, *core.RtnStatus) {
+func (r *DataListRoute) sortData(c *gin.Context, pm *params.GetDataListSortDataParams) ([]*ent.DataList, error) {
 	data, err := r.dlb.GetSortData(c.Request.Context(), pm)
 	if err != nil {
-		return nil, core.NewRtnWithErr(err)
+		return nil, err
 	}
 	return data, nil
 }
 
-func (r *DataListRoute) updateOrder(c *gin.Context, pm *params.ItemOrderParams) (*core.EmptyResponse, *core.RtnStatus) {
+func (r *DataListRoute) updateOrder(c *gin.Context, pm *params.ItemOrderParams) (*core.EmptyResponse, error) {
 	if err := r.dlb.UpdateOrder(c.Request.Context(), pm); err != nil {
-		return nil, core.NewRtnWithErr(err)
+		return nil, err
 	}
 	return nil, nil
 }

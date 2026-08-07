@@ -33,16 +33,16 @@ type UserLoginResponse struct {
 }
 
 func (r *UserRoute) Register(router gin.IRouter) {
-	// router.GET("/v1/user", core.NoInput(r.user))
+	// router.GET("/v1/user", core.NoInputE(r.user))
 
 	group := router.Group("/v1/user")
 	{
-		group.GET("", core.NoInput(r.user))
-		group.POST("/login", core.JSON(r.login))
+		group.GET("", core.NoInputE(r.user))
+		group.POST("/login", core.JSONE(r.login))
 	}
 	authGroup := router.Group("/auth/v1/user").Use(mdw.MustLoginMiddleware())
 	{
-		authGroup.GET("/info", core.NoInput(r.info))
+		authGroup.GET("/info", core.NoInputE(r.info))
 	}
 	adminGroup := router.Group("/admin/v1/user").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
 	{
@@ -50,18 +50,18 @@ func (r *UserRoute) Register(router gin.IRouter) {
 	}
 }
 
-func (r *UserRoute) user(c *gin.Context) (string, *core.RtnStatus) {
+func (r *UserRoute) user(c *gin.Context) (string, error) {
 	return "hello", nil
 }
 
-func (r *UserRoute) login(c *gin.Context, pm *params.UserLoginParams) (UserLoginResponse, *core.RtnStatus) {
+func (r *UserRoute) login(c *gin.Context, pm *params.UserLoginParams) (UserLoginResponse, error) {
 	u, token, err := r.ub.Login(c.Request.Context(), pm)
 	if err != nil {
-		return UserLoginResponse{}, core.NewRtnWithErr(err)
+		return UserLoginResponse{}, err
 	}
 	return UserLoginResponse{User: u, Token: token}, nil
 }
 
-func (r *UserRoute) info(c *gin.Context) (*ent.User, *core.RtnStatus) {
+func (r *UserRoute) info(c *gin.Context) (*ent.User, error) {
 	return utils.User(c), nil
 }
