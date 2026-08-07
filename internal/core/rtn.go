@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 
 	"github.com/Xwudao/neter-template/internal/data/ent"
 	"github.com/Xwudao/neter-template/internal/domain/errs"
@@ -74,16 +75,6 @@ func NewRtnWithErr(err error) *RtnStatus {
 	}
 }
 
-func NewListRtn[T ~int | ~int64](data any, total T) (gin.H, *RtnStatus) {
-	return gin.H{
-			"list":  data,
-			"total": total,
-		}, &RtnStatus{
-			Code:    CodeSuccess,
-			Message: "ok",
-		}
-}
-
 var (
 	Success = &RtnStatus{200, "请求成功"}
 	Fail    = &RtnStatus{0, "请求失败"}
@@ -96,25 +87,124 @@ type WrappedResp struct {
 	Data any      `json:"data"`
 }
 
-type WrappedHandlerFunc func(*gin.Context) (any, *RtnStatus)
-
 // Handler declares an API contract directly at the handler boundary.  Gin
 // receives an ordinary HandlerFunc, while Request and Response remain visible
 // to generators and static tooling.
 type Handler[Request any, Response any] func(*gin.Context, *Request) (Response, *RtnStatus)
 
+// ErrHandler 与 Handler 等价，但第二个返回值是 error：
+// 返回 error 时代码自动转为 RtnStatus（可用 RtnStatusError 携带业务码）。
+// 相比 Handler，业务函数体不再需要写 `return x, core.NewRtnWithErr(err)`。
+type ErrHandler[Request any, Response any] func(*gin.Context, *Request) (Response, error)
+
+// EmptyResponse 无数据成功响应，序列化为 `data: null`。
 type EmptyResponse struct{}
 
-func JSON[Request any, Response any](handler Handler[Request, Response]) gin.HandlerFunc {
-	return bindAndRespond(func(c *gin.Context, request *Request) error {
-		return c.ShouldBindJSON(request)
-	}, handler)
+// ListResponse 列表响应的标准结构（list/total）。
+type ListResponse[T any] struct {
+	List  []T   `json:"list"`
+	Total int64 `json:"total"`
 }
 
-func Request[Request any, Response any](handler Handler[Request, Response]) gin.HandlerFunc {
+// BindErrorMapper 将请求绑定错误映射为用户可读的错误信息。
+type BindErrorMapper func(request any, err error) error
+
+// Validator 由请求结构体实现，提供字段级中文校验消息（可选）。
+type Validator interface {
+	GetMessages() ValidatorMessages
+}
+
+// ValidatorMessages 字段错误消息映射，key 形如 "Field.Tag"。
+type ValidatorMessages map[string]string
+
+// defaultBindErrorMapper 默认绑定错误映射：
+// 优先返回结构体自定义消息（GetMessages），否则返回原始校验错误。
+func defaultBindErrorMapper(request any, err error) error {
+	var validationErrors validator.ValidationErrors
+	if errors.As(err, &validationErrors) {
+		messages, isValidator := request.(Validator)
+		for _, v := range validationErrors {
+			if isValidator {
+				if message, exist := messages.GetMessages()[v.Field()+"."+v.Tag()]; exist {
+					return errors.New(message)
+				}
+			}
+			return v
+		}
+	}
+
+	return errors.New("参数错误")
+}
+
+// Optimizer 绑定成功后自动调用的接口（无返回值）。
+// 请求结构体实现后，框架在绑定完成、handler 执行前自动调用，无需在 handler 内手动调用。
+type Optimizer interface {
+	Optimize()
+}
+
+// OptimizerErr 绑定成功后自动调用的接口（返回 error）。
+// 优化失败时框架直接返回错误响应，不执行 handler。
+type OptimizerErr interface {
+	Optimize() error
+}
+
+// RtnStatusError 携带业务码的错误，用于 ErrHandler 中返回特殊业务码。
+type RtnStatusError struct {
+	Status *RtnStatus
+}
+
+func (e *RtnStatusError) Error() string {
+	if e.Status == nil {
+		return ""
+	}
+	return e.Status.Message
+}
+
+// NewRtnError 构造携带业务码的错误（供 ErrHandler 返回特殊业务码，如 CodeNeedVIP）。
+func NewRtnError(code CodeType, msg string) error {
+	return &RtnStatusError{Status: NewRtnStatus(code, msg)}
+}
+
+// errToRtn 将 error 转为 RtnStatus；识别 RtnStatusError 时直接使用其业务码。
+func errToRtn(err error) *RtnStatus {
+	var rtnErr *RtnStatusError
+	if errors.As(err, &rtnErr) && rtnErr.Status != nil {
+		return rtnErr.Status
+	}
+	return NewRtnWithErr(err)
+}
+
+// errHandlerToHandler 将 ErrHandler 适配为 Handler（内部统一走 errToRtn）。
+func errHandlerToHandler[Request, Response any](h ErrHandler[Request, Response]) Handler[Request, Response] {
+	return func(c *gin.Context, req *Request) (Response, *RtnStatus) {
+		resp, err := h(c, req)
+		if err != nil {
+			return resp, errToRtn(err)
+		}
+		return resp, nil
+	}
+}
+
+func JSON[Request any, Response any](handler Handler[Request, Response], mappers ...BindErrorMapper) gin.HandlerFunc {
+	return bindAndRespond(func(c *gin.Context, request *Request) error {
+		return c.ShouldBindJSON(request)
+	}, handler, mappers...)
+}
+
+func Request[Request any, Response any](handler Handler[Request, Response], mappers ...BindErrorMapper) gin.HandlerFunc {
 	return bindAndRespond(func(c *gin.Context, request *Request) error {
 		return c.ShouldBind(request)
-	}, handler)
+	}, handler, mappers...)
+}
+
+// JSONE 绑定 JSON body 后调用 ErrHandler；绑定错误与业务 error 自动转响应。
+func JSONE[Req any, Resp any](handler ErrHandler[Req, Resp], mappers ...BindErrorMapper) gin.HandlerFunc {
+	return JSON(errHandlerToHandler[Req, Resp](handler), mappers...)
+}
+
+// RequestE 绑定 query/form 后调用 ErrHandler；绑定错误与业务 error 自动转响应。
+func RequestE[Req any, Resp any](handler ErrHandler[Req, Resp], mappers ...BindErrorMapper) gin.HandlerFunc {
+	return Request(errHandlerToHandler[Req, Resp](handler), mappers...)
 }
 
 func NoInput[Response any](handler func(*gin.Context) (Response, *RtnStatus)) gin.HandlerFunc {
@@ -124,17 +214,62 @@ func NoInput[Response any](handler func(*gin.Context) (Response, *RtnStatus)) gi
 	}
 }
 
-func bindAndRespond[Request any, Response any](bind func(*gin.Context, *Request) error, handler Handler[Request, Response]) gin.HandlerFunc {
+// NoInputE 无绑定调用 ErrHandler；业务 error 自动转响应。
+func NoInputE[Response any](handler func(*gin.Context) (Response, error)) gin.HandlerFunc {
+	return NoInput(func(c *gin.Context) (Response, *RtnStatus) {
+		resp, err := handler(c)
+		if err != nil {
+			return resp, errToRtn(err)
+		}
+		return resp, nil
+	})
+}
+
+func bindAndRespond[Request any, Response any](bind func(*gin.Context, *Request) error, handler Handler[Request, Response], mappers ...BindErrorMapper) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var request Request
 		if err := bind(c, &request); err != nil {
+			err = applyBindMappers(&request, err, mappers)
 			var zero Response
 			writeResponse(c, zero, NewRtnWithErr(err))
+			return
+		}
+		if !optimizeRequest(&request) {
+			var zero Response
+			writeResponse(c, zero, NewRtnWithErr(errors.New("参数优化失败")))
 			return
 		}
 		data, status := handler(c, &request)
 		writeResponse(c, data, status)
 	}
+}
+
+// applyBindMappers 应用绑定错误映射；未显式传 mapper 时使用默认映射。
+func applyBindMappers(request any, err error, mappers []BindErrorMapper) error {
+	if len(mappers) == 0 {
+		return defaultBindErrorMapper(request, err)
+	}
+	for _, mapper := range mappers {
+		if mapper != nil {
+			err = mapper(request, err)
+		}
+	}
+	return err
+}
+
+// optimizeRequest 绑定成功后自动调用请求结构体的 Optimize 方法（若实现）。
+// 支持 `Optimize()` 与 `Optimize() error` 两种签名；返回 false 表示优化失败。
+func optimizeRequest[T any](request *T) bool {
+	if opt, ok := any(request).(OptimizerErr); ok {
+		if err := opt.Optimize(); err != nil {
+			return false
+		}
+		return true
+	}
+	if opt, ok := any(request).(Optimizer); ok {
+		opt.Optimize()
+	}
+	return true
 }
 
 func writeResponse(c *gin.Context, data any, status *RtnStatus) {
@@ -148,12 +283,4 @@ func writeResponse(c *gin.Context, data any, status *RtnStatus) {
 	}
 	resp.Data = data
 	c.JSON(http.StatusOK, resp)
-}
-
-// WrapData 包装响应结果
-func WrapData(handler WrappedHandlerFunc) func(*gin.Context) {
-	return func(c *gin.Context) {
-		data, stat := handler(c)
-		writeResponse(c, data, stat)
-	}
 }
