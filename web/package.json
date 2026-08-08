@@ -11,6 +11,8 @@
     "fmt": "oxfmt --write",
     "tsgo": "tsgo -b",
     "type-check": "tsgo -b && oxlint --type-aware --type-check",
+    "gen:api-types": "nr route-info gen-ts --dir ..",
+    "check:api-types": "nr route-info gen-ts --dir .. --check",
     "preview": "vite preview",
     "lint": "oxlint"
   },
