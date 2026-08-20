@@ -3,22 +3,24 @@ package params
 import (
 	"errors"
 
-	"github.com/Xwudao/neter-template/internal/routes/valid"
+	"github.com/Xwudao/neter-template/internal/validate"
 )
 
 type DeleteIDParams struct {
-	ID int64 `json:"id" binding:"required"`
+	ID int64 `json:"id"`
 }
 
-func (d *DeleteIDParams) GetMessages() valid.ValidatorMessages {
-	return valid.ValidatorMessages{
-		"Name.required": "ID必填",
-	}
+func (d *DeleteIDParams) Validate() error {
+	return validate.Validate(
+		validate.Field("id", d.ID,
+			validate.Message("ID必填", validate.NotZero[int64]()),
+		),
+	)
 }
 
 type ItemOrderParams struct {
-	IDs    []int64 `json:"ids" binding:"required"`
-	Orders []int   `json:"orders" binding:"required"`
+	IDs    []int64 `json:"ids"`
+	Orders []int   `json:"orders"`
 }
 
 func (i *ItemOrderParams) Optimize() error {
@@ -28,9 +30,13 @@ func (i *ItemOrderParams) Optimize() error {
 	return nil
 }
 
-func (i *ItemOrderParams) GetMessages() valid.ValidatorMessages {
-	return valid.ValidatorMessages{
-		"IDs.required":    "ID必填",
-		"Orders.required": "排序必填",
-	}
+func (i *ItemOrderParams) Validate() error {
+	return validate.Validate(
+		validate.Field("ids", i.IDs,
+			validate.Message("ID必填", validate.MinItems[int64](1)),
+		),
+		validate.Field("orders", i.Orders,
+			validate.Message("排序必填", validate.MinItems[int](1)),
+		),
+	)
 }

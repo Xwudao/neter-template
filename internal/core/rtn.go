@@ -6,10 +6,10 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 
 	"github.com/Xwudao/neter-template/internal/data/ent"
 	"github.com/Xwudao/neter-template/internal/domain/errs"
+	"github.com/Xwudao/neter-template/internal/validate"
 )
 
 type CodeType int
@@ -109,30 +109,16 @@ type ListResponse[T any] struct {
 // BindErrorMapper 将请求绑定错误映射为用户可读的错误信息。
 type BindErrorMapper func(request any, err error) error
 
-// Validator 由请求结构体实现，提供字段级中文校验消息（可选）。
-type Validator interface {
-	GetMessages() ValidatorMessages
+// RequestValidator 由请求结构体实现，提供代码式字段校验。
+// 框架在绑定成功、Optimize 之前自动调用；校验失败返回错误，不执行 handler。
+type RequestValidator interface {
+	Validate() error
 }
 
-// ValidatorMessages 字段错误消息映射，key 形如 "Field.Tag"。
-type ValidatorMessages map[string]string
-
 // defaultBindErrorMapper 默认绑定错误映射：
-// 优先返回结构体自定义消息（GetMessages），否则返回原始校验错误。
+// 绑定解析失败（JSON 语法/类型错误、空 body、strconv 错误）统一返回"参数错误"，
+// 不把原始解析错误暴露给客户端；字段校验失败由 Validate() 在绑定成功后处理。
 func defaultBindErrorMapper(request any, err error) error {
-	var validationErrors validator.ValidationErrors
-	if errors.As(err, &validationErrors) {
-		messages, isValidator := request.(Validator)
-		for _, v := range validationErrors {
-			if isValidator {
-				if message, exist := messages.GetMessages()[v.Field()+"."+v.Tag()]; exist {
-					return errors.New(message)
-				}
-			}
-			return v
-		}
-	}
-
 	return errors.New("参数错误")
 }
 
@@ -234,6 +220,11 @@ func bindAndRespond[Request any, Response any](bind func(*gin.Context, *Request)
 			writeResponse(c, zero, NewRtnWithErr(err))
 			return
 		}
+		if err := validateRequest(&request); err != nil {
+			var zero Response
+			writeResponse(c, zero, NewRtnWithErr(err))
+			return
+		}
 		if !optimizeRequest(&request) {
 			var zero Response
 			writeResponse(c, zero, NewRtnWithErr(errors.New("参数优化失败")))
@@ -255,6 +246,17 @@ func applyBindMappers(request any, err error, mappers []BindErrorMapper) error {
 		}
 	}
 	return err
+}
+
+// validateRequest 绑定成功后自动调用请求结构体的 Validate 方法（若实现）。
+// 校验失败时只向响应暴露第一条消息，维持既有 msg 行为。
+func validateRequest[T any](request *T) error {
+	if v, ok := any(request).(RequestValidator); ok {
+		if err := v.Validate(); err != nil {
+			return validate.FirstError(err)
+		}
+	}
+	return nil
 }
 
 // optimizeRequest 绑定成功后自动调用请求结构体的 Optimize 方法（若实现）。

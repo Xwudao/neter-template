@@ -1,15 +1,15 @@
 package params
 
 import (
-	"github.com/Xwudao/neter-template/internal/routes/valid"
+	"github.com/Xwudao/neter-template/internal/validate"
 )
 
 // CreateDataListParams 创建参数
 type CreateDataListParams struct {
-	Label string `json:"label" binding:"required"`
-	Key   string `json:"key" binding:"required"`
-	Kind  string `json:"kind" binding:"required"`
-	Value string `json:"value" binding:"required"`
+	Label string `json:"label"`
+	Key   string `json:"key"`
+	Kind  string `json:"kind"`
+	Value string `json:"value"`
 
 	ItemOrder int `json:"item_order"`
 }
@@ -21,35 +21,49 @@ func (c *CreateDataListParams) Optimize() error {
 	return nil
 }
 
-func (c *CreateDataListParams) GetMessages() valid.ValidatorMessages {
-	return valid.ValidatorMessages{
-		"Label.required": "标签必填",
-		"Kind.required":  "分类必填",
-		"Value.required": "内容必填",
-		"Key.required":   "Key必填",
-	}
+func (c *CreateDataListParams) Validate() error {
+	return validate.Validate(
+		validate.Field("label", c.Label,
+			validate.Message("标签必填", validate.Required()),
+		),
+		validate.Field("key", c.Key,
+			validate.Message("Key必填", validate.Required()),
+		),
+		validate.Field("kind", c.Kind,
+			validate.Message("分类必填", validate.Required()),
+		),
+		validate.Field("value", c.Value,
+			validate.Message("内容必填", validate.Required()),
+		),
+	)
 }
 
 // UpdateDataListParams 更新参数
 type UpdateDataListParams struct {
-	ID        int64  `json:"id" binding:"required"`
-	Key       string `json:"key" binding:"required"`
-	Value     string `json:"value" binding:"required"`
+	ID        int64  `json:"id"`
+	Key       string `json:"key"`
+	Value     string `json:"value"`
 	ItemOrder *int   `json:"item_order"`
 }
 
-func (u *UpdateDataListParams) GetMessages() valid.ValidatorMessages {
-	return valid.ValidatorMessages{
-		"ID.required":    "ID必填",
-		"Key.required":   "Key必填",
-		"Value.required": "内容必填",
-	}
+func (u *UpdateDataListParams) Validate() error {
+	return validate.Validate(
+		validate.Field("id", u.ID,
+			validate.Message("ID必填", validate.NotZero[int64]()),
+		),
+		validate.Field("key", u.Key,
+			validate.Message("Key必填", validate.Required()),
+		),
+		validate.Field("value", u.Value,
+			validate.Message("内容必填", validate.Required()),
+		),
+	)
 }
 
 type ListDataByKindParams struct {
 	Kind string `json:"kind" form:"kind"`
-	Page int    `json:"page" binding:"min=1" form:"page"`
-	Size int    `json:"size" binding:"min=1,max=100" form:"size"`
+	Page int    `json:"page" form:"page"`
+	Size int    `json:"size" form:"size"`
 
 	Offset int `json:"-" form:"-"`
 }
@@ -59,24 +73,29 @@ func (l *ListDataByKindParams) Optimize() error {
 	return nil
 }
 
-func (l *ListDataByKindParams) GetMessages() valid.ValidatorMessages {
-	return valid.ValidatorMessages{
-		"Kind.required": "Kind必填",
-		"Page.min":      "Page最小值为1",
-		"Size.min":      "Size最小值为1",
-		"Size.max":      "Size最大值为100",
-	}
+func (l *ListDataByKindParams) Validate() error {
+	return validate.Validate(
+		validate.Field("page", l.Page,
+			validate.Message("Page最小值为1", validate.Min(1)),
+		),
+		validate.Field("size", l.Size,
+			validate.Message("Size最小值为1", validate.Min(1)),
+			validate.Message("Size最大值为100", validate.Max(100)),
+		),
+	)
 }
 
 // GetDataListSortDataParams 获取排序数据
 type GetDataListSortDataParams struct {
-	Kind string `json:"kind" binding:"required" form:"kind"`
+	Kind string `json:"kind" form:"kind"`
 }
 
-func (g *GetDataListSortDataParams) GetMessages() valid.ValidatorMessages {
-	return valid.ValidatorMessages{
-		"Kind.required": "Kind必填",
-	}
+func (g *GetDataListSortDataParams) Validate() error {
+	return validate.Validate(
+		validate.Field("kind", g.Kind,
+			validate.Message("Kind必填", validate.Required()),
+		),
+	)
 }
 
 type GetAllDataListByKindsParams struct {

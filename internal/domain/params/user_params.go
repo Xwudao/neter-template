@@ -2,20 +2,24 @@ package params
 
 import (
 	"github.com/Xwudao/neter-template/internal/data/ent/user"
-	"github.com/Xwudao/neter-template/internal/routes/valid"
+	"github.com/Xwudao/neter-template/internal/validate"
 )
 
 type CreateUserParams struct {
-	Username string    `json:"username" binding:"required"`
-	Password string    `json:"password" binding:"required"`
+	Username string    `json:"username"`
+	Password string    `json:"password"`
 	Role     user.Role `json:"-"`
 }
 
-func (c *CreateUserParams) GetMessages() valid.ValidatorMessages {
-	return valid.ValidatorMessages{
-		"Username.required": "用户名不能为空",
-		"Password.required": "密码不能为空",
-	}
+func (c *CreateUserParams) Validate() error {
+	return validate.Validate(
+		validate.Field("username", c.Username,
+			validate.Message("用户名不能为空", validate.Required()),
+		),
+		validate.Field("password", c.Password,
+			validate.Message("密码不能为空", validate.Required()),
+		),
+	)
 }
 
 type GetUserByParams struct {
@@ -24,13 +28,17 @@ type GetUserByParams struct {
 }
 
 type UserLoginParams struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
-func (u *UserLoginParams) GetMessages() valid.ValidatorMessages {
-	return valid.ValidatorMessages{
-		"Username.required": "用户名不能为空",
-		"Password.required": "密码不能为空",
-	}
+func (u *UserLoginParams) Validate() error {
+	return validate.Validate(
+		validate.Field("username", u.Username,
+			validate.Message("用户名不能为空", validate.Required()),
+		),
+		validate.Field("password", u.Password,
+			validate.Message("密码不能为空", validate.Required()),
+		),
+	)
 }
