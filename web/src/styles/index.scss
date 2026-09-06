@@ -44,3 +44,146 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+// Lightweight SSR shell. These global classes are consumed by src/ssr.tsx,
+// whose markup is rendered by gotossr without importing SCSS Modules.
+.ssr-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.ssr-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  border-bottom: 1px solid var(--color-border-soft);
+  background: var(--color-canvas);
+}
+
+.ssr-header-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  width: min(100% - var(--space-6), var(--container-page));
+  height: var(--header-h);
+  margin: 0 auto;
+}
+
+.ssr-brand,
+.ssr-nav,
+.ssr-actions {
+  display: flex;
+  align-items: center;
+}
+
+.ssr-brand {
+  gap: var(--space-2);
+  color: var(--color-text-strong);
+  font-weight: var(--font-weight-bold);
+}
+
+.ssr-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-md);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--font-weight-bold);
+}
+
+.ssr-nav {
+  flex: 1;
+  justify-content: center;
+  gap: var(--space-1);
+}
+
+.ssr-nav-link {
+  padding: var(--space-1-5) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+
+  &:hover {
+    background: var(--color-accent-soft);
+    color: var(--color-text-strong);
+  }
+}
+
+.ssr-main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  width: min(100% - var(--space-6), var(--container-page));
+  margin: 0 auto;
+  padding-block: var(--space-16);
+  text-align: center;
+}
+
+.ssr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: 40rem;
+}
+
+.ssr-title {
+  margin: 0;
+  color: var(--color-text-strong);
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-tight);
+}
+
+.ssr-subtitle {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+}
+
+.ssr-actions {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.ssr-action-primary,
+.ssr-action-secondary {
+  padding: var(--padding-control-md);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.ssr-action-primary {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+.ssr-action-secondary {
+  border: 1px solid var(--color-accent-border);
+  color: var(--color-accent);
+}
+
+.ssr-footer {
+  padding: var(--space-6);
+  border-top: 1px solid var(--color-border-soft);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  text-align: center;
+}
+
+@include sm {
+  .ssr-header-inner,
+  .ssr-main {
+    width: min(100% - var(--space-8), var(--container-page));
+  }
+}

@@ -1,0 +1,83 @@
+// ========================================
+// StatCard — neter-template
+// ========================================
+
+@use '@/styles/mixins' as *;
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.iconBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+}
+
+.icon {
+  font-size: 1.25rem;
+}
+
+.neutral {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+}
+
+.accent {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.success {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.warning {
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+}
+
+.danger {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-strong);
+  line-height: var(--line-height-tight);
+}
+
+.hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}

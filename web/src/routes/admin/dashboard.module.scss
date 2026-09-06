@@ -1,0 +1,167 @@
+// ========================================
+// Admin Dashboard — neter-template
+// ========================================
+
+@use '@/styles/mixins' as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.statsGrid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(1, 1fr);
+
+  @include md {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include lg {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.twoCol {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(1, 1fr);
+
+  @include lg {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-strong);
+}
+
+/* Table */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.table th {
+  text-align: left;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border-soft);
+  text-transform: uppercase;
+  font-size: var(--font-size-2xs);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.table td {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-border-soft);
+  color: var(--color-text);
+  vertical-align: middle;
+}
+
+.userCell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2-5);
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.userName {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-strong);
+  line-height: var(--line-height-tight);
+}
+
+.userEmail {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-0-5) var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.statusDanger {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+/* Activity list */
+.activityList {
+  display: flex;
+  flex-direction: column;
+}
+
+.activity {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+
+  & + .activity {
+    border-top: 1px solid var(--color-border-soft);
+  }
+}
+
+.activityIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+.activityBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+}
+
+.activityText {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  line-height: var(--line-height-normal);
+}
+
+.activityTime {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}

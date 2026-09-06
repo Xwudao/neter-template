@@ -11,6 +11,10 @@ mock:
 	mockgen -source=internal/biz/site_config_biz.go -destination=internal/biz/mocks/mock_site_config_repository.go -package=mocks
 	mockgen -source=internal/biz/data_list_biz.go -destination=internal/biz/mocks/mock_data_list_repository.go -package=mocks
 
+.PHONY: web-build
+web-build:
+	pnpm --dir web build
+
 .PHONY: test
 test:
 	go test ./internal/biz/... -v -count=1

@@ -47,7 +47,11 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	}
 	userRepository := data.NewUserRepository(appContext, dataData)
 	seoBizBiz := biz.NewSeoBizBiz(sugaredLogger, appContext)
-	engine, err := routes.NewEngine(zapWriter, client, userRepository, koanf, seoBizBiz, sugaredLogger)
+	ssrRenderer, err := routes.NewSSRRenderer()
+	if err != nil {
+		return nil, nil, err
+	}
+	engine, err := routes.NewEngine(zapWriter, client, userRepository, koanf, seoBizBiz, sugaredLogger, ssrRenderer)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -61,7 +65,7 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	dataListBiz := biz.NewDataListBiz(sugaredLogger, dataListRepository, appContext)
 	dataListRoute := v1.NewDataListRoute(dataListBiz, sugaredLogger, koanf)
 	routeRegistry := routes.NewRouteRegistry(userRoute, siteConfigRoute, dataListRoute)
-	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, appContext, routeRegistry)
+	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, appContext, routeRegistry, ssrRenderer)
 	if err != nil {
 		return nil, nil, err
 	}

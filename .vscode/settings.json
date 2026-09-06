@@ -35,5 +35,6 @@
   "oxc.enable": true,
   "chat.tools.terminal.autoApprove": {
     "pnpm": true
-  }
+  },
+  "js/ts.experimental.useTsgo": true
 }

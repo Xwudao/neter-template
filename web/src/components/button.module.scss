@@ -1,0 +1,138 @@
+// ========================================
+// Button — neter-template
+// ========================================
+
+@use '@/styles/mixins' as *;
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-sans);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    background var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+/* Sizes */
+.sm {
+  height: 2rem;
+  padding: 0 var(--space-3);
+  font-size: var(--font-size-xs);
+}
+
+.md {
+  height: 2.375rem;
+  padding: 0 var(--space-4);
+  font-size: var(--font-size-sm);
+}
+
+.lg {
+  height: 2.875rem;
+  padding: 0 var(--space-5);
+  font-size: var(--font-size-md);
+}
+
+.full {
+  width: 100%;
+}
+
+/* Variants */
+.primary {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+
+  &:hover {
+    background: var(--color-accent-hover);
+  }
+
+  &:active {
+    background: var(--color-accent-active);
+  }
+}
+
+.secondary {
+  background: var(--color-surface);
+  color: var(--color-text-strong);
+  border-color: var(--color-border-soft);
+
+  &:hover {
+    background: var(--color-surface-muted);
+    border-color: var(--color-border-strong);
+  }
+}
+
+.ghost {
+  background: transparent;
+  color: var(--color-text-muted);
+
+  &:hover {
+    background: var(--color-hover-overlay);
+    color: var(--color-text-strong);
+  }
+}
+
+.outline {
+  background: transparent;
+  color: var(--color-accent);
+  border-color: var(--color-accent-border);
+
+  &:hover {
+    background: var(--color-accent-soft);
+    border-color: var(--color-accent);
+  }
+}
+
+.danger {
+  background: var(--color-danger);
+  color: #fff;
+
+  &:hover {
+    filter: brightness(1.05);
+  }
+}
+
+/* Icons */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05em;
+  line-height: 1;
+}
+
+.iconLeft {
+  margin-right: -0.125rem;
+}
+
+.iconRight {
+  margin-left: -0.125rem;
+}
+
+.label {
+  line-height: 1;
+}

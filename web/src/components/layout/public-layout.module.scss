@@ -1,0 +1,217 @@
+// ========================================
+// PublicLayout — neter-template
+// ========================================
+
+@use '@/styles/mixins' as *;
+
+.layout {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-canvas);
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4) var(--space-10);
+
+  @include md {
+    padding: var(--space-8) var(--space-6) var(--space-12);
+  }
+}
+
+.maxSm {
+  max-width: 40rem;
+}
+
+.maxMd {
+  max-width: 56rem;
+}
+
+.maxLg {
+  max-width: 72rem;
+}
+
+.maxFull {
+  max-width: 100%;
+}
+
+/* ── Header ─────────────────────────────── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  border-bottom: 1px solid var(--color-border-soft);
+  background: color-mix(in srgb, var(--color-canvas) 85%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.headerInner {
+  max-width: 72rem;
+  margin: 0 auto;
+  height: var(--header-h);
+  padding: 0 var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+
+  @include md {
+    padding: 0 var(--space-6);
+  }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2-5);
+  text-decoration: none;
+  flex-shrink: 0;
+
+  :global(svg) {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+.brandName {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-strong);
+  letter-spacing: var(--letter-spacing-tight);
+  white-space: nowrap;
+}
+
+.nav {
+  display: none;
+  align-items: center;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+
+  @include md {
+    display: flex;
+  }
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  padding: var(--space-1-5) var(--space-3);
+  border-radius: var(--radius-md);
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    background var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    color: var(--color-text-strong);
+    background: var(--color-hover-overlay);
+  }
+}
+
+.navLinkActive {
+  color: var(--color-text-strong);
+  background: var(--color-accent-soft);
+
+  .navIcon {
+    color: var(--color-accent);
+  }
+}
+
+.navIcon {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ── Footer ─────────────────────────────── */
+.footer {
+  border-top: 1px solid var(--color-border-soft);
+  background: var(--color-surface-muted);
+}
+
+.footerInner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-4);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+
+  @include md {
+    grid-template-columns: 2fr 1fr;
+    padding: var(--space-12) var(--space-6);
+  }
+}
+
+.footerBrand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+
+  :global(svg) {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+.footerDesc {
+  margin: 0;
+  max-width: 28rem;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-relaxed);
+}
+
+.footerNav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.footerTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-strong);
+}
+
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+}
+
+.footerLink {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    color: var(--color-text-strong);
+  }
+}
+
+.footerBottom {
+  border-top: 1px solid var(--color-border-soft);
+  padding: var(--space-4);
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}

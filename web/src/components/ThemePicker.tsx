@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 
-import useAppConfig, { type AccentPreset, type ThemeMode } from '@/store/useAppConfig'
+import useAppConfig, { type AccentPreset, type ThemeMode } from '../store/useAppConfig'
 
 import classes from './theme-picker.module.scss'
 

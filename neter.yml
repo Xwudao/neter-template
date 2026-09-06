@@ -1,0 +1,5 @@
+build:
+  cgo: true
+  stop_copy: true
+  tags:
+    - prod

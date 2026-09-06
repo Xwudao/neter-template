@@ -32,6 +32,7 @@ func NewEngine(
 	conf *koanf.Koanf,
 	sb *biz.SeoBizBiz,
 	log *zap.SugaredLogger,
+	ssr *SSRRenderer,
 ) (*gin.Engine, error) {
 	var (
 		isDebug   = conf.String("app.mode") == "debug"
@@ -65,7 +66,7 @@ func NewEngine(
 	if err != nil {
 		return nil, err
 	}
-	r.NoRoute(spa.Serve("/"))
+	r.NoRoute(ssr.Serve(spa.Serve("/")))
 	//r.NoRoute(spa.Serve("index.html"))
 	//r.NoRoute(mdw.NotFoundMdw())
 
@@ -83,6 +84,7 @@ type HttpEngine struct {
 	ctx    *system.AppContext
 
 	routes RouteRegistry
+	ssr    *SSRRenderer
 }
 
 func NewHttpEngine(
@@ -91,6 +93,7 @@ func NewHttpEngine(
 	log *zap.SugaredLogger,
 	ctx *system.AppContext,
 	routes RouteRegistry,
+	ssr *SSRRenderer,
 ) (*HttpEngine, error) {
 
 	he := &HttpEngine{
@@ -99,6 +102,7 @@ func NewHttpEngine(
 		router: router,
 		ctx:    ctx,
 		routes: routes,
+		ssr:    ssr,
 	}
 
 	return he, nil
@@ -108,6 +112,11 @@ func (r *HttpEngine) Run() error {
 	log := r.log
 	router := r.router
 	defer r.ctx.Cancel()
+	defer func() {
+		if err := r.ssr.Shutdown(context.Background()); err != nil {
+			log.Warnw("shutdown SSR engine", "error", err)
+		}
+	}()
 
 	port := r.conf.Int("app.port")
 	host := r.conf.Bool("app.host")

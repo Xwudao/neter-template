@@ -15,6 +15,10 @@ const resolve = (p: string) => path.resolve(__dirname, p)
 
 // https://vite.dev/config/
 export default defineConfig({
+  // The Go SPA middleware serves `assets/dist` at the site root. Vite's
+  // emitted file names already start with `assets/`, so adding `/assets/` as
+  // a base produced `/assets/assets/...` URLs and made client-only /admin
+  // receive HTML instead of JavaScript.
   base: '/',
   resolve: {
     alias: {
@@ -52,6 +56,11 @@ export default defineConfig({
   ],
   define: {
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
+  build: {
+    outDir: resolve('../assets/dist'),
+    emptyOutDir: true,
+    manifest: true,
   },
   css: {
     modules: {

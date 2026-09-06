@@ -22,3 +22,6 @@ logs
 .idea
 mock.json
 build
+
+# Local application binary
+/main

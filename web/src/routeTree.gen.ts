@@ -9,50 +9,337 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as PublicAboutRouteImport } from './routes/_public/about'
+import { Route as PublicDocsRouteImport } from './routes/_public/docs'
+import { Route as PublicLatestRouteImport } from './routes/_public/latest'
+import { Route as PublicSearchRouteImport } from './routes/_public/search'
+import { Route as PublicTagsRouteImport } from './routes/_public/tags'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminLogsRouteImport } from './routes/admin/logs'
+import { Route as AdminResourcesRouteImport } from './routes/admin/resources'
+import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as AdminTagsRouteImport } from './routes/admin/tags'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
 
-const IndexRoute = IndexRouteImport.update({
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicAboutRoute = PublicAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicDocsRoute = PublicDocsRouteImport.update({
+  id: '/docs',
+  path: '/docs',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicLatestRoute = PublicLatestRouteImport.update({
+  id: '/latest',
+  path: '/latest',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSearchRoute = PublicSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicTagsRoute = PublicTagsRouteImport.update({
+  id: '/tags',
+  path: '/tags',
+  getParentRoute: () => PublicRoute,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLogsRoute = AdminLogsRouteImport.update({
+  id: '/logs',
+  path: '/logs',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminResourcesRoute = AdminResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTagsRoute = AdminTagsRouteImport.update({
+  id: '/tags',
+  path: '/tags',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof PublicIndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/about': typeof PublicAboutRoute
+  '/docs': typeof PublicDocsRoute
+  '/latest': typeof PublicLatestRoute
+  '/search': typeof PublicSearchRoute
+  '/tags': typeof PublicTagsRoute
+  '/admin/logs': typeof AdminLogsRoute
+  '/admin/resources': typeof AdminResourcesRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/tags': typeof AdminTagsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/about': typeof PublicAboutRoute
+  '/docs': typeof PublicDocsRoute
+  '/latest': typeof PublicLatestRoute
+  '/search': typeof PublicSearchRoute
+  '/tags': typeof PublicTagsRoute
+  '/admin/logs': typeof AdminLogsRoute
+  '/admin/resources': typeof AdminResourcesRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/tags': typeof AdminTagsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/': typeof PublicIndexRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_public': typeof PublicRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
+  '/_public/about': typeof PublicAboutRoute
+  '/_public/docs': typeof PublicDocsRoute
+  '/_public/latest': typeof PublicLatestRoute
+  '/_public/search': typeof PublicSearchRoute
+  '/_public/tags': typeof PublicTagsRoute
+  '/admin/logs': typeof AdminLogsRoute
+  '/admin/resources': typeof AdminResourcesRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/tags': typeof AdminTagsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/_public/': typeof PublicIndexRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/about'
+    | '/docs'
+    | '/latest'
+    | '/search'
+    | '/tags'
+    | '/admin/logs'
+    | '/admin/resources'
+    | '/admin/settings'
+    | '/admin/tags'
+    | '/admin/users'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/about'
+    | '/docs'
+    | '/latest'
+    | '/search'
+    | '/tags'
+    | '/admin/logs'
+    | '/admin/resources'
+    | '/admin/settings'
+    | '/admin/tags'
+    | '/admin/users'
+    | '/'
+    | '/admin'
+  id:
+    | '__root__'
+    | '/_public'
+    | '/admin'
+    | '/_public/about'
+    | '/_public/docs'
+    | '/_public/latest'
+    | '/_public/search'
+    | '/_public/tags'
+    | '/admin/logs'
+    | '/admin/resources'
+    | '/admin/settings'
+    | '/admin/tags'
+    | '/admin/users'
+    | '/_public/'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  PublicRoute: typeof PublicRouteWithChildren
+  AdminRoute: typeof AdminRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public/': {
+      id: '/_public/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/about': {
+      id: '/_public/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof PublicAboutRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/docs': {
+      id: '/_public/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof PublicDocsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/latest': {
+      id: '/_public/latest'
+      path: '/latest'
+      fullPath: '/latest'
+      preLoaderRoute: typeof PublicLatestRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/search': {
+      id: '/_public/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof PublicSearchRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/tags': {
+      id: '/_public/tags'
+      path: '/tags'
+      fullPath: '/tags'
+      preLoaderRoute: typeof PublicTagsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/logs': {
+      id: '/admin/logs'
+      path: '/logs'
+      fullPath: '/admin/logs'
+      preLoaderRoute: typeof AdminLogsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/resources': {
+      id: '/admin/resources'
+      path: '/resources'
+      fullPath: '/admin/resources'
+      preLoaderRoute: typeof AdminResourcesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tags': {
+      id: '/admin/tags'
+      path: '/tags'
+      fullPath: '/admin/tags'
+      preLoaderRoute: typeof AdminTagsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
     }
   }
 }
 
+interface PublicRouteChildren {
+  PublicAboutRoute: typeof PublicAboutRoute
+  PublicDocsRoute: typeof PublicDocsRoute
+  PublicLatestRoute: typeof PublicLatestRoute
+  PublicSearchRoute: typeof PublicSearchRoute
+  PublicTagsRoute: typeof PublicTagsRoute
+  PublicIndexRoute: typeof PublicIndexRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicAboutRoute: PublicAboutRoute,
+  PublicDocsRoute: PublicDocsRoute,
+  PublicLatestRoute: PublicLatestRoute,
+  PublicSearchRoute: PublicSearchRoute,
+  PublicTagsRoute: PublicTagsRoute,
+  PublicIndexRoute: PublicIndexRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
+
+interface AdminRouteChildren {
+  AdminLogsRoute: typeof AdminLogsRoute
+  AdminResourcesRoute: typeof AdminResourcesRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminTagsRoute: typeof AdminTagsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminLogsRoute: AdminLogsRoute,
+  AdminResourcesRoute: AdminResourcesRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminTagsRoute: AdminTagsRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  PublicRoute: PublicRouteWithChildren,
+  AdminRoute: AdminRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

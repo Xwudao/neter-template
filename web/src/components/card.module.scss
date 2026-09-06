@@ -1,0 +1,16 @@
+// ========================================
+// Card — neter-template
+// ========================================
+
+@use '@/styles/mixins' as *;
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.padded {
+  padding: var(--padding-card);
+}

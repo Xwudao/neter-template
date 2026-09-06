@@ -5,7 +5,7 @@ import useAppConfig, {
   type AccentPreset,
   type ResolvedTheme,
   type ThemeMode,
-} from '@/store/useAppConfig'
+} from '../store/useAppConfig'
 
 type ThemeContextValue = {
   accent: AccentPreset

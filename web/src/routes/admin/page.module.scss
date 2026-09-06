@@ -1,0 +1,130 @@
+// ========================================
+// Shared admin page utilities — neter-template
+// ========================================
+
+@use '@/styles/mixins' as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.toolbarLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+  min-width: 640px;
+}
+
+.table th {
+  text-align: left;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-soft);
+  text-transform: uppercase;
+  font-size: var(--font-size-2xs);
+  letter-spacing: var(--letter-spacing-wide);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-soft);
+  color: var(--color-text);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr {
+  transition: background var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    background: var(--color-hover-overlay);
+  }
+}
+
+/* Icon cell */
+.iconCell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+  color: var(--color-accent);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* Status pill */
+.status {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-0-5) var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+}
+
+.statusSuccess {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.statusWarning {
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+}
+
+.statusDanger {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+/* Fields for settings */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 40rem;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--space-4);
+
+  @include md {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
