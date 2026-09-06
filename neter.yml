@@ -1,6 +1,8 @@
 build:
-  cgo: true
+  # The Linux release is cross-compiled from macOS. Use gotossr's pure-Go
+  # runtime so nr does not invoke the macOS C compiler for Linux/amd64.
+  cgo: false
   stop_copy: true
   tags:
     - prod
-    - use_quickjs
+    - use_moderncjs

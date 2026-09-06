@@ -18,6 +18,7 @@
 # Build artifacts and runtime files
 dist/
 build/
+app-linux
 /tmp/
 /main
 *.log
