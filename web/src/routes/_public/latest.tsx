@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import { Button } from '@/components/Button'
 import { Card } from '@/components/Card'
 import { PageHeader } from '@/components/PageHeader'
+import { useSSRPageData } from '@/ssr-data'
 
 import classes from './page.module.scss'
 
@@ -30,6 +31,9 @@ const resources: Resource[] = [
 ]
 
 function LatestPage() {
+  const { featuredResource } = useSSRPageData()
+  const pageResources = featuredResource ? [featuredResource, ...resources] : resources
+
   return (
     <div className={clsx(classes.page)}>
       <PageHeader
@@ -43,7 +47,7 @@ function LatestPage() {
       />
 
       <div className={clsx(classes.cardList)}>
-        {resources.map((resource) => (
+        {pageResources.map((resource) => (
           <Card key={resource.id} padded={false} className={clsx(classes.listItem)}>
             <span className={clsx(resource.icon, classes.listItemIcon)} aria-hidden="true" />
             <div className={clsx(classes.listItemBody)}>

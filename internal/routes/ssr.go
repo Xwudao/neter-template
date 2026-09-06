@@ -30,10 +30,20 @@ type viteManifestEntry struct {
 // SSRPageData is the server-owned data contract for an SSR response. Replace
 // ssrPageDataForPath with a business-layer query when pages are backed by the
 // database; the result is used for both document metadata and SSR props.
+type SSRResource struct {
+	ID        int    `json:"id"`
+	Title     string `json:"title"`
+	Category  string `json:"category"`
+	Size      string `json:"size"`
+	UpdatedAt string `json:"updatedAt"`
+	Icon      string `json:"icon"`
+}
+
 type SSRPageData struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Keywords    string `json:"keywords"`
+	Title            string       `json:"title"`
+	Description      string       `json:"description"`
+	Keywords         string       `json:"keywords"`
+	FeaturedResource *SSRResource `json:"featuredResource,omitempty"`
 }
 
 func ssrPageDataForPath(requestPath string) SSRPageData {
@@ -47,6 +57,17 @@ func ssrPageDataForPath(requestPath string) SSRPageData {
 			Title:       "最新资源｜neter-template",
 			Description: "测试最新资源描述：浏览最近发布和更新的站内资源。",
 			Keywords:    "最新资源,资源列表,neter-template",
+			// Example of Go-owned data: in production obtain this value from the
+			// business layer before RenderRoute. It is serialized into
+			// __SSR_PROPS__ and reused by hydrateRoot without a second request.
+			FeaturedResource: &SSRResource{
+				ID:        0,
+				Title:     "服务端注入的首屏资源",
+				Category:  "SSR 示例",
+				Size:      "0 KB",
+				UpdatedAt: "刚刚",
+				Icon:      "i-mdi-server-network",
+			},
 		},
 		"/tags": {
 			Title:       "标签浏览｜neter-template",
@@ -94,12 +115,11 @@ func NewSSRRenderer() (*SSRRenderer, error) {
 	}
 
 	engine, err := gossr.New(gossr.Config{
-		AppEnv:            "production",
-		AssetRoute:        "/assets",
-		FrontendDir:       "./web",
-		ClientAppPath:     "src/ssr.tsx",
-		SPAHydrationMode:  "tanstack",
-		JSRuntimePoolSize: 1,
+		AppEnv:                   "production",
+		AssetRoute:               "/assets",
+		FrontendDir:              "./web",
+		PrebuiltServerBundlePath: "./assets/ssr/entry-server.js",
+		JSRuntimePoolSize:        1,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("create SSR engine: %w", err)
@@ -121,7 +141,7 @@ func (r *SSRRenderer) Serve(spa gin.HandlerFunc) gin.HandlerFunc {
 
 		pageData := ssrPageDataForPath(c.Request.URL.Path)
 		page := r.engine.RenderRoute(gossr.RenderConfig{
-			File:  "src/ssr.tsx",
+			File:  "src/entry-server.tsx",
 			Title: pageData.Title,
 			MetaTags: map[string]string{
 				"description": pageData.Description,

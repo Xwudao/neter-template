@@ -14,7 +14,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const resolve = (p: string) => path.resolve(__dirname, p)
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ isSsrBuild }) => {
+  const outDir = isSsrBuild ? resolve('../assets/ssr') : resolve('../assets/dist')
+
+  return {
   // The Go SPA middleware serves `assets/dist` at the site root. Vite's
   // emitted file names already start with `assets/`, so adding `/assets/` as
   // a base produced `/assets/assets/...` URLs and made client-only /admin
@@ -28,7 +31,9 @@ export default defineConfig({
   plugins: [
     tanstackRouter({
       target: 'react',
-      autoCodeSplitting: true,
+      // The browser keeps route chunks. The synchronous gotossr runtime needs
+      // one complete SSR graph because renderToString cannot await Suspense.
+      autoCodeSplitting: !isSsrBuild,
     }),
     react(),
     babel({ presets: [reactCompilerPreset()] }),
@@ -57,10 +62,27 @@ export default defineConfig({
   define: {
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
   },
+  ssr: {
+    // gotossr evaluates the server artifact in its embedded runtime, so React,
+    // TanStack Router, and every application dependency must be in this file.
+    noExternal: true,
+  },
   build: {
-    outDir: resolve('../assets/dist'),
+    outDir,
     emptyOutDir: true,
-    manifest: true,
+    manifest: !isSsrBuild,
+    // Vite intentionally leaves SSR output readable by default. gotossr loads
+    // this artifact in production, so minify it just like the client bundle.
+    minify: isSsrBuild ? 'oxc' : undefined,
+    rollupOptions: isSsrBuild
+      ? {
+          output: {
+            format: 'iife',
+            inlineDynamicImports: true,
+            entryFileNames: 'entry-server.js',
+          },
+        }
+      : undefined,
   },
   css: {
     modules: {
@@ -72,4 +94,5 @@ export default defineConfig({
       },
     },
   },
+  }
 })

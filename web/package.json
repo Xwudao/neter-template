@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsgo -b && vite build",
+    "build": "tsgo -b && vite build && vite build --ssr src/entry-server.tsx",
     "check": "oxlint .",
     "fix": "oxlint --fix --fix-suggestions --fix-dangerously",
     "fmt": "oxfmt --write",

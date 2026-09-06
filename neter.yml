@@ -3,3 +3,4 @@ build:
   stop_copy: true
   tags:
     - prod
+    - use_quickjs

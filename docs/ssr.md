@@ -1,6 +1,6 @@
 # Hybrid SSR
 
-Public TanStack Router routes are rendered by Go through `gotossr`; `/admin` and `/admin/*` remain Vite SPA routes. Go uses memory history to render a crawlable public-page shell, then the Vite bundle mounts the full client application.
+Public TanStack Router routes are rendered by Go through `gotossr`; `/admin` and `/admin/*` remain Vite SPA routes. Vite emits both a browser bundle and a single-file SSR bundle. gotossr evaluates the latter with memory history, while the browser hydrates that exact route tree with browser history.
 
 ## Build and run
 
@@ -9,7 +9,7 @@ make web-build
 go run ./cmd/app
 ```
 
-`make web-build` emits the Vite manifest and assets to `assets/dist`, which are embedded in the Go binary. The SSR engine also evaluates `web/src/ssr.tsx` at runtime, so deploy the `web` source directory alongside the binary.
+`make web-build` emits the Vite browser manifest/assets to `assets/dist` and the single-file server artifact to `assets/ssr/entry-server.js`. `assets/dist` is embedded in the Go binary; deploy `assets/ssr/entry-server.js` alongside it. The server artifact is intentionally external because gotossr must evaluate it at request time.
 
 The current `go.mod` uses the same local `gotossr` checkout as the reference project (`/Users/tim/Codes/ai-project/gotossr`) for its TanStack Router compatibility fixes. Point that `replace` directive at your checkout until those fixes are released upstream.
 
@@ -17,10 +17,10 @@ During frontend development, use `pnpm --dir web dev` for Vite HMR. The Go SSR r
 
 ## Adding an SSR page
 
-Add its server-renderable shell to `web/src/ssr.tsx`; this file deliberately avoids SCSS Modules because gotossr uses esbuild directly. Keep `/admin` routes out of that entry: `internal/routes/ssr.go` always returns the normal Vite SPA shell for `/admin` and `/admin/*`.
+Add a normal file-based TanStack route under `web/src/routes`; do not create a second SSR-only component. The Vite SSR build resolves UnoCSS, SCSS Modules, aliases, and the same route tree used by the browser. Keep `/admin` routes out of SSR: `internal/routes/ssr.go` returns the normal Vite SPA shell for `/admin` and `/admin/*`.
 
 ## Dynamic title, meta, and page data
 
-`internal/routes/ssr.go` resolves `SSRPageData` before calling `RenderRoute`. Its hard-coded `ssrPageDataForPath` entries are working examples: `Title` becomes `<title>`, while `Description` and `Keywords` become named meta tags. The same struct is passed as `RenderConfig.Props` to `web/src/ssr.tsx`.
+`internal/routes/ssr.go` resolves `SSRPageData` before calling `RenderRoute`. `Title` becomes `<title>`, while `Description` and `Keywords` become named meta tags. `FeaturedResource` on `/latest` is the complete data-flow example: Go serializes it into `__SSR_PROPS__`; `SSRDataProvider` supplies it to both `entry-server.tsx` and `main.tsx`; `LatestPage` reads it with `useSSRPageData()`. Hydration therefore sees identical initial data and does not issue a duplicate request.
 
-For database-backed pages, replace that function with a business-layer query using `c.Request.Context()` and route parameters, then pass the queried title, summary, tags, and body data as `Props`. Do this in Go before `RenderRoute`; TanStack client loaders cannot query the database for this SSR integration.
+For database-backed pages, replace the example value with a business-layer query using `c.Request.Context()` and route parameters. For later client navigation, fetch through an API route or a TanStack Router loader; browser-only APIs must not run during SSR.
