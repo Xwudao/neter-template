@@ -15,13 +15,25 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
+# Build artifacts and runtime files
 dist/
 build/
-
-logs
-.idea
-mock.json
-build
-
-# Local application binary
+/tmp/
 /main
+*.log
+*.pid
+coverage.out
+*.prof
+
+# Local environment configuration
+.env
+.env.*
+!.env.example
+
+# OS and editor files
+.DS_Store
+.idea/
+.vscode/
+
+logs/
+mock.json
