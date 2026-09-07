@@ -13,6 +13,7 @@
 test.mp3
 
 /main
+/app-linux
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
