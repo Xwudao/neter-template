@@ -1,29 +1,27 @@
-### Go template
-# Binaries for programs and plugins
+# Go binaries and plugins
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
-
-# Test binary, built with `go test -c`
-*.test
-
-# Local audio test output
-test.mp3
-
 /main
 /app-linux
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
 
-# Dependency directories (remove the comment below to include it)
+# Test artifacts and local test output
+*.test
+*.out
+test.mp3
+
+# Dependency directories
 # vendor/
 
+# Build artifacts
 dist/
 build/
 
-logs
-.idea
+# Local runtime and configuration
+logs/
 mock.json
-build
+
+# IDE files
+.idea/
