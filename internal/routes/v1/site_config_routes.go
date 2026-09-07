@@ -47,7 +47,7 @@ func NewSiteConfigRoute(
 func (r *SiteConfigRoute) Register(router gin.IRouter) {
 	group := router.Group("/v1/site_config")
 	{
-		group.GET("/all", core.NoInput(func(c *gin.Context) (map[string]string, error) { return r.getAll(c, false) }))
+		group.GET("/all", core.NoInputE(func(c *gin.Context) (map[string]string, error) { return r.getAll(c, false) }))
 	}
 	authGroup := router.Group("/auth/v1/site_config").Use(mdw.MustLoginMiddleware())
 	{
@@ -55,7 +55,7 @@ func (r *SiteConfigRoute) Register(router gin.IRouter) {
 	}
 	adminGroup := router.Group("/admin/v1/site_config").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
 	{
-		adminGroup.GET("/all", core.NoInput(func(c *gin.Context) (map[string]string, error) { return r.getAll(c, true) }))
+		adminGroup.GET("/all", core.NoInputE(func(c *gin.Context) (map[string]string, error) { return r.getAll(c, true) }))
 		adminGroup.GET("/gen_sitemap", core.NoInputE(r.genSitemap))
 		adminGroup.POST("/update", core.JSONE(r.update))
 		adminGroup.POST("/write_file", core.JSONE(r.writeFile))
