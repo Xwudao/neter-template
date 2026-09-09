@@ -6,6 +6,8 @@ import (
 	"net/url"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/knadh/koanf/v2"
+	"go.uber.org/zap"
 
 	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/internal/domain/payloads"
@@ -18,7 +20,7 @@ type Data struct {
 	Queries *sqlc.Queries
 }
 
-func NewData(dbConf *payloads.DBConfig) (*Data, func(), error) {
+func NewData(dbConf *payloads.DBConfig, conf *koanf.Koanf, log *zap.SugaredLogger) (*Data, func(), error) {
 	dsn := fmt.Sprintf(
 		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
 		url.QueryEscape(dbConf.Username),
@@ -28,7 +30,16 @@ func NewData(dbConf *payloads.DBConfig) (*Data, func(), error) {
 		url.PathEscape(dbConf.Database),
 	)
 
-	pool, err := pgxpool.New(context.Background(), dsn)
+	poolConfig, err := pgxpool.ParseConfig(dsn)
+	if err != nil {
+		return nil, nil, err
+	}
+	// SQL tracing is restricted to debug mode to avoid noisy production logs.
+	if conf.String("app.mode") == "debug" {
+		poolConfig.ConnConfig.Tracer = sqlTracer{log: log.Named("sql")}
+	}
+
+	pool, err := pgxpool.NewWithConfig(context.Background(), poolConfig)
 	if err != nil {
 		return nil, nil, err
 	}

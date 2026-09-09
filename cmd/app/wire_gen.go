@@ -42,7 +42,7 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	dataData, cleanup, err := data.NewData(dbConfig)
+	dataData, cleanup, err := data.NewData(dbConfig, koanf, sugaredLogger)
 	if err != nil {
 		return nil, nil, err
 	}
