@@ -2,6 +2,7 @@ package libx
 
 import (
 	"bytes"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -25,7 +26,7 @@ func TestS3Client_UploadBytes(t *testing.T) {
 		Username: "",
 		Password: "",
 		Addr:     "http://127.0.0.1:10809",
-	}, &payloads.S3Config{})
+	}, s3TestConfig(t))
 	assert.Nil(t, err)
 	assert.NotNil(t, client)
 
@@ -38,7 +39,7 @@ func TestS3Client_DownloadTo(t *testing.T) {
 		Username: "",
 		Password: "",
 		Addr:     "http://127.0.0.1:10809",
-	}, &payloads.S3Config{})
+	}, s3TestConfig(t))
 	assert.Nil(t, err)
 	assert.NotNil(t, client)
 
@@ -48,4 +49,20 @@ func TestS3Client_DownloadTo(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, "test", buf.String())
+}
+
+// s3TestConfig returns credentials from the environment and skips the test when
+// they are absent, so a fresh clone has a green test suite.
+func s3TestConfig(t *testing.T) *payloads.S3Config {
+	t.Helper()
+	cfg := &payloads.S3Config{
+		AccessKey: os.Getenv("S3_ACCESS_KEY"),
+		SecretKey: os.Getenv("S3_SECRET_KEY"),
+		Endpoint:  os.Getenv("S3_ENDPOINT"),
+		Bucket:    os.Getenv("S3_BUCKET"),
+	}
+	if cfg.AccessKey == "" || cfg.SecretKey == "" {
+		t.Skip("set S3_ACCESS_KEY/S3_SECRET_KEY/S3_ENDPOINT to run the S3 integration test")
+	}
+	return cfg
 }

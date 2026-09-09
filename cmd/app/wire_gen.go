@@ -41,7 +41,7 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	dataData, err := data.NewData(koanf, dbConfig)
+	dataData, cleanup, err := data.NewData(dbConfig)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -49,6 +49,7 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	seoBizBiz := biz.NewSeoBizBiz(sugaredLogger, appContext)
 	engine, err := routes.NewEngine(zapWriter, client, userRepository, koanf, seoBizBiz, sugaredLogger)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	userBiz := biz.NewUserBiz(sugaredLogger, userRepository, client, appContext)
@@ -63,16 +64,19 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	routeRegistry := routes.NewRouteRegistry(userRoute, siteConfigRoute, dataListRoute)
 	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, appContext, routeRegistry)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	cronCron, err := cron.NewCron(sugaredLogger)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	initSystem := system.NewInitSystem(koanf)
 	systemInitBiz := biz.NewSystemInitBiz(sugaredLogger, userRepository, appContext)
-	cmdMainApp, cleanup := cmd.NewMainApp(httpEngine, sugaredLogger, koanf, cronCron, initSystem, systemInitBiz, siteConfigBiz)
+	cmdMainApp, cleanup2 := cmd.NewMainApp(httpEngine, sugaredLogger, koanf, cronCron, initSystem, systemInitBiz, siteConfigBiz)
 	return cmdMainApp, func() {
+		cleanup2()
 		cleanup()
 	}, nil
 }

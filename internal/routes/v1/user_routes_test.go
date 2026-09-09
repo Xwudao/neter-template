@@ -15,7 +15,7 @@ import (
 
 	"github.com/Xwudao/neter-template/internal/biz/mocks"
 	"github.com/Xwudao/neter-template/internal/core"
-	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	v1 "github.com/Xwudao/neter-template/internal/routes/v1"
 )
 
@@ -40,7 +40,7 @@ func TestUserRoute_Login_Success(t *testing.T) {
 	mockBiz := mocks.NewMockUserBizIface(ctrl)
 	mockBiz.EXPECT().
 		Login(gomock.Any(), gomock.Any()).
-		Return(&ent.User{ID: 1}, "test-token", nil)
+		Return(&sqlc.User{ID: 1}, "test-token", nil)
 
 	g := newTestUserRoute(t, mockBiz)
 

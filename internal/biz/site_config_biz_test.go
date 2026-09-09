@@ -14,7 +14,7 @@ import (
 
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/biz/mocks"
-	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/internal/domain/models"
 	"github.com/Xwudao/neter-template/internal/domain/params"
 	"github.com/Xwudao/neter-template/internal/system"
@@ -50,7 +50,7 @@ func TestSiteConfigBiz_Init_CreatesMissingKeys(t *testing.T) {
 	// Both site_info and seo_config should be created.
 	mockRepo.EXPECT().
 		Create(gomock.Any(), gomock.Any()).
-		Return(&ent.SiteConfig{ID: 1}, nil).
+		Return(&sqlc.SiteConfig{ID: 1}, nil).
 		Times(2)
 
 	b := newTestSiteConfigBiz(t, mockRepo)
@@ -71,7 +71,7 @@ func TestSiteConfigBiz_Init_SkipsExistingKeys(t *testing.T) {
 
 	mockRepo.EXPECT().
 		Create(gomock.Any(), gomock.Any()).
-		Return(&ent.SiteConfig{ID: 2}, nil).
+		Return(&sqlc.SiteConfig{ID: 2}, nil).
 		Times(1)
 
 	b := newTestSiteConfigBiz(t, mockRepo)
@@ -103,7 +103,7 @@ func TestSiteConfigBiz_GetConfig_FromRepo(t *testing.T) {
 	mockRepo := mocks.NewMockSiteConfigRepository(ctrl)
 	mockRepo.EXPECT().
 		GetByName(gomock.Any(), string(enum.ConfigKeySiteInfo)).
-		Return(&ent.SiteConfig{
+		Return(&sqlc.SiteConfig{
 			ID:         1,
 			Name:       string(enum.ConfigKeySiteInfo),
 			Config:     configJSON,
@@ -131,7 +131,7 @@ func TestSiteConfigBiz_GetConfig_CacheHit(t *testing.T) {
 	// GetByName must be called exactly once; the second call should use the cache.
 	mockRepo.EXPECT().
 		GetByName(gomock.Any(), string(enum.ConfigKeySiteInfo)).
-		Return(&ent.SiteConfig{
+		Return(&sqlc.SiteConfig{
 			ID:     1,
 			Name:   string(enum.ConfigKeySiteInfo),
 			Config: configJSON,
@@ -217,7 +217,7 @@ func TestSiteConfigBiz_GetAll_Admin(t *testing.T) {
 	mockRepo := mocks.NewMockSiteConfigRepository(ctrl)
 	mockRepo.EXPECT().
 		GetAll(gomock.Any()).
-		Return([]*ent.SiteConfig{
+		Return([]*sqlc.SiteConfig{
 			{ID: 1, Name: string(enum.ConfigKeySiteInfo), Config: `{}`},
 			{ID: 2, Name: string(enum.ConfigKeySeoConfig), Config: `{}`},
 		}, nil)

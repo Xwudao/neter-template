@@ -8,8 +8,7 @@ import (
 
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/core"
-	"github.com/Xwudao/neter-template/internal/data/ent"
-	"github.com/Xwudao/neter-template/internal/data/ent/user"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/internal/domain/params"
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
 )
@@ -32,8 +31,8 @@ func NewDataListRoute(dlb biz.DataListBizIface, log *zap.SugaredLogger, conf *ko
 }
 
 type DataListPageResponse struct {
-	List  []*ent.DataList `json:"list"`
-	Total int             `json:"total"`
+	List  []*sqlc.DataList `json:"list"`
+	Total int              `json:"total"`
 }
 
 func (r *DataListRoute) Register(router gin.IRouter) {
@@ -48,7 +47,7 @@ func (r *DataListRoute) Register(router gin.IRouter) {
 		// authGroup.GET("/auth", core.NoInputE(r.dataList))
 		_ = authGroup
 	}
-	adminGroup := router.Group("/admin/v1/data_list").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
+	adminGroup := router.Group("/admin/v1/data_list").Use(mdw.MustWithRoleMiddleware(sqlc.UserRoleAdmin))
 	{
 		adminGroup.GET("/list", core.RequestE(r.list))
 		adminGroup.GET("/sort_data", core.RequestE(r.sortData))
@@ -71,7 +70,7 @@ func (r *DataListRoute) list(c *gin.Context, pm *params.ListDataByKindParams) (D
 	return DataListPageResponse{List: data, Total: total}, nil
 }
 
-func (r *DataListRoute) create(c *gin.Context, pm *params.CreateDataListParams) (*ent.DataList, error) {
+func (r *DataListRoute) create(c *gin.Context, pm *params.CreateDataListParams) (*sqlc.DataList, error) {
 	data, err := r.dlb.Create(c.Request.Context(), pm)
 	if err != nil {
 		return nil, err
@@ -86,7 +85,7 @@ func (r *DataListRoute) delete(c *gin.Context, pm *params.DeleteIDParams) (*core
 	return nil, nil
 }
 
-func (r *DataListRoute) update(c *gin.Context, pm *params.UpdateDataListParams) (*ent.DataList, error) {
+func (r *DataListRoute) update(c *gin.Context, pm *params.UpdateDataListParams) (*sqlc.DataList, error) {
 	data, err := r.dlb.Update(c.Request.Context(), pm)
 	if err != nil {
 		return nil, err
@@ -94,7 +93,7 @@ func (r *DataListRoute) update(c *gin.Context, pm *params.UpdateDataListParams) 
 	return data, nil
 }
 
-func (r *DataListRoute) sortData(c *gin.Context, pm *params.GetDataListSortDataParams) ([]*ent.DataList, error) {
+func (r *DataListRoute) sortData(c *gin.Context, pm *params.GetDataListSortDataParams) ([]*sqlc.DataList, error) {
 	data, err := r.dlb.GetSortData(c.Request.Context(), pm)
 	if err != nil {
 		return nil, err

@@ -6,7 +6,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/internal/domain/params"
 	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/utils/bcrypt"
@@ -14,11 +14,11 @@ import (
 )
 
 type UserRepository interface {
-	GetAll(ctx context.Context) ([]*ent.User, error)
+	GetAll(ctx context.Context) ([]*sqlc.User, error)
 	DeleteByID(ctx context.Context, id int64) error
-	GetByID(ctx context.Context, id int64) (*ent.User, error)
-	GetBy(ctx context.Context, p *params.GetUserByParams) (*ent.User, error)
-	Create(ctx context.Context, p *params.CreateUserParams) (*ent.User, error)
+	GetByID(ctx context.Context, id int64) (*sqlc.User, error)
+	GetBy(ctx context.Context, p *params.GetUserByParams) (*sqlc.User, error)
+	Create(ctx context.Context, p *params.CreateUserParams) (*sqlc.User, error)
 }
 
 type UserBiz struct {
@@ -45,16 +45,16 @@ func (h *UserBiz) Delete(ctx context.Context, id int64) error {
 	return h.ur.DeleteByID(ctx, id)
 }
 
-func (h *UserBiz) Get(ctx context.Context, id int64) (*ent.User, error) {
+func (h *UserBiz) Get(ctx context.Context, id int64) (*sqlc.User, error) {
 	return h.ur.GetByID(ctx, id)
 }
 
-func (h *UserBiz) GetBy(ctx context.Context, p *params.GetUserByParams) (*ent.User, error) {
+func (h *UserBiz) GetBy(ctx context.Context, p *params.GetUserByParams) (*sqlc.User, error) {
 	return h.ur.GetBy(ctx, p)
 }
 
 // Login 登录
-func (h *UserBiz) Login(ctx context.Context, p *params.UserLoginParams) (*ent.User, string, error) {
+func (h *UserBiz) Login(ctx context.Context, p *params.UserLoginParams) (*sqlc.User, string, error) {
 	us, err := h.ur.GetBy(ctx, &params.GetUserByParams{Username: p.Username})
 	if err != nil {
 		return nil, "", err
@@ -73,7 +73,7 @@ func (h *UserBiz) Login(ctx context.Context, p *params.UserLoginParams) (*ent.Us
 	return us, token, nil
 }
 
-func (h *UserBiz) Create(ctx context.Context, p *params.CreateUserParams) (*ent.User, error) {
+func (h *UserBiz) Create(ctx context.Context, p *params.CreateUserParams) (*sqlc.User, error) {
 
 	generatePassword, err := bcrypt.GeneratePassword(p.Password)
 	if err != nil {
@@ -84,6 +84,6 @@ func (h *UserBiz) Create(ctx context.Context, p *params.CreateUserParams) (*ent.
 	return h.ur.Create(ctx, p)
 }
 
-func (h *UserBiz) GetAll(ctx context.Context) ([]*ent.User, error) {
+func (h *UserBiz) GetAll(ctx context.Context) ([]*sqlc.User, error) {
 	return h.ur.GetAll(ctx)
 }

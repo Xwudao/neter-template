@@ -3,46 +3,40 @@ package data
 import (
 	"context"
 	"fmt"
+	"net/url"
 
-	"github.com/gin-gonic/gin"
-	"github.com/knadh/koanf/v2"
+	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/internal/domain/payloads"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
+// Data owns the PostgreSQL connection pool and sqlc query set. Repositories
+// depend on this small facade rather than opening database connections directly.
 type Data struct {
-	Client *ent.Client
+	Pool    *pgxpool.Pool
+	Queries *sqlc.Queries
 }
 
-func NewData(conf *koanf.Koanf, dbConf *payloads.DBConfig) (*Data, error) {
-	isDebug := conf.String("app.mode") == gin.DebugMode
-
+func NewData(dbConf *payloads.DBConfig) (*Data, func(), error) {
 	dsn := fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?parseTime=True",
-		dbConf.Username,
-		dbConf.Password,
+		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
+		url.QueryEscape(dbConf.Username),
+		url.QueryEscape(dbConf.Password),
 		dbConf.Host,
 		dbConf.Port,
-		dbConf.Database,
+		url.PathEscape(dbConf.Database),
 	)
 
-	client, err := ent.Open(dbConf.Dialect, dsn)
+	pool, err := pgxpool.New(context.Background(), dsn)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
+	}
+	if err := pool.Ping(context.Background()); err != nil {
+		pool.Close()
+		return nil, nil, err
 	}
 
-	if dbConf.AutoMigrate {
-		if err = client.Schema.Create(context.Background()); err != nil {
-			return nil, err
-		}
-	}
-
-	if isDebug {
-		client = client.Debug()
-	}
-
-	return &Data{Client: client}, nil
+	data := &Data{Pool: pool, Queries: sqlc.New(pool)}
+	return data, pool.Close, nil
 }

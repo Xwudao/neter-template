@@ -13,7 +13,7 @@ import (
 
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/biz/mocks"
-	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/internal/domain/params"
 	"github.com/Xwudao/neter-template/internal/system"
 )
@@ -25,8 +25,8 @@ func newTestDataListBiz(t *testing.T, dlr biz.DataListRepository) *biz.DataListB
 	return biz.NewDataListBiz(log, dlr, appCtx)
 }
 
-func newDataList(id int64, kind, key, value string) *ent.DataList {
-	return &ent.DataList{
+func newDataList(id int64, kind, key, value string) *sqlc.DataList {
+	return &sqlc.DataList{
 		ID:         id,
 		Kind:       kind,
 		Key:        key,
@@ -54,7 +54,7 @@ func TestDataListBiz_Create_Success(t *testing.T) {
 	mockRepo := mocks.NewMockDataListRepository(ctrl)
 	mockRepo.EXPECT().
 		Create(gomock.Any(), gomock.AssignableToTypeOf(&params.CreateDataListParams{})).
-		DoAndReturn(func(_ context.Context, got *params.CreateDataListParams) (*ent.DataList, error) {
+		DoAndReturn(func(_ context.Context, got *params.CreateDataListParams) (*sqlc.DataList, error) {
 			assert.Equal(t, 1, got.ItemOrder, "Optimize() should set ItemOrder to 1")
 			return want, nil
 		})
@@ -139,7 +139,7 @@ func TestDataListBiz_Update(t *testing.T) {
 func TestDataListBiz_GetAll(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
-	items := []*ent.DataList{
+	items := []*sqlc.DataList{
 		newDataList(1, "a", "k1", "v1"),
 		newDataList(2, "b", "k2", "v2"),
 	}
@@ -161,12 +161,12 @@ func TestDataListBiz_ListByKind(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
 	p := &params.ListDataByKindParams{Kind: "friend_link", Page: 2, Size: 10}
-	wantItems := []*ent.DataList{newDataList(1, "friend_link", "k", "v")}
+	wantItems := []*sqlc.DataList{newDataList(1, "friend_link", "k", "v")}
 
 	mockRepo := mocks.NewMockDataListRepository(ctrl)
 	mockRepo.EXPECT().
 		ListByKind(gomock.Any(), gomock.AssignableToTypeOf(&params.ListDataByKindParams{})).
-		DoAndReturn(func(_ context.Context, got *params.ListDataByKindParams) ([]*ent.DataList, int, error) {
+		DoAndReturn(func(_ context.Context, got *params.ListDataByKindParams) ([]*sqlc.DataList, int, error) {
 			assert.Equal(t, 10, got.Offset, "Optimize() should compute Offset = (Page-1)*Size")
 			return wantItems, 1, nil
 		})
@@ -184,7 +184,7 @@ func TestDataListBiz_GetAllByKinds(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
 	p := &params.GetAllDataListByKindsParams{Kinds: []string{"friend_link", "nav"}}
-	items := []*ent.DataList{
+	items := []*sqlc.DataList{
 		newDataList(1, "friend_link", "k1", "v1"),
 		newDataList(2, "nav", "k2", "v2"),
 	}
@@ -206,7 +206,7 @@ func TestDataListBiz_GetSortData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
 	p := &params.GetDataListSortDataParams{Kind: "friend_link"}
-	items := []*ent.DataList{
+	items := []*sqlc.DataList{
 		newDataList(1, "friend_link", "k1", "v1"),
 		newDataList(2, "friend_link", "k2", "v2"),
 	}

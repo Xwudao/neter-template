@@ -21,6 +21,9 @@ export default defineConfig({
       '@': resolve('src'),
     },
   },
+  build: {
+    manifest: true,
+  },
   plugins: [
     tanstackRouter({
       target: 'react',

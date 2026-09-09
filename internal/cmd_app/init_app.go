@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/knadh/koanf/parsers/yaml"
+	"github.com/Xwudao/neter-template/pkg/config"
 )
 
 type InitApp struct {

@@ -1,14 +1,14 @@
 package params
 
 import (
-	"github.com/Xwudao/neter-template/internal/data/ent/user"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/internal/validate"
 )
 
 type CreateUserParams struct {
-	Username string    `json:"username"`
-	Password string    `json:"password"`
-	Role     user.Role `json:"-"`
+	Username string        `json:"username"`
+	Password string        `json:"password"`
+	Role     sqlc.UserRole `json:"-"`
 }
 
 func (c *CreateUserParams) Validate() error {

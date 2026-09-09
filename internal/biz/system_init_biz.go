@@ -1,10 +1,11 @@
 package biz
 
 import (
-	"go.uber.org/zap"
+	"errors"
 
-	"github.com/Xwudao/neter-template/internal/data/ent"
-	"github.com/Xwudao/neter-template/internal/data/ent/user"
+	"github.com/jackc/pgx/v5"
+	"go.uber.org/zap"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/internal/domain/params"
 	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/utils"
@@ -34,11 +35,11 @@ func (h *SystemInitBiz) AddAdminUser() error {
 	}
 
 	_, err = h.ur.GetByID(h.appCtx.Ctx, 1)
-	if err != nil && ent.IsNotFound(err) {
+	if errors.Is(err, pgx.ErrNoRows) {
 		_, err = h.ur.Create(h.appCtx.Ctx, &params.CreateUserParams{
 			Username: "admin",
 			Password: password,
-			Role:     user.RoleAdmin,
+			Role:     sqlc.UserRoleAdmin,
 		})
 		if err != nil {
 			return err

@@ -11,13 +11,11 @@ type JwtConfig struct {
 }
 
 type DBConfig struct {
-	Host        string `json:"host" koanf:"host"`
-	Port        int    `json:"port" koanf:"port"`
-	Dialect     string `json:"dialect" koanf:"dialect"`
-	Username    string `json:"username" koanf:"username"`
-	Password    string `json:"password" koanf:"password"`
-	Database    string `json:"database" koanf:"database"`
-	AutoMigrate bool   `json:"autoMigrate" koanf:"autoMigrate"`
+	Host     string `json:"host" koanf:"host"`
+	Port     int    `json:"port" koanf:"port"`
+	Username string `json:"username" koanf:"username"`
+	Password string `json:"password" koanf:"password"`
+	Database string `json:"database" koanf:"database"`
 }
 
 type CorsConfig struct {

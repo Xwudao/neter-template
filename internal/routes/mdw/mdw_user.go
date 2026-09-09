@@ -9,8 +9,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/Xwudao/neter-template/internal/biz"
-	"github.com/Xwudao/neter-template/internal/data/ent"
-	"github.com/Xwudao/neter-template/internal/data/ent/user"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/pkg/enum"
 	"github.com/Xwudao/neter-template/pkg/utils/jwt"
 )
@@ -90,7 +89,7 @@ func MustLoginMiddleware() gin.HandlerFunc {
 	}
 }
 
-func MustWithRoleMiddleware(needRole user.Role) gin.HandlerFunc {
+func MustWithRoleMiddleware(needRole sqlc.UserRole) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		u, exists := c.Get(enum.KeyUserInfo)
 		if !exists {
@@ -105,7 +104,7 @@ func MustWithRoleMiddleware(needRole user.Role) gin.HandlerFunc {
 			return
 		}
 
-		userInfo := u.(*ent.User)
+		userInfo := u.(*sqlc.User)
 		if userInfo.Role != needRole {
 			c.AbortWithStatusJSON(
 				http.StatusForbidden,

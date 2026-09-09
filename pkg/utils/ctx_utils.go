@@ -6,8 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/Xwudao/neter-template/internal/data/ent"
-	"github.com/Xwudao/neter-template/internal/data/ent/user"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/pkg/enum"
 )
 
@@ -51,19 +50,19 @@ func IsAdmin(c *gin.Context) bool {
 		return false
 	}
 
-	userInfo := u.(*ent.User)
+	userInfo := u.(*sqlc.User)
 
-	return userInfo.Role == user.RoleAdmin
+	return userInfo.Role == sqlc.UserRoleAdmin
 }
 
 // User 获取用户信息，可能为nil
-func User(c *gin.Context) *ent.User {
+func User(c *gin.Context) *sqlc.User {
 	vl, exists := c.Get(enum.KeyUserInfo)
 	if !exists {
 		return nil
 	}
 
-	return vl.(*ent.User)
+	return vl.(*sqlc.User)
 }
 
 func UserID(c *gin.Context) int64 {
@@ -72,7 +71,7 @@ func UserID(c *gin.Context) int64 {
 		return 0
 	}
 
-	userInfo := u.(*ent.User)
+	userInfo := u.(*sqlc.User)
 
 	return userInfo.ID
 }

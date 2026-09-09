@@ -3,6 +3,7 @@ package mdw
 import (
 	"io"
 	"io/fs"
+	"log"
 	"mime"
 	"net/http"
 	"os"
@@ -55,12 +56,15 @@ func NewSpaMdw(fsData fs.FS, target string, modifier IndexModifier) (*SpaMdw, er
 	return sm, nil
 }
 
-// parseManifest validates the embedded Vite bundle at startup.
+// parseManifest validates the embedded Vite bundle at startup. A missing
+// manifest is not fatal: the backend can run before the frontend has been
+// built, and the SPA handler already degrades to 404 until assets exist.
 func (m *SpaMdw) parseManifest() error {
 	fd := EmbedFolder(m.fsData, m.target)
 	manifest, err := readEmbedFile(fd, ".vite/manifest.json")
 	if err != nil {
-		return err
+		log.Printf("warning: embedded SPA manifest not found (%v); run `nr run --web` or `nr build --web` to build the frontend", err)
+		return nil
 	}
 	_, err = libx.ParseManifestString(string(manifest))
 	return err

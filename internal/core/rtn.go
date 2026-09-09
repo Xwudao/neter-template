@@ -6,8 +6,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-
-	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/jackc/pgx/v5"
 	"github.com/Xwudao/neter-template/internal/domain/errs"
 	"github.com/Xwudao/neter-template/internal/validate"
 )
@@ -55,9 +54,9 @@ func NewRtnWithErr(err error) *RtnStatus {
 	switch {
 	case errors.As(err, &businessErr):
 		msg = businessErr.Message
-	case ent.IsNotFound(err):
+	case errors.Is(err, pgx.ErrNoRows):
 		msg = "记录不存在"
-	case strings.Contains(msg, "Duplicate entry"):
+	case strings.Contains(msg, "Duplicate entry") || strings.Contains(msg, "duplicate key"):
 		return &RtnStatus{
 			Code:    CodeError,
 			Message: "资源已存在",

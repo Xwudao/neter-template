@@ -10,13 +10,11 @@ cors:
     - 127.0.0.1
   maxAge: 24h
 db:
-  database: nr-demo
-  dialect: mysql
-  host: 192.168.1.10
-  username: root
-  password: 123456
-  port: 3306
-  autoMigrate: true
+  database: neter
+  host: 127.0.0.1
+  username: postgres
+  password: postgres
+  port: 5432
 jwt:
   secret: thisstringmustbeverylongandrandom
   expire: 24h
@@ -28,7 +26,7 @@ log:
   path: ./logs
 
 redis:
-  addr: 192.168.1.10:6379
+  addr: 127.0.0.1:6379
   db: 0
   password: ""
   prefix: ""

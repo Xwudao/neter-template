@@ -4,10 +4,10 @@
 package cmd_app
 
 import (
+	"github.com/google/wire"
 	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/config"
 	"github.com/Xwudao/neter-template/pkg/logger"
-	"github.com/google/wire"
 )
 
 func MigrateCmd() (*MigrateApp, func(), error) {

@@ -13,7 +13,7 @@ import (
 
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/biz/mocks"
-	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/internal/domain/params"
 	"github.com/Xwudao/neter-template/internal/domain/payloads"
 	"github.com/Xwudao/neter-template/internal/system"
@@ -45,7 +45,7 @@ func TestUserBiz_Login_Success(t *testing.T) {
 	hashedPwd, err := bcrypt.GeneratePassword("password123")
 	require.NoError(t, err)
 
-	mockUser := &ent.User{ID: 1, Username: "admin", Password: hashedPwd}
+	mockUser := &sqlc.User{ID: 1, Username: "admin", Password: hashedPwd}
 
 	mockRepo := mocks.NewMockUserRepository(ctrl)
 	mockRepo.EXPECT().
@@ -93,7 +93,7 @@ func TestUserBiz_Login_WrongPassword(t *testing.T) {
 	mockRepo := mocks.NewMockUserRepository(ctrl)
 	mockRepo.EXPECT().
 		GetBy(gomock.Any(), gomock.Any()).
-		Return(&ent.User{ID: 1, Username: "admin", Password: hashedPwd}, nil)
+		Return(&sqlc.User{ID: 1, Username: "admin", Password: hashedPwd}, nil)
 
 	b := newTestUserBiz(t, mockRepo)
 	_, _, err = b.Login(context.Background(), &params.UserLoginParams{
@@ -110,7 +110,7 @@ func TestUserBiz_Create(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
 	p := &params.CreateUserParams{Username: "newuser", Password: "secret"}
-	want := &ent.User{ID: 2, Username: "newuser"}
+	want := &sqlc.User{ID: 2, Username: "newuser"}
 
 	mockRepo := mocks.NewMockUserRepository(ctrl)
 	// Password is hashed before forwarding, so use Any() for the repo call.
@@ -148,7 +148,7 @@ func TestUserBiz_Create_RepoError(t *testing.T) {
 func TestUserBiz_Get(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
-	want := &ent.User{ID: 5, Username: "alice"}
+	want := &sqlc.User{ID: 5, Username: "alice"}
 
 	mockRepo := mocks.NewMockUserRepository(ctrl)
 	mockRepo.EXPECT().
@@ -182,7 +182,7 @@ func TestUserBiz_GetBy(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
 	p := &params.GetUserByParams{Username: "bob"}
-	want := &ent.User{ID: 7, Username: "bob"}
+	want := &sqlc.User{ID: 7, Username: "bob"}
 
 	mockRepo := mocks.NewMockUserRepository(ctrl)
 	mockRepo.EXPECT().

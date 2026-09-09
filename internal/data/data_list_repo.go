@@ -3,11 +3,11 @@ package data
 import (
 	"context"
 
-	"entgo.io/ent/dialect/sql"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgtype"
 
 	"github.com/Xwudao/neter-template/internal/biz"
-	"github.com/Xwudao/neter-template/internal/data/ent"
-	"github.com/Xwudao/neter-template/internal/data/ent/datalist"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/internal/domain/params"
 	"github.com/Xwudao/neter-template/internal/system"
 )
@@ -20,77 +20,76 @@ type dataListRepository struct {
 }
 
 func NewDataListRepository(appCtx *system.AppContext, data *Data) biz.DataListRepository {
-	return &dataListRepository{
-		appCtx: appCtx,
-		data:   data,
-	}
+	return &dataListRepository{appCtx: appCtx, data: data}
 }
 
-func (u *dataListRepository) GetAll(ctx context.Context) ([]*ent.DataList, error) {
-	return u.data.Client.DataList.Query().All(ctx)
+func (u *dataListRepository) GetAll(ctx context.Context) ([]*sqlc.DataList, error) {
+	return u.data.Queries.ListDataLists(ctx, "")
 }
 
 func (u *dataListRepository) DeleteByID(ctx context.Context, id int64) error {
-	return u.data.Client.DataList.DeleteOneID(id).Exec(ctx)
+	_, err := u.data.Queries.DeleteDataList(ctx, id)
+	return err
 }
 
-func (u *dataListRepository) GetByID(ctx context.Context, id int64) (*ent.DataList, error) {
-	return u.data.Client.DataList.Get(ctx, id)
+func (u *dataListRepository) GetByID(ctx context.Context, id int64) (*sqlc.DataList, error) {
+	return u.data.Queries.GetDataList(ctx, id)
 }
 
-// GetSortData 获取排序的字段id,name
-func (u *dataListRepository) GetSortData(ctx context.Context, p *params.GetDataListSortDataParams) ([]*ent.DataList, error) {
-	var builder = u.data.Client.DataList.Query().Where(datalist.KindEQ(p.Kind)).
-		Order(datalist.ByItemOrder(sql.OrderDesc()))
-
-	return builder.All(ctx)
+func (u *dataListRepository) GetSortData(ctx context.Context, p *params.GetDataListSortDataParams) ([]*sqlc.DataList, error) {
+	return u.data.Queries.ListDataListSortData(ctx, p.Kind)
 }
 
-func (u *dataListRepository) Create(ctx context.Context, p *params.CreateDataListParams) (*ent.DataList, error) {
-	return u.data.Client.DataList.Create().SetItemOrder(p.ItemOrder).SetKey(p.Key).SetKind(p.Kind).
-		SetValue(p.Value).SetLabel(p.Label).
-		Save(ctx)
+func (u *dataListRepository) Create(ctx context.Context, p *params.CreateDataListParams) (*sqlc.DataList, error) {
+	return u.data.Queries.CreateDataList(ctx, sqlc.CreateDataListParams{
+		Label: p.Label, Kind: p.Kind, Key: p.Key, Value: p.Value, ItemOrder: int32(p.ItemOrder),
+	})
 }
 
-func (u *dataListRepository) Update(ctx context.Context, p *params.UpdateDataListParams) (*ent.DataList, error) {
-	return u.data.Client.DataList.UpdateOneID(p.ID).SetKey(p.Key).SetNillableItemOrder(p.ItemOrder).
-		SetValue(p.Value).Save(ctx)
+func (u *dataListRepository) Update(ctx context.Context, p *params.UpdateDataListParams) (*sqlc.DataList, error) {
+	itemOrder := pgtype.Int4{}
+	if p.ItemOrder != nil {
+		itemOrder = pgtype.Int4{Int32: int32(*p.ItemOrder), Valid: true}
+	}
+	return u.data.Queries.UpdateDataList(ctx, sqlc.UpdateDataListParams{
+		ID: p.ID, Key: p.Key, Value: p.Value, ItemOrder: itemOrder,
+	})
 }
 
-// GetAllByKinds 根据Kind查询
-func (u *dataListRepository) GetAllByKinds(ctx context.Context, p *params.GetAllDataListByKindsParams) ([]*ent.DataList, error) {
-	var builder = u.data.Client.DataList.Query().Where(datalist.KindIn(p.Kinds...))
-
+func (u *dataListRepository) GetAllByKinds(ctx context.Context, p *params.GetAllDataListByKindsParams) ([]*sqlc.DataList, error) {
 	switch p.ByOrder {
 	case "asc":
-		builder.Order(datalist.ByItemOrder())
+		return u.data.Queries.ListDataListsByKindsAsc(ctx, p.Kinds)
 	case "desc":
-		builder.Order(datalist.ByItemOrder(sql.OrderDesc()))
+		return u.data.Queries.ListDataListsByKindsDesc(ctx, p.Kinds)
+	default:
+		return u.data.Queries.ListDataListsByKinds(ctx, p.Kinds)
 	}
-
-	return builder.All(ctx)
 }
 
-// ListByKind 根据Kind查询
-func (u *dataListRepository) ListByKind(ctx context.Context, p *params.ListDataByKindParams) ([]*ent.DataList, int, error) {
-	var builder = u.data.Client.DataList.Query()
-
-	if p.Kind != "" {
-		builder.Where(datalist.KindEQ(p.Kind))
+func (u *dataListRepository) ListByKind(ctx context.Context, p *params.ListDataByKindParams) ([]*sqlc.DataList, int, error) {
+	total, err := u.data.Queries.CountDataListsByKind(ctx, p.Kind)
+	if err != nil {
+		return nil, 0, err
 	}
-
-	var total = builder.CountX(ctx)
-
-	rtn, err := builder.Offset(p.Offset).Limit(p.Size).All(ctx)
-	return rtn, total, err
+	items, err := u.data.Queries.ListDataListsByKindPage(ctx, sqlc.ListDataListsByKindPageParams{
+		Kind: p.Kind, PageOffset: int32(p.Offset), PageSize: int32(p.Size),
+	})
+	return items, int(total), err
 }
 
 func (u *dataListRepository) UpdateOrder(ctx context.Context, p *params.ItemOrderParams) error {
+	tx, err := u.data.Pool.BeginTx(ctx, pgx.TxOptions{})
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	queries := u.data.Queries.WithTx(tx)
 	for i, id := range p.IDs {
-		if _, err := u.data.Client.DataList.UpdateOneID(id).SetItemOrder(p.Orders[i]).Save(ctx); err != nil {
+		if _, err = queries.UpdateDataListOrder(ctx, sqlc.UpdateDataListOrderParams{ID: id, ItemOrder: int32(p.Orders[i])}); err != nil {
 			return err
 		}
 	}
-
-	return nil
+	return tx.Commit(ctx)
 }

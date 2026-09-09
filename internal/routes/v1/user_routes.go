@@ -6,8 +6,7 @@ import (
 
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/core"
-	"github.com/Xwudao/neter-template/internal/data/ent"
-	"github.com/Xwudao/neter-template/internal/data/ent/user"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/internal/domain/params"
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
 	"github.com/Xwudao/neter-template/pkg/utils"
@@ -28,8 +27,8 @@ func NewUserRoute(uz biz.UserBizIface, conf *koanf.Koanf) *UserRoute {
 }
 
 type UserLoginResponse struct {
-	User  *ent.User `json:"user"`
-	Token string    `json:"token"`
+	User  *sqlc.User `json:"user"`
+	Token string     `json:"token"`
 }
 
 func (r *UserRoute) Register(router gin.IRouter) {
@@ -44,7 +43,7 @@ func (r *UserRoute) Register(router gin.IRouter) {
 	{
 		authGroup.GET("/info", core.NoInputE(r.info))
 	}
-	adminGroup := router.Group("/admin/v1/user").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
+	adminGroup := router.Group("/admin/v1/user").Use(mdw.MustWithRoleMiddleware(sqlc.UserRoleAdmin))
 	{
 		_ = adminGroup
 	}
@@ -62,6 +61,6 @@ func (r *UserRoute) login(c *gin.Context, pm *params.UserLoginParams) (UserLogin
 	return UserLoginResponse{User: u, Token: token}, nil
 }
 
-func (r *UserRoute) info(c *gin.Context) (*ent.User, error) {
+func (r *UserRoute) info(c *gin.Context) (*sqlc.User, error) {
 	return utils.User(c), nil
 }

@@ -12,9 +12,9 @@ package mocks
 import (
 	reflect "reflect"
 
-	models "github.com/Xwudao/neter-template/internal/domain/models"
 	gin "github.com/gin-gonic/gin"
 	gomock "go.uber.org/mock/gomock"
+	models "github.com/Xwudao/neter-template/internal/domain/models"
 )
 
 // MockHtmlHelpBizIface is a mock of HtmlHelpBizIface interface.

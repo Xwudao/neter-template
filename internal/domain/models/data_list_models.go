@@ -3,7 +3,7 @@ package models
 import (
 	json "github.com/json-iterator/go"
 
-	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 )
 
 //type DataListBase struct {
@@ -39,7 +39,7 @@ type DataLink struct {
 	Enable    bool   `json:"enable"`
 }
 
-func UnmarshalDataList[T any](arr []*ent.DataList, kind string) []T {
+func UnmarshalDataList[T any](arr []*sqlc.DataList, kind string) []T {
 	var res []T
 	for _, v := range arr {
 		if v.Kind != kind {

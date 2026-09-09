@@ -1,9 +1,9 @@
 package core
 
 import (
-	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/knadh/koanf/v2"
 	"go.uber.org/zap"
+	"github.com/Xwudao/neter-template/internal/system"
 )
 
 // type App struct {

@@ -4,12 +4,12 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 )
 
 func TestUnmarshalDataList(t *testing.T) {
 	type args struct {
-		arr  []*ent.DataList
+		arr  []*sqlc.DataList
 		kind string
 	}
 	type testCase[T any] struct {
@@ -21,7 +21,7 @@ func TestUnmarshalDataList(t *testing.T) {
 		{
 			name: "case1",
 			args: args{
-				arr: []*ent.DataList{
+				arr: []*sqlc.DataList{
 					{
 						Value: `{"name":"test","link":"http://test.com","open_blank":true,"enable":true}`,
 						Label: `友链`,

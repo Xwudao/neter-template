@@ -11,7 +11,7 @@ import (
 
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/core"
-	"github.com/Xwudao/neter-template/internal/data/ent/user"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/internal/domain/params"
 	"github.com/Xwudao/neter-template/internal/libx"
 	"github.com/Xwudao/neter-template/internal/routes/mdw"
@@ -53,7 +53,7 @@ func (r *SiteConfigRoute) Register(router gin.IRouter) {
 	{
 		_ = authGroup
 	}
-	adminGroup := router.Group("/admin/v1/site_config").Use(mdw.MustWithRoleMiddleware(user.RoleAdmin))
+	adminGroup := router.Group("/admin/v1/site_config").Use(mdw.MustWithRoleMiddleware(sqlc.UserRoleAdmin))
 	{
 		adminGroup.GET("/all", core.NoInputE(func(c *gin.Context) (map[string]string, error) { return r.getAll(c, true) }))
 		adminGroup.GET("/gen_sitemap", core.NoInputE(r.genSitemap))

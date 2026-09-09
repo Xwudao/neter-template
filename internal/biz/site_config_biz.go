@@ -7,7 +7,7 @@ import (
 	json "github.com/json-iterator/go"
 	"go.uber.org/zap"
 
-	"github.com/Xwudao/neter-template/internal/data/ent"
+	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/internal/domain/models"
 	"github.com/Xwudao/neter-template/internal/domain/params"
 	"github.com/Xwudao/neter-template/internal/system"
@@ -16,12 +16,12 @@ import (
 )
 
 type SiteConfigRepository interface {
-	GetAll(ctx context.Context) ([]*ent.SiteConfig, error)
+	GetAll(ctx context.Context) ([]*sqlc.SiteConfig, error)
 	GetNames(ctx context.Context) ([]string, error)
-	GetByName(ctx context.Context, name string) (*ent.SiteConfig, error)
+	GetByName(ctx context.Context, name string) (*sqlc.SiteConfig, error)
 	DeleteByID(ctx context.Context, id int64) error
-	GetByID(ctx context.Context, id int64) (*ent.SiteConfig, error)
-	Create(ctx context.Context, p *params.CreateSiteConfigParams) (*ent.SiteConfig, error)
+	GetByID(ctx context.Context, id int64) (*sqlc.SiteConfig, error)
+	Create(ctx context.Context, p *params.CreateSiteConfigParams) (*sqlc.SiteConfig, error)
 	Update(ctx context.Context, p *params.UpdateSiteConfigParams) (int, error)
 }
 
@@ -108,11 +108,11 @@ func (h *SiteConfigBiz) Delete(ctx context.Context, id int64) error {
 	return h.scr.DeleteByID(ctx, id)
 }
 
-func (h *SiteConfigBiz) Get(ctx context.Context, id int64) (*ent.SiteConfig, error) {
+func (h *SiteConfigBiz) Get(ctx context.Context, id int64) (*sqlc.SiteConfig, error) {
 	return h.scr.GetByID(ctx, id)
 }
 
-func (h *SiteConfigBiz) Create(ctx context.Context, p *params.CreateSiteConfigParams) (*ent.SiteConfig, error) {
+func (h *SiteConfigBiz) Create(ctx context.Context, p *params.CreateSiteConfigParams) (*sqlc.SiteConfig, error) {
 	return h.scr.Create(ctx, p)
 }
 
