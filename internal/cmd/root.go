@@ -1,11 +1,14 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/knadh/koanf/v2"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
 	"github.com/Xwudao/neter-template/internal/biz"
+	"github.com/Xwudao/neter-template/internal/cmd_app"
 	"github.com/Xwudao/neter-template/internal/cron"
 	"github.com/Xwudao/neter-template/internal/system"
 
@@ -36,6 +39,7 @@ type MainApp struct {
 	logger     *zap.SugaredLogger
 	sib        *biz.SystemInitBiz
 	scb        *biz.SiteConfigBiz
+	migrator   *cmd_app.MigrateApp
 }
 
 func NewMainApp(
@@ -46,6 +50,7 @@ func NewMainApp(
 	initSystem *system.InitSystem,
 	sib *biz.SystemInitBiz,
 	scb *biz.SiteConfigBiz,
+	migrator *cmd_app.MigrateApp,
 ) (*MainApp, func()) {
 	m := &MainApp{
 		logger:     logger,
@@ -54,6 +59,7 @@ func NewMainApp(
 		cron:       cron,
 		conf:       conf,
 		sib:        sib, scb: scb,
+		migrator: migrator,
 	}
 
 	cleanup := func() {
@@ -69,6 +75,10 @@ func NewMainApp(
 
 func (m *MainApp) Run() error {
 	m.initSystem.InitConfig()
+
+	if err := m.migrator.AutoMigrate(); err != nil {
+		return fmt.Errorf("auto migrate: %w", err)
+	}
 
 	if err := m.sib.AddAdminUser(); err != nil {
 		return err

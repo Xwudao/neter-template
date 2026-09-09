@@ -40,7 +40,9 @@ var upCmd = &cobra.Command{
 		}
 		defer f()
 
-		mc.Up(upAll)
+		if err := mc.Up(upAll); err != nil {
+			panic(err)
+		}
 	},
 }
 
@@ -56,7 +58,9 @@ var downCmd = &cobra.Command{
 		}
 		defer f()
 
-		mc.Down(downAll)
+		if err := mc.Down(downAll); err != nil {
+			panic(err)
+		}
 	},
 }
 

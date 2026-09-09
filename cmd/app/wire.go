@@ -13,6 +13,7 @@ import (
 
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/cmd"
+	"github.com/Xwudao/neter-template/internal/cmd_app"
 	"github.com/Xwudao/neter-template/internal/core"
 	"github.com/Xwudao/neter-template/internal/routes"
 	"github.com/Xwudao/neter-template/pkg/config"
@@ -22,6 +23,7 @@ import (
 func mainApp() (*cmd.MainApp, func(), error) {
 	panic(wire.Build(
 		cmd.NewMainApp,
+		cmd_app.NewMigrateApp,
 		logger.NewLogger,
 		logger.NewZapWriter,
 		config.ProviderConfigSet,

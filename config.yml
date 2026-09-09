@@ -15,6 +15,13 @@ db:
   username: postgres
   password: postgres
   port: 5432
+  # Apply pending db/migrations when the binary starts. Set false to run
+  # migrations as a separate step (e.g. `./app migrate up --all` or a k8s Job).
+  autoMigrate: true
+  # Optional: dedicated DDL user for migrations.
+  # migrateDsn: postgres://migrator:secret@127.0.0.1:5432/neter?sslmode=disable
+  # Optional: read migrations from disk instead of the embedded copy.
+  # migratePath: db/migrations
 jwt:
   secret: thisstringmustbeverylongandrandom
   expire: 24h

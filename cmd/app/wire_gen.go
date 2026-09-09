@@ -9,6 +9,7 @@ package main
 import (
 	"github.com/Xwudao/neter-template/internal/biz"
 	"github.com/Xwudao/neter-template/internal/cmd"
+	"github.com/Xwudao/neter-template/internal/cmd_app"
 	"github.com/Xwudao/neter-template/internal/cron"
 	"github.com/Xwudao/neter-template/internal/data"
 	"github.com/Xwudao/neter-template/internal/routes"
@@ -74,7 +75,8 @@ func mainApp() (*cmd.MainApp, func(), error) {
 	}
 	initSystem := system.NewInitSystem(koanf)
 	systemInitBiz := biz.NewSystemInitBiz(sugaredLogger, userRepository, appContext)
-	cmdMainApp, cleanup2 := cmd.NewMainApp(httpEngine, sugaredLogger, koanf, cronCron, initSystem, systemInitBiz, siteConfigBiz)
+	migrateApp := cmd_app.NewMigrateApp(appContext, koanf, sugaredLogger)
+	cmdMainApp, cleanup2 := cmd.NewMainApp(httpEngine, sugaredLogger, koanf, cronCron, initSystem, systemInitBiz, siteConfigBiz, migrateApp)
 	return cmdMainApp, func() {
 		cleanup2()
 		cleanup()

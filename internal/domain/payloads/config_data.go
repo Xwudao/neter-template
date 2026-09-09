@@ -16,9 +16,19 @@ type DBConfig struct {
 	Username string `json:"username" koanf:"username"`
 	Password string `json:"password" koanf:"password"`
 	Database string `json:"database" koanf:"database"`
+
+	// AutoMigrate applies pending migrations when the binary starts.
+	// Override with NETER_AUTO_MIGRATE=true|false.
+	AutoMigrate bool `json:"autoMigrate" koanf:"autoMigrate"`
+	// MigrateDsn overrides the application DSN for migrations, e.g. a
+	// dedicated DDL user. Override with NETER_MIGRATE_DSN.
+	MigrateDsn string `json:"migrateDsn" koanf:"migrateDsn"`
+	// MigratePath, when set, reads migrations from this directory on disk
+	// instead of the embedded copy (development only).
+	MigratePath string `json:"migratePath" koanf:"migratePath"`
 }
 
-type CorsConfig struct {
+type CorsConfig	 struct {
 	AllowOrigin      []string      `json:"allowOrigin" koanf:"allowOrigin"`
 	AllowCredentials bool          `json:"allowCredentials" koanf:"allowCredentials"`
 	MaxAge           time.Duration `json:"maxAge" koanf:"maxAge"`
