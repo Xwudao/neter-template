@@ -4,8 +4,8 @@ github.com/Microsoft/go-winio v0.6.1 h1:9/kr64B9VUZrLm5YYwbGtUJnMgqWVOdUAXu6Migc
 github.com/Microsoft/go-winio v0.6.1/go.mod h1:LRdKpFKfdobln8UmuiYcKPot9D2v6svN5+sAH+4kjUM=
 github.com/PuerkitoBio/goquery v1.10.3 h1:pFYcNSqHxBD06Fpj/KsbStFRsgRATgnf3LeXiUkhzPo=
 github.com/PuerkitoBio/goquery v1.10.3/go.mod h1:tMUX0zDMHXYlAQk6p35XxQMqMweEKB7iK7iLNd4RH4Y=
-github.com/Xwudao/loom v0.1.0 h1:4/F2SjYOY4QdFdJYH+DeWKDNYerLl09+vQnPuSxMQoM=
-github.com/Xwudao/loom v0.1.0/go.mod h1:ohfMAnfVlWB77H5/7PhwoDLlIqWFFZZdErpMIYR5594=
+github.com/Xwudao/loom v0.2.0 h1:pL3yzJmXCn+UypXzD+UQSBMa5/QR7m9pMBJCXV1Im5w=
+github.com/Xwudao/loom v0.2.0/go.mod h1:ohfMAnfVlWB77H5/7PhwoDLlIqWFFZZdErpMIYR5594=
 github.com/andybalholm/cascadia v1.3.3 h1:AG2YHrzJIm4BZ19iwJ/DAua6Btl3IwJX+VI4kktS1LM=
 github.com/andybalholm/cascadia v1.3.3/go.mod h1:xNd9bqTn98Ln4DwST8/nG+H0yuB8Hmgu1YHNnWw0GeA=
 github.com/aws/aws-sdk-go v1.34.0 h1:brux2dRrlwCF5JhTL7MUT3WUwo9zfDHZZp3+g3Mvlmo=

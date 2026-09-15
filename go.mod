@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/PuerkitoBio/goquery v1.10.3
-	github.com/Xwudao/loom v0.1.0
+	github.com/Xwudao/loom v0.2.0
 	github.com/aws/aws-sdk-go v1.34.0
 	github.com/gin-contrib/cors v1.7.7
 	github.com/gin-gonic/gin v1.12.0
