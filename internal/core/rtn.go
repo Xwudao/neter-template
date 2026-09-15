@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5"
 	"github.com/Xwudao/neter-template/internal/domain/errs"
 	"github.com/Xwudao/neter-template/internal/validate"
+	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5"
 )
 
 type CodeType int

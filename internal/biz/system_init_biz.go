@@ -3,13 +3,13 @@ package biz
 import (
 	"errors"
 
-	"github.com/jackc/pgx/v5"
-	"go.uber.org/zap"
 	"github.com/Xwudao/neter-template/internal/data/sqlc"
 	"github.com/Xwudao/neter-template/internal/domain/params"
 	"github.com/Xwudao/neter-template/internal/system"
 	"github.com/Xwudao/neter-template/pkg/utils"
 	"github.com/Xwudao/neter-template/pkg/utils/bcrypt"
+	"github.com/jackc/pgx/v5"
+	"go.uber.org/zap"
 )
 
 type SystemInitBiz struct {

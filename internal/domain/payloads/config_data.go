@@ -28,7 +28,7 @@ type DBConfig struct {
 	MigratePath string `json:"migratePath" koanf:"migratePath"`
 }
 
-type CorsConfig	 struct {
+type CorsConfig struct {
 	AllowOrigin      []string      `json:"allowOrigin" koanf:"allowOrigin"`
 	AllowCredentials bool          `json:"allowCredentials" koanf:"allowCredentials"`
 	MaxAge           time.Duration `json:"maxAge" koanf:"maxAge"`
