@@ -1,7 +1,5 @@
 package system
 
-import (
-	"github.com/google/wire"
-)
+import "github.com/Xwudao/loom"
 
-var ProviderSystemSet = wire.NewSet(NewInitSystem)
+var ProviderSystemSet = loom.Module(loom.Provide(NewInitSystem))

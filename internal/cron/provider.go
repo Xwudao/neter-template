@@ -1,7 +1,5 @@
 package cron
 
-import (
-	"github.com/google/wire"
-)
+import "github.com/Xwudao/loom"
 
-var ProviderCronSet = wire.NewSet(NewCron)
+var ProviderCronSet = loom.Module(loom.Provide(NewCron))

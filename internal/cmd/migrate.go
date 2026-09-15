@@ -4,9 +4,11 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/Xwudao/neter-template/internal/cmd_app"
+	"context"
 
 	"github.com/spf13/cobra"
+
+	"github.com/Xwudao/neter-template/internal/cmd_app"
 )
 
 // migrateCmd represents the migrate command
@@ -15,11 +17,11 @@ var migrateCmd = &cobra.Command{
 	Short: "migrate database",
 	Run: func(cmd *cobra.Command, args []string) {
 		migrateName, _ := cmd.Flags().GetString("name")
-		mc, f, err := cmd_app.MigrateCmd()
+		mc, lifecycle, err := cmd_app.MigrateCmd()
 		if err != nil {
 			panic(err)
 		}
-		defer f()
+		defer func() { _ = lifecycle.Stop(context.Background()) }()
 
 		mc.Run(migrateName)
 
@@ -34,11 +36,11 @@ var upCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		upAll, _ := cmd.Flags().GetBool("all")
 
-		mc, f, err := cmd_app.MigrateCmd()
+		mc, lifecycle, err := cmd_app.MigrateCmd()
 		if err != nil {
 			panic(err)
 		}
-		defer f()
+		defer func() { _ = lifecycle.Stop(context.Background()) }()
 
 		if err := mc.Up(upAll); err != nil {
 			panic(err)
@@ -52,11 +54,11 @@ var downCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		downAll, _ := cmd.Flags().GetBool("all")
 
-		mc, f, err := cmd_app.MigrateCmd()
+		mc, lifecycle, err := cmd_app.MigrateCmd()
 		if err != nil {
 			panic(err)
 		}
-		defer f()
+		defer func() { _ = lifecycle.Stop(context.Background()) }()
 
 		if err := mc.Down(downAll); err != nil {
 			panic(err)

@@ -1,7 +1,6 @@
-.PHONY: install sqlc wire mock test
+.PHONY: install sqlc generate generate-check mock test
 
 install:
-	go install github.com/google/wire/cmd/wire@latest
 	go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.31.1
 	go install github.com/spf13/cobra-cli@latest
 	go install go.uber.org/mock/mockgen@latest
@@ -9,9 +8,12 @@ install:
 sqlc:
 	sqlc generate
 
-wire:
-	cd cmd/app && wire
-	cd internal/cmd_app && wire
+generate:
+	go tool loom generate ./...
+
+# Fails when a committed loom_gen.go is out of date. Suitable for CI.
+generate-check:
+	go tool loom generate -dry-run ./...
 
 mock:
 	mockgen -source=internal/biz/user_biz.go -destination=internal/biz/mocks/mock_user_repository.go -package=mocks

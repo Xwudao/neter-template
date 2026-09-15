@@ -4,9 +4,11 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/spf13/cobra"
+
 	"github.com/Xwudao/neter-template/internal/cmd_app"
 )
 
@@ -23,11 +25,11 @@ var configCmd = &cobra.Command{
 	Use:   "config",
 	Short: "config something that the system need",
 	Run: func(cmd *cobra.Command, args []string) {
-		ic, f, err := cmd_app.InitCmd()
+		ic, lifecycle, err := cmd_app.InitCmd()
 		if err != nil {
 			panic(err)
 		}
-		defer f()
+		defer func() { _ = lifecycle.Stop(context.Background()) }()
 
 		ic.Config()
 	},

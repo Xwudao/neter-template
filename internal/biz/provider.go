@@ -1,20 +1,17 @@
 package biz
 
-import "github.com/google/wire"
+import "github.com/Xwudao/loom"
 
-var ProviderBizSet = wire.NewSet(
-	NewUserBiz,
-	NewSystemInitBiz,
-	NewSiteConfigBiz,
-	NewSiteHelpBiz,
-	NewDataListBiz,
-	NewHtmlHelpBiz,
-	NewSeoBizBiz,
+var ProviderBizSet = loom.Module(
+	loom.Provide(NewSystemInitBiz),
+	loom.Provide(NewSeoBizBiz),
 	// Bind concrete implementations to their handler-facing interfaces.
-	// This lets Wire inject the interface type into route constructors.
-	wire.Bind(new(UserBizIface), new(*UserBiz)),
-	wire.Bind(new(SiteConfigBizIface), new(*SiteConfigBiz)),
-	wire.Bind(new(SiteHelpBizIface), new(*SiteHelpBiz)),
-	wire.Bind(new(DataListBizIface), new(*DataListBiz)),
-	wire.Bind(new(HtmlHelpBizIface), new(*HtmlHelpBiz)),
+	// loom.As replaces the Wire Provide+Bind pair: it registers the
+	// constructor and exposes the same instance as the interface, so the
+	// constructor must not also appear as a plain loom.Provide.
+	loom.As[UserBizIface](NewUserBiz),
+	loom.As[SiteConfigBizIface](NewSiteConfigBiz),
+	loom.As[SiteHelpBizIface](NewSiteHelpBiz),
+	loom.As[DataListBizIface](NewDataListBiz),
+	loom.As[HtmlHelpBizIface](NewHtmlHelpBiz),
 )

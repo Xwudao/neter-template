@@ -1,14 +1,12 @@
 package config
 
-import (
-	"github.com/google/wire"
-)
+import "github.com/Xwudao/loom"
 
-var ProviderConfigSet = wire.NewSet(
-	NewKoanf,
-	NewJwtConfigData,
-	NewDBConfig,
-	NewCorsConfig,
-	NewProxyConfig,
-	NewS3Config,
+var ProviderConfigSet = loom.Module(
+	loom.Provide(NewKoanf),
+	loom.Provide(NewJwtConfigData),
+	loom.Provide(NewDBConfig),
+	loom.Provide(NewCorsConfig),
+	loom.Provide(NewProxyConfig),
+	loom.Provide(NewS3Config),
 )

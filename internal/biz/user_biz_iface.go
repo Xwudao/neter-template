@@ -9,7 +9,7 @@ import (
 
 // UserBizIface is the interface consumed by route handlers.
 // Defining the interface here (alongside its implementation) keeps the biz
-// package as the single source of truth; wire.Bind maps *UserBiz → UserBizIface.
+// package as the single source of truth; loom.As maps *UserBiz → UserBizIface.
 type UserBizIface interface {
 	Login(ctx context.Context, p *params.UserLoginParams) (*sqlc.User, string, error)
 	Delete(ctx context.Context, id int64) error

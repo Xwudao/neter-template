@@ -1,12 +1,10 @@
 package data
 
-import "github.com/google/wire"
+import "github.com/Xwudao/loom"
 
-var ProviderDataSet = wire.NewSet(
-	NewData,
-	NewUserRepository,
-	NewSiteConfigRepository,
-	NewDataListRepository,
+var ProviderDataSet = loom.Module(
+	loom.Provide(NewData),
+	loom.Provide(NewUserRepository),
+	loom.Provide(NewSiteConfigRepository),
+	loom.Provide(NewDataListRepository),
 )
-
-//var ProviderDataSet = wire.NewSet(NewRedisClient, NewUserRepository)
