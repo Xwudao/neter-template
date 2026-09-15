@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -31,8 +33,18 @@ func main() {
 			}
 		}()
 
-		err = app.Run()
-		if err != nil {
+		if err := app.Prepare(); err != nil {
+			app.AbortStartup()
+			panic(err)
+		}
+		if err := lifecycle.Start(context.Background()); err != nil {
+			app.CancelAppContext()
+			panic(err)
+		}
+
+		runCtx, stopSignals := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+		defer stopSignals()
+		if err := app.Wait(runCtx); err != nil {
 			panic(err)
 		}
 

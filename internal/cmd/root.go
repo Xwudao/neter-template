@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/knadh/koanf/v2"
@@ -51,7 +52,7 @@ func NewMainApp(
 	sib *biz.SystemInitBiz,
 	scb *biz.SiteConfigBiz,
 	migrator *cmd_app.MigrateApp,
-) (*MainApp, func()) {
+) *MainApp {
 	m := &MainApp{
 		logger:     logger,
 		http:       http,
@@ -62,18 +63,12 @@ func NewMainApp(
 		migrator: migrator,
 	}
 
-	cleanup := func() {
-		logger.Infof("begin to cleanup")
-		_ = m.cron.Close()
-		logger.Infof("cleanup done")
-	}
-
 	m.checkSystem()
 
-	return m, cleanup
+	return m
 }
 
-func (m *MainApp) Run() error {
+func (m *MainApp) Prepare() error {
 	m.initSystem.InitConfig()
 
 	if err := m.migrator.AutoMigrate(); err != nil {
@@ -89,8 +84,17 @@ func (m *MainApp) Run() error {
 
 	m.cron.Run()
 	m.http.Register()
-	return m.http.Run()
+	return nil
 }
+
+func (m *MainApp) Wait(ctx context.Context) error { return m.http.Wait(ctx) }
+
+func (m *MainApp) AbortStartup() {
+	_ = m.cron.Close()
+	m.http.CancelAppContext()
+}
+
+func (m *MainApp) CancelAppContext() { m.http.CancelAppContext() }
 
 // check system
 func (m *MainApp) checkSystem() {

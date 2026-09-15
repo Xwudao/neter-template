@@ -68,6 +68,11 @@ func mainApp() (*cmd.MainApp, *loom.Lifecycle, error) {
 		return nil, nil, errors.Join(err, lifecycle.Rollback(context.Background()))
 	}
 
+	cronCron, err := cron.NewCron(sugaredLogger)
+	if err != nil {
+		return nil, nil, errors.Join(err, lifecycle.Rollback(context.Background()))
+	}
+
 	userBiz := biz.NewUserBiz(sugaredLogger, userRepository, client, appContext)
 
 	userRoute := v1.NewUserRoute(userBiz, koanf)
@@ -88,12 +93,7 @@ func mainApp() (*cmd.MainApp, *loom.Lifecycle, error) {
 
 	routeRegistry := routes.NewRouteRegistry(userRoute, siteConfigRoute, dataListRoute)
 
-	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, appContext, routeRegistry)
-	if err != nil {
-		return nil, nil, errors.Join(err, lifecycle.Rollback(context.Background()))
-	}
-
-	cronCron, err := cron.NewCron(sugaredLogger)
+	httpEngine, err := routes.NewHttpEngine(engine, koanf, sugaredLogger, appContext, cronCron, routeRegistry, lifecycle)
 	if err != nil {
 		return nil, nil, errors.Join(err, lifecycle.Rollback(context.Background()))
 	}
@@ -104,11 +104,7 @@ func mainApp() (*cmd.MainApp, *loom.Lifecycle, error) {
 
 	migrateApp := cmd_app.NewMigrateApp(appContext, koanf, sugaredLogger)
 
-	cmdMainApp, cmdMainAppCleanup := cmd.NewMainApp(httpEngine, sugaredLogger, koanf, cronCron, initSystem, systemInitBiz, siteConfigBiz, migrateApp)
-	lifecycle.AddCleanup(func(ctx context.Context) error {
-		cmdMainAppCleanup()
-		return nil
-	})
+	cmdMainApp := cmd.NewMainApp(httpEngine, sugaredLogger, koanf, cronCron, initSystem, systemInitBiz, siteConfigBiz, migrateApp)
 
 	return cmdMainApp, lifecycle, nil
 }
