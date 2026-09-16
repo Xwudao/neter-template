@@ -3,7 +3,7 @@ package params
 import (
 	"mime/multipart"
 
-	"github.com/Xwudao/neter-template/internal/validate"
+	"github.com/Xwudao/go-validate"
 )
 
 type UploadToS3Params struct {

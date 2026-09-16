@@ -10,8 +10,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/Xwudao/go-validate"
 	"github.com/Xwudao/neter-template/internal/domain/errs"
-	"github.com/Xwudao/neter-template/internal/validate"
 )
 
 func TestNewRtnWithErrUsesBusinessMessage(t *testing.T) {

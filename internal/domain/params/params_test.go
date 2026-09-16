@@ -1,13 +1,14 @@
 package params
 
 import (
+	"errors"
 	"mime/multipart"
-	"strings"
 	"testing"
+
+	"github.com/Xwudao/go-validate"
 )
 
-// TestDTOValidateMessages 断言 Validate() 聚合错误文本与旧自定义消息映射保持一致。
-// 消息按字段声明顺序聚合（每条用 "; " 分隔），与旧 validator 字段序遍历一致。
+// TestDTOValidateMessages 断言 Validate() 的字段名和消息按声明顺序聚合。
 func TestDTOValidateMessages(t *testing.T) {
 	tests := []struct {
 		name string
@@ -17,7 +18,7 @@ func TestDTOValidateMessages(t *testing.T) {
 		{
 			name: "CreateDataListParams all empty",
 			err:  (&CreateDataListParams{}).Validate(),
-			want: "标签必填; Key必填; 分类必填; 内容必填",
+			want: "label: 标签必填; key: Key必填; kind: 分类必填; value: 内容必填",
 		},
 		{
 			name: "CreateDataListParams valid",
@@ -27,17 +28,17 @@ func TestDTOValidateMessages(t *testing.T) {
 		{
 			name: "UpdateDataListParams all empty",
 			err:  (&UpdateDataListParams{}).Validate(),
-			want: "ID必填; Key必填; 内容必填",
+			want: "id: ID必填; key: Key必填; value: 内容必填",
 		},
 		{
 			name: "ListDataByKindParams page and size zero",
 			err:  (&ListDataByKindParams{}).Validate(),
-			want: "Page最小值为1; Size最小值为1",
+			want: "page: Page最小值为1; size: Size最小值为1",
 		},
 		{
 			name: "ListDataByKindParams size too large",
 			err:  (&ListDataByKindParams{Page: 1, Size: 101}).Validate(),
-			want: "Size最大值为100",
+			want: "size: Size最大值为100",
 		},
 		{
 			name: "ListDataByKindParams valid",
@@ -47,12 +48,12 @@ func TestDTOValidateMessages(t *testing.T) {
 		{
 			name: "GetDataListSortDataParams kind empty",
 			err:  (&GetDataListSortDataParams{}).Validate(),
-			want: "Kind必填",
+			want: "kind: Kind必填",
 		},
 		{
 			name: "DeleteIDParams id zero",
 			err:  (&DeleteIDParams{}).Validate(),
-			want: "ID必填",
+			want: "id: ID必填",
 		},
 		{
 			name: "DeleteIDParams id valid",
@@ -62,7 +63,7 @@ func TestDTOValidateMessages(t *testing.T) {
 		{
 			name: "ItemOrderParams ids empty",
 			err:  (&ItemOrderParams{}).Validate(),
-			want: "ID必填; 排序必填",
+			want: "ids: ID必填; orders: 排序必填",
 		},
 		{
 			name: "ItemOrderParams valid",
@@ -72,33 +73,33 @@ func TestDTOValidateMessages(t *testing.T) {
 		{
 			name: "CreateUserParams all empty",
 			err:  (&CreateUserParams{}).Validate(),
-			want: "用户名不能为空; 密码不能为空",
+			want: "username: 用户名不能为空; password: 密码不能为空",
 		},
 		{
 			name: "UserLoginParams all empty",
 			err:  (&UserLoginParams{}).Validate(),
-			want: "用户名不能为空; 密码不能为空",
+			want: "username: 用户名不能为空; password: 密码不能为空",
 		},
 		{
 			name: "CreateSiteConfigParams all empty",
 			err:  (&CreateSiteConfigParams{}).Validate(),
-			want: "名称不能为空; 配置不能为空",
+			want: "name: 名称不能为空; config: 配置不能为空",
 		},
 		{
 			// 旧自定义消息映射中 Name.required 的文案为 "ID不能为空"（历史文案），按原样保留。
 			name: "UpdateSiteConfigParams all empty",
 			err:  (&UpdateSiteConfigParams{}).Validate(),
-			want: "ID不能为空; 配置不能为空",
+			want: "name: ID不能为空; config: 配置不能为空",
 		},
 		{
 			name: "WriteFileParams all empty",
 			err:  (&WriteFileParams{}).Validate(),
-			want: "文件名不能为空; 数据不能为空",
+			want: "filename: 文件名不能为空; data: 数据不能为空",
 		},
 		{
-			name: "UploadToS3Params all empty (no custom messages -> 参数错误)",
+			name: "UploadToS3Params all empty (default messages)",
 			err:  (&UploadToS3Params{}).Validate(),
-			want: "参数错误; 参数错误; 参数错误",
+			want: "prefix: 不能为空; object: 不能为空; file: 不能为空",
 		},
 	}
 
@@ -121,15 +122,18 @@ func TestDTOValidateMessages(t *testing.T) {
 	}
 }
 
-// TestValidateFirstMessage 断言 HTTP 入口取第一条消息的行为（维持既有 msg）。
+// TestValidateFirstMessage 断言 HTTP 入口可从聚合错误中获取首条消息。
 func TestValidateFirstMessage(t *testing.T) {
 	err := (&CreateDataListParams{}).Validate()
 	if err == nil {
 		t.Fatal("expected error")
 	}
-	first := strings.Split(err.Error(), "; ")[0]
-	if first != "标签必填" {
-		t.Fatalf("first message = %q, want 标签必填", first)
+	var validationErrors validate.Errors
+	if !errors.As(err, &validationErrors) {
+		t.Fatalf("expected validate.Errors, got %T", err)
+	}
+	if first := validationErrors.First(); first == nil || first.Error() != "标签必填" {
+		t.Fatalf("first message = %v, want 标签必填", first)
 	}
 }
 

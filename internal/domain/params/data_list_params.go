@@ -1,7 +1,7 @@
 package params
 
 import (
-	"github.com/Xwudao/neter-template/internal/validate"
+	"github.com/Xwudao/go-validate"
 )
 
 // CreateDataListParams 创建参数

@@ -4,6 +4,8 @@ github.com/Microsoft/go-winio v0.6.1 h1:9/kr64B9VUZrLm5YYwbGtUJnMgqWVOdUAXu6Migc
 github.com/Microsoft/go-winio v0.6.1/go.mod h1:LRdKpFKfdobln8UmuiYcKPot9D2v6svN5+sAH+4kjUM=
 github.com/PuerkitoBio/goquery v1.10.3 h1:pFYcNSqHxBD06Fpj/KsbStFRsgRATgnf3LeXiUkhzPo=
 github.com/PuerkitoBio/goquery v1.10.3/go.mod h1:tMUX0zDMHXYlAQk6p35XxQMqMweEKB7iK7iLNd4RH4Y=
+github.com/Xwudao/go-validate v0.1.1 h1:yRmVWHQ9MNBw8BLoW5FCZ8OuW6jzIvuF8bVJ5dHN7tY=
+github.com/Xwudao/go-validate v0.1.1/go.mod h1:LcXsGqASJSl904zzwVU8oQap68+IPHiADukQ4qo3Ps0=
 github.com/Xwudao/loom v0.2.0 h1:pL3yzJmXCn+UypXzD+UQSBMa5/QR7m9pMBJCXV1Im5w=
 github.com/Xwudao/loom v0.2.0/go.mod h1:ohfMAnfVlWB77H5/7PhwoDLlIqWFFZZdErpMIYR5594=
 github.com/andybalholm/cascadia v1.3.3 h1:AG2YHrzJIm4BZ19iwJ/DAua6Btl3IwJX+VI4kktS1LM=

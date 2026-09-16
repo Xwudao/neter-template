@@ -1,8 +1,8 @@
 package params
 
 import (
+	"github.com/Xwudao/go-validate"
 	"github.com/Xwudao/neter-template/internal/data/sqlc"
-	"github.com/Xwudao/neter-template/internal/validate"
 )
 
 type CreateUserParams struct {

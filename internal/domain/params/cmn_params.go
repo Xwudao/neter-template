@@ -3,7 +3,7 @@ package params
 import (
 	"errors"
 
-	"github.com/Xwudao/neter-template/internal/validate"
+	"github.com/Xwudao/go-validate"
 )
 
 type DeleteIDParams struct {

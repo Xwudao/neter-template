@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Xwudao/go-validate"
 	"github.com/Xwudao/neter-template/internal/domain/errs"
-	"github.com/Xwudao/neter-template/internal/validate"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5"
 )
@@ -252,7 +252,11 @@ func applyBindMappers(request any, err error, mappers []BindErrorMapper) error {
 func validateRequest[T any](request *T) error {
 	if v, ok := any(request).(RequestValidator); ok {
 		if err := v.Validate(); err != nil {
-			return validate.FirstError(err)
+			var validationErrors validate.Errors
+			if errors.As(err, &validationErrors) {
+				return validationErrors.First()
+			}
+			return err
 		}
 	}
 	return nil
