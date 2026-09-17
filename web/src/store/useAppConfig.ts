@@ -12,14 +12,18 @@ export type AccentPreset =
   | 'violet'
   | 'orange'
 
+export type SurfaceStyle = 'solid' | 'glass'
+
 type AppConfigState = {
   theme: ThemeMode
   resolvedTheme: ResolvedTheme
   accent: AccentPreset
+  surfaceStyle: SurfaceStyle
   setTheme: (theme: ThemeMode) => void
   cycleTheme: () => void
   syncSystemTheme: () => void
   setAccent: (accent: AccentPreset) => void
+  setSurfaceStyle: (surfaceStyle: SurfaceStyle) => void
 }
 
 const THEME_SEQUENCE: ThemeMode[] = ['light', 'dark', 'system']
@@ -47,12 +51,18 @@ const validAccents: AccentPreset[] = [
   'orange',
 ]
 
+const validSurfaceStyles: SurfaceStyle[] = ['solid', 'glass']
+
+export const normalizeSurfaceStyle = (value: unknown): SurfaceStyle =>
+  validSurfaceStyles.includes(value as SurfaceStyle) ? (value as SurfaceStyle) : 'solid'
+
 const useAppConfig = create<AppConfigState>()(
   persist(
     (set) => ({
       theme: 'system',
       resolvedTheme: getSystemTheme(),
       accent: 'indigo',
+      surfaceStyle: 'solid',
       setTheme: (theme) => set({ theme, resolvedTheme: resolveTheme(theme) }),
       cycleTheme: () =>
         set((state) => {
@@ -70,13 +80,16 @@ const useAppConfig = create<AppConfigState>()(
             : { resolvedTheme: resolveTheme(state.theme) },
         ),
       setAccent: (accent) => set({ accent }),
+      setSurfaceStyle: (surfaceStyle) =>
+        set({ surfaceStyle: normalizeSurfaceStyle(surfaceStyle) }),
     }),
     {
       name: 'app-config',
-      version: 3,
+      version: 4,
       partialize: (state) => ({
         theme: state.theme,
         accent: state.accent,
+        surfaceStyle: state.surfaceStyle,
       }),
       merge: (persisted, current) => {
         const p = persisted as Partial<AppConfigState>
@@ -88,6 +101,7 @@ const useAppConfig = create<AppConfigState>()(
           accent: validAccents.includes(p.accent ?? 'indigo')
             ? (p.accent ?? 'indigo')
             : 'indigo',
+          surfaceStyle: normalizeSurfaceStyle(p.surfaceStyle),
         }
       },
       migrate: (persisted: unknown) => {
@@ -102,6 +116,7 @@ const useAppConfig = create<AppConfigState>()(
           ...state,
           theme,
           accent,
+          surfaceStyle: normalizeSurfaceStyle(state.surfaceStyle),
           resolvedTheme: resolveTheme(theme),
         }
       },

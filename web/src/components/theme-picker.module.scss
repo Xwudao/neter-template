@@ -30,7 +30,7 @@
 }
 
 .toggleIcon {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-md);
 }
 
 .accentList {
@@ -57,4 +57,41 @@
 .accentBtnActive {
   border-color: var(--color-accent);
   transform: scale(1.1);
+}
+
+.surfaceList {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+}
+
+.surfaceBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+  }
+}
+
+.surfaceBtnActive {
+  color: var(--color-accent);
+  border-color: var(--color-accent-border);
+  background: var(--color-accent-soft);
+}
+
+.surfaceIcon {
+  font-size: var(--font-size-sm);
 }

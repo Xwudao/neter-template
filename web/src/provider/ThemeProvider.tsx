@@ -163,6 +163,7 @@ export function ThemeProvider({ children }: PropsWithChildren) {
   const accent = useAppConfig((state) => state.accent)
   const theme = useAppConfig((state) => state.theme)
   const resolvedTheme = useAppConfig((state) => state.resolvedTheme)
+  const surfaceStyle = useAppConfig((state) => state.surfaceStyle)
   const syncSystemTheme = useAppConfig((state) => state.syncSystemTheme)
 
   // Listen for system theme changes
@@ -188,8 +189,9 @@ export function ThemeProvider({ children }: PropsWithChildren) {
     const root = document.documentElement
     root.dataset.theme = resolvedTheme
     root.dataset.themeMode = theme
+    root.dataset.surfaceStyle = surfaceStyle
     root.style.colorScheme = resolvedTheme
-  }, [resolvedTheme, theme])
+  }, [resolvedTheme, theme, surfaceStyle])
 
   // Sync accent colors
   useEffect(() => {

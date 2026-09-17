@@ -105,7 +105,8 @@
   --color-canvas: #0a0a0a;
   --color-surface: #121212;
   --color-surface-muted: #1b1b1b;
-  --color-input: var(--color-canvas);
+  /* Keep editable fields distinct from dark cards without reading as black wells. */
+  --color-input: color-mix(in srgb, var(--color-surface-muted) 70%, var(--color-canvas));
   --color-surface-elevated: rgba(27, 27, 27, 0.98);
 
   /* Text */
@@ -161,7 +162,22 @@
   --z-dropdown: 50;
   --z-modal: 200;
   --z-top: 9999;
+  --z-captcha: 10000;
   --z-toast: 10001;
+
+  /* Semantic aliases */
+  --bg: var(--color-canvas);
+  --text: var(--color-text);
+  --text-h: var(--color-text-strong);
+  --border: var(--color-border-soft);
+  --code-bg: var(--color-surface-muted);
+  --accent: var(--color-accent);
+  --accent-bg: var(--color-accent-soft);
+  --accent-border: var(--color-accent-border);
+  --shadow: var(--shadow-sm);
+  --sans: var(--font-sans);
+  --heading: var(--font-heading);
+  --mono: var(--font-mono);
 }
 
 /* ========================================
@@ -216,5 +232,98 @@
 @media (max-width: 900px) {
   :root {
     --header-h: 3.25rem;
+  }
+}
+
+/* ========================================
+   GLASS SURFACE — solid fallback defaults
+   ======================================== */
+:root {
+  --glass-page-background: var(--color-canvas);
+  --glass-surface: var(--color-surface);
+  --glass-surface-strong: var(--color-surface-elevated);
+  --glass-border: var(--color-border-soft);
+  --glass-highlight: transparent;
+  --glass-inner-shadow: transparent;
+  --glass-blur: 0px;
+  --glass-blur-strong: 0px;
+  --glass-saturation: 100%;
+  --glass-saturation-strong: 100%;
+  --glass-shadow: var(--shadow-md);
+  --glass-shadow-strong: var(--shadow-lg);
+}
+
+/* Dark glass */
+:root[data-surface-style='glass'] {
+  --glass-page-background:
+    radial-gradient(
+      circle at 10% -12%,
+      color-mix(in srgb, var(--color-accent) 24%, transparent),
+      transparent 30rem
+    ),
+    radial-gradient(
+      circle at 92% 16%,
+      color-mix(in srgb, var(--color-info) 16%, transparent),
+      transparent 28rem
+    ),
+    radial-gradient(
+      circle at 42% 108%,
+      color-mix(in srgb, var(--color-signal) 10%, transparent),
+      transparent 34rem
+    ),
+    var(--color-canvas);
+
+  --glass-surface: rgba(24, 24, 27, 0.62);
+  --glass-surface-strong: rgba(24, 24, 27, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.13);
+  --glass-highlight: rgba(255, 255, 255, 0.075);
+  --glass-inner-shadow: rgba(255, 255, 255, 0.05);
+  --glass-blur: 14px;
+  --glass-blur-strong: 20px;
+  --glass-saturation: 118%;
+  --glass-saturation-strong: 128%;
+  --glass-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+  --glass-shadow-strong: 0 16px 44px rgba(0, 0, 0, 0.28);
+}
+
+/* Light glass */
+:root[data-theme='light'][data-surface-style='glass'] {
+  --glass-page-background:
+    radial-gradient(
+      circle at 12% -8%,
+      color-mix(in srgb, var(--color-accent) 13%, transparent),
+      transparent 29rem
+    ),
+    radial-gradient(
+      circle at 90% 14%,
+      color-mix(in srgb, var(--color-signal) 8%, transparent),
+      transparent 25rem
+    ),
+    linear-gradient(145deg, #f7f8ff, var(--color-canvas) 48%, #f9fafc);
+  // Keep modal/menu glass close enough to the white form controls that they
+  // read as one surface, while retaining the backdrop depth at the edges.
+  --glass-surface: rgba(255, 255, 255, 0.58);
+  --glass-surface-strong: rgba(255, 255, 255, 0.86);
+  --glass-border: rgba(255, 255, 255, 0.68);
+  --glass-highlight: rgba(255, 255, 255, 0.42);
+  --glass-inner-shadow: rgba(255, 255, 255, 0.34);
+  --glass-shadow: 0 8px 28px rgba(24, 24, 27, 0.075);
+  --glass-shadow-strong: 0 16px 44px rgba(24, 24, 27, 0.11);
+}
+
+/* Accessibility: reduced transparency */
+@media (prefers-reduced-transparency: reduce) {
+  :root[data-surface-style='glass'] {
+    --glass-surface: var(--color-surface);
+    --glass-surface-strong: var(--color-surface-elevated);
+    --glass-border: var(--color-border-soft);
+    --glass-highlight: transparent;
+    --glass-inner-shadow: transparent;
+    --glass-blur: 0px;
+    --glass-blur-strong: 0px;
+    --glass-saturation: 100%;
+    --glass-saturation-strong: 100%;
+    --glass-shadow: var(--shadow-md);
+    --glass-shadow-strong: var(--shadow-lg);
   }
 }

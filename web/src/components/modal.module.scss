@@ -28,6 +28,10 @@
   padding: var(--space-6);
 }
 
+:root[data-surface-style='glass'] .content {
+  @include glass-surface(true);
+}
+
 .header {
   display: flex;
   align-items: center;

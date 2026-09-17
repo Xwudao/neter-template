@@ -1,6 +1,10 @@
 import clsx from 'clsx'
 
-import useAppConfig, { type AccentPreset, type ThemeMode } from '@/store/useAppConfig'
+import useAppConfig, {
+  type AccentPreset,
+  type SurfaceStyle,
+  type ThemeMode,
+} from '@/store/useAppConfig'
 
 import classes from './theme-picker.module.scss'
 
@@ -24,11 +28,18 @@ const accentColors: Record<AccentPreset, string> = {
   orange: '#fb923c',
 }
 
+const surfaceOptions: { key: SurfaceStyle; label: string; icon: string }[] = [
+  { key: 'solid', label: 'Solid', icon: 'i-mdi-square-rounded' },
+  { key: 'glass', label: 'Glass', icon: 'i-mdi-blur' },
+]
+
 export function ThemePicker() {
   const theme = useAppConfig((s) => s.theme)
   const accent = useAppConfig((s) => s.accent)
   const cycleTheme = useAppConfig((s) => s.cycleTheme)
   const setAccent = useAppConfig((s) => s.setAccent)
+  const surfaceStyle = useAppConfig((s) => s.surfaceStyle)
+  const setSurfaceStyle = useAppConfig((s) => s.setSurfaceStyle)
 
   const themeIcon = (t: ThemeMode): string => {
     switch (t) {
@@ -64,6 +75,25 @@ export function ThemePicker() {
             type="button"
             aria-label={accentLabels[key]}
           />
+        ))}
+      </div>
+
+      <div className={clsx(classes.surfaceList)}>
+        {surfaceOptions.map(({ key, label, icon }) => (
+          <button
+            key={key}
+            className={clsx(
+              classes.surfaceBtn,
+              surfaceStyle === key && classes.surfaceBtnActive,
+            )}
+            onClick={() => setSurfaceStyle(key)}
+            title={label}
+            type="button"
+            aria-pressed={surfaceStyle === key}
+          >
+            <span className={clsx(icon, classes.surfaceIcon)} aria-hidden="true" />
+            <span>{label}</span>
+          </button>
         ))}
       </div>
     </div>
