@@ -26,7 +26,7 @@ subdirectory and finds the nearest `go.mod`.
 | Add a business capability | `nr gen biz -n <name> ...` | Start with this for biz/repository/DI scaffolding; choose the flags in [Biz scaffolding](#biz-scaffolding). |
 | Add a HTTP route scaffold | `nr gen route -n <name>` | Add `--pkg v1` for a route subpackage; use `--v2` only when the project uses the v2 route template. |
 | Add an idempotent seed scaffold | `nr gen seed -n <name>` | On first use, bootstraps the seed registry, Cobra command, and DI graph entry; later runs register dependency-free seed scaffolds automatically. |
-| Inspect routes or create frontend API contracts | `nr route-info …` | Use it for Gin route discovery; see [Routes and TypeScript](#routes-and-typescript). |
+| Inspect Gin routes | `nr route-info …` | Route discovery/documentation; see [Routes](#routes). |
 | Add a database schema change | `nr migrate new <name>` | Create paired up/down files, edit **both**, review, then apply with `nr migrate up`. |
 | Regenerate generated dependencies | `nr loom`, `nr gen mock`, `make sqlc` | Pick the generator that owns the modified source; see [After changing code](#after-changing-code). |
 | See all flags or an unfamiliar command | `nr <command> --help` | Prefer help over guessing flags or generated file locations. |
@@ -142,38 +142,19 @@ can apply its embedded migrations at startup with `db.autoMigrate: true` (or
 
 `nr route-info` prints a notice for sqlc projects and is not maintained here.
 
+## Routes
 
-
-
-
-
-## Routes and TypeScript
-
-Use these commands only for Gin route inspection/documentation or generated
-frontend contracts—not as a substitute for compiling and testing the server.
+Use these commands only for Gin route inspection/documentation—not as a
+substitute for compiling and testing the server. Frontend API types are
+hand-written in `web/src/api/types.ts` and updated manually whenever routes or
+DTOs change.
 
 ```bash
 nr route-info                                      # terminal curl examples
 nr route-info --format md --output docs/routes.md  # write route docs
 nr route-info export -o docs/routes.json           # explicit file export
 nr route-info -f users -p v1                       # limit by path/handler and route package
-nr route-info gen-ts                               # write per-route *.gen.ts files under web/src/api/generated
-nr route-info gen-ts --check                       # CI check: fail if contracts are missing/stale
 ```
-
-Use `--output file.ts` with `gen-ts` only when a single generated TypeScript
-file is required; otherwise use a directory for per-route files. Do not edit
-`*.gen.ts` by hand—change routes/types and regenerate instead.
-
-Request fields become required in the contract when the backend declares them
-so: either a Gin `binding:"required"` tag or an unconditional rule in the
-DTO's code-first `Validate() error` that rejects the zero value
-(`validate.Required`, `validate.NotZero`, positive `Min`/`MinLen`/`MinItems`,
-`OneOf` without an empty-string member) — the `github.com/Xwudao/go-validate`
-convention in sqlc+pg projects. `validate.Optional`/`validate.When` keep the
-field optional. A DTO without any `Validate()` method has no required signal
-and its fields stay optional, so add `Validate()` when a field must be
-mandatory rather than editing the generated file.
 
 ## Tests, mocks, and generated output
 
@@ -185,7 +166,7 @@ mandatory rather than editing the generated file.
 - Use `make mock` where the project provides it. Generated mocks can also be
   refreshed with `go generate ./internal/biz/mocks/...`.
 - Do not hand-edit generated code: `internal/data/sqlc/**`, `*_gen.go`,
-  `assets/dist/**`, generated mock files, generated `*.gen.ts`, or this
+  `assets/dist/**`, generated mock files, `web/src/routeTree.gen.ts`, or this
   `SKILL.md`.
 
 ## Frontend / SPA
@@ -201,7 +182,7 @@ mandatory rather than editing the generated file.
 ## Final checks
 
 Before completing a change: regenerate every affected generator (sqlc, Ent,
-DI graphs, mocks, routes/TypeScript), inspect generated diffs, run focused tests,
+DI graphs, mocks), inspect generated diffs, run focused tests,
 and run the project's broader test target when practical. Use
 `nr <command> --help` whenever flags, application layout, or deployment
 behavior are uncertain.
